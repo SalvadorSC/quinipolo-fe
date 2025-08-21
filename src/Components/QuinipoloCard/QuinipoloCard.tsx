@@ -1,4 +1,16 @@
-import { Button, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Typography,
+  Box,
+} from "@mui/material";
 import React from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -12,91 +24,140 @@ import styles from "./QuinipoloCard.module.scss";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { apiPatch } from "../../utils/apiUtils";
 import { useTheme } from "../../Context/ThemeContext/ThemeContext";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import { QuinipoloCardProps } from "../../types/quinipolo";
+import { isUserModerator } from "../../utils/moderatorUtils";
+import { red } from "@mui/material/colors";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
-interface QuinipoloCardProps {
-  quinipolo: any;
-  deadlineIsInPast: boolean;
-  username: string;
-  moderatedLeagues: string[];
-}
 
 const QuinipoloCard = ({
   quinipolo,
   deadlineIsInPast,
   username,
-  moderatedLeagues,
+  userLeagues,
 }: QuinipoloCardProps) => {
+  console.log("QuinipoloCard - moderator check:", {
+    quinipoloId: quinipolo.id,
+    leagueId: quinipolo.league_id,
+    leagueName: quinipolo.league_name,
+    userLeagues,
+    isModerated: isUserModerator(userLeagues, quinipolo.league_id),
+    hasBeenCorrected: quinipolo.has_been_corrected,
+    deadlineIsInPast,
+    isDeleted: quinipolo.is_deleted,
+  });
   const navigate = useNavigate();
   const { theme } = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
+  const [countdown, setCountdown] = React.useState(5);
+  const [canConfirm, setCanConfirm] = React.useState(false);
+  const [currentDeadlineIsInPast, setCurrentDeadlineIsInPast] =
+    React.useState(deadlineIsInPast);
   const open = Boolean(anchorEl);
+  const { t } = useTranslation();
+
+  // Simple timer completion handler
+  const handleTimerComplete = () => {
+    if (!currentDeadlineIsInPast) {
+      console.log(`Quinipolo ${quinipolo.id} timer expired`);
+      setCurrentDeadlineIsInPast(true);
+    }
+  };
+
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-  const { t } = useTranslation();
+
+  const handleDeleteClick = () => {
+    setDeleteModalOpen(true);
+    setCountdown(5);
+    setCanConfirm(false);
+    handleMenuClose();
+
+    // Start countdown
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setCanConfirm(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    // Cleanup timer when modal is closed
+    return () => clearInterval(timer);
+  };
 
   const handleDeleteQuinipolo = async () => {
     const response = await apiPatch(
-      `/api/quinipolos/quinipolo/${quinipolo._id}/delete`,
+      `/api/quinipolos/quinipolo/${quinipolo.id}/delete`,
       null
     );
     console.log("Quinipolo marked as deleted:", response);
+    setDeleteModalOpen(false);
+  };
 
-    handleMenuClose();
+  const handleCloseModal = () => {
+    setDeleteModalOpen(false);
+    setCanConfirm(false);
   };
 
   return (
     <div
       className={`${styles.quinipoloContainer} ${
-        quinipolo.isDeleted ? styles.deleted : ""
+        quinipolo.is_deleted ? styles.deleted : ""
       } ${theme === "dark" ? styles.dark : ""}`}
-      key={`${quinipolo.league}-${quinipolo.endDate}`}
+      key={`${quinipolo.league_name}-${quinipolo.end_date}`}
     >
       <div className={styles.quinipoloInfo}>
         <div className={styles.quinipoloInfoHeader}>
           <div className={styles.quinipoloInfoLeft}>
-            <h2>{`${quinipolo.leagueName}`}</h2>
+            <h2>{`${quinipolo.league_name}`}</h2>
             <h3
               className={`${styles.endDate} ${
                 theme === "dark" ? styles.endDateDark : ""
               }`}
             >
-              {dayjs(quinipolo.endDate).utc().format("DD/MM/YY HH:mm")}
+              {dayjs(quinipolo.end_date).utc().format("DD/MM/YY HH:mm")}
             </h3>
           </div>
           <div className={styles.quinipoloInfoRight}>
-            {quinipolo.isDeleted ? (
-              <p>Eliminada</p>
+            {quinipolo.is_deleted ? (
+              <p>{t("deleted")}</p>
             ) : (
               <>
-                {!quinipolo.participantsWhoAnswered.includes(username) ? (
-                  <p>Sin responder</p>
+                {!quinipolo.participants_who_answered?.includes(username) ? (
+                  <p>{t("notAnswered")}</p>
                 ) : null}
-                {!deadlineIsInPast ? (
+                {!currentDeadlineIsInPast ? (
                   <p
                     className={`${styles.countdown} ${
                       theme !== "light" && styles.countdownDark
                     }`}
                   >
-                    {new Date(quinipolo.endDate) > new Date() && (
-                      <Countdown date={quinipolo.endDate} />
+                    {new Date(quinipolo.end_date) > new Date() && (
+                      <Countdown
+                        date={quinipolo.end_date}
+                        onComplete={handleTimerComplete}
+                      />
                     )}
                   </p>
                 ) : null}
               </>
             )}
           </div>
-          {moderatedLeagues.includes(quinipolo.leagueId) &&
-          !quinipolo.hasBeenCorrected &&
-          !deadlineIsInPast &&
-          !quinipolo.isDeleted ? (
+          {isUserModerator(userLeagues, quinipolo.league_id) &&
+          !quinipolo.has_been_corrected &&
+          !quinipolo.is_deleted ? (
             <>
               <IconButton
                 sx={{ padding: 0, ml: 1 }}
@@ -124,9 +185,9 @@ const QuinipoloCard = ({
                     fontSize: "12px",
                     padding: "2px 8px",
                   }}
-                  onClick={handleDeleteQuinipolo}
+                  onClick={handleDeleteClick}
                 >
-                  {t('deleteBtn')}
+                  {t("deleteBtn")}
                 </MenuItem>
               </Menu>
             </>
@@ -134,74 +195,155 @@ const QuinipoloCard = ({
         </div>
 
         <div className={styles.quinipoloActions}>
-          {!quinipolo.participantsWhoAnswered.includes(username) && (
+          {!quinipolo.participants_who_answered?.includes(username) && (
             <Button
-              className={styles.actionButton}
-              disabled={deadlineIsInPast || quinipolo.isDeleted}
-              onClick={() => navigate(`/quinipolo?id=${quinipolo._id}`)}
+              className={`${styles.actionButton} ${
+                currentDeadlineIsInPast || quinipolo.is_deleted
+                  ? ""
+                  : "gradient-primary"
+              }`}
+              disabled={currentDeadlineIsInPast || quinipolo.is_deleted}
+              onClick={() => navigate(`/quinipolo?id=${quinipolo.id}`)}
               variant={"contained"}
             >
-              <span>{t('submit')}</span>
+              <span>{t("answer")}</span>
               <PlayCircleFilledIcon />
             </Button>
           )}
-          {moderatedLeagues.includes(quinipolo.leagueId) &&
-            !quinipolo.hasBeenCorrected &&
-            deadlineIsInPast && (
-              <Tooltip
-                arrow
-                title={
-                  !deadlineIsInPast &&
-                  t('edit')
-                }
-              >
+          {isUserModerator(userLeagues, quinipolo.league_id) &&
+            !quinipolo.has_been_corrected &&
+            currentDeadlineIsInPast && (
+              <Tooltip arrow title={!currentDeadlineIsInPast && t("edit")}>
                 <Button
-                  className={`${styles.actionButton} ${styles.actionButtonCorrect} ${theme === "dark" ? styles.dark : ""}`}
+                  className={`${styles.actionButton} ${
+                    styles.actionButtonCorrect
+                  } ${quinipolo.is_deleted ? "" : "gradient-mint"} ${
+                    theme === "dark" ? styles.dark : ""
+                  }`}
                   onClick={() => {
                     navigate(
-                      `/quinipolo/correct?id=${quinipolo._id}&correct=true`
+                      `/quinipolo/correct?id=${quinipolo.id}&correct=true`
                     );
                   }}
                   variant={"contained"}
-                  disabled={!deadlineIsInPast || quinipolo.isDeleted}
+                  disabled={quinipolo.is_deleted}
                 >
-                  <span>{t('correct')}</span>
+                  <span>{t("correct")}</span>
                   <EditIcon />
                 </Button>
               </Tooltip>
             )}
-          {quinipolo.hasBeenCorrected &&
-            moderatedLeagues.includes(quinipolo.leagueId) && (
+          {quinipolo.has_been_corrected &&
+            isUserModerator(userLeagues, quinipolo.league_id) && (
               <Button
-                className={`${styles.actionButton} ${styles.actionButtonCorrect}`}
+                className={`${styles.actionButton} ${
+                  styles.actionButtonCorrect
+                } ${quinipolo.is_deleted ? "" : "gradient-mint"}`}
                 onClick={() =>
-                  navigate(`/quinipolo?id=${quinipolo._id}&correctionEdit=true`)
+                  navigate(`/quinipolo?id=${quinipolo.id}&correctionEdit=true`)
                 }
-                disabled={quinipolo.isDeleted}
+                disabled={quinipolo.is_deleted}
                 variant={"contained"}
               >
-                <span>{t('edit')}</span>
+                <span>{t("edit")}</span>
                 <EditIcon />
               </Button>
             )}
-          {(quinipolo.hasBeenCorrected ||
-            quinipolo.participantsWhoAnswered.includes(username)) ? (
+          {quinipolo.has_been_corrected ||
+          quinipolo.participants_who_answered?.includes(username) ? (
             <Button
-              className={`${styles.actionButton}`}
+              className={`${styles.actionButton} ${
+                quinipolo.is_deleted ? "" : "gradient-primary"
+              }`}
               onClick={() => {
-                navigate(`/quinipolo?id=${quinipolo._id}&see=true`);
+                navigate(`/quinipolo?id=${quinipolo.id}&see=true`);
               }}
-              disabled={
-                quinipolo.isDeleted || quinipolo.leagueId === "sant_feliu_24_25"
-              }
+              disabled={quinipolo.is_deleted}
               variant={"contained"}
             >
-              <span>{t('answers')}</span>
+              <span>{t("answers")}</span>
               <VisibilityIcon />
             </Button>
           ) : null}
         </div>
       </div>
+
+      <Dialog
+        open={deleteModalOpen}
+        onClose={handleCloseModal}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle sx={{ color: "error.main", fontWeight: "bold" }}>
+          {t("deleteConfirmTitle")}
+        </DialogTitle>
+        <DialogContent>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              mb: 2,
+              py: 2,
+            }}
+          >
+            {countdown > 0 ? (
+              <Typography variant="body1" sx={{ textAlign: "center" }}>
+                <span
+                  style={{
+                    color: "red",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {countdown}
+                </span>{" "}
+                {t("deleteConfirmMessage")}
+              </Typography>
+            ) : (
+              <Typography variant="body1" sx={{ textAlign: "center" }}>
+                {t("readyToDelete")}
+              </Typography>
+            )}
+            {!canConfirm && (
+              <Typography
+                variant="body2"
+                sx={{ color: "text.secondary", mt: 1, textAlign: "center" }}
+              >
+                {t("pleaseWaitBeforeConfirming")}
+              </Typography>
+            )}
+          </Box>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            px: 3,
+            pb: 2,
+            justifyContent: "center",
+            flexDirection: "column-reverse",
+            gap: 2,
+          }}
+        >
+          <Button
+            onClick={handleCloseModal}
+            color="primary"
+            variant="outlined"
+            fullWidth
+          >
+            {t("cancel")}
+          </Button>
+          {canConfirm && (
+            <Button
+              onClick={handleDeleteQuinipolo}
+              color="error"
+              variant="contained"
+              fullWidth
+              sx={{ fontWeight: "bold" }}
+            >
+              {t("confirmDelete")}
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

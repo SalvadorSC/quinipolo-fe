@@ -1,4 +1,15 @@
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
+import { supabase } from "../../lib/supabaseClient";
+import { apiGet } from "../../utils/apiUtils";
+import { useNavigate } from "react-router-dom";
 
 // Define a type for Leagues
 
@@ -16,20 +27,22 @@ export type UserDataType = {
   leagues: Leagues[];
   quinipolosToAnswer: any[];
   userId: string;
-  moderatedLeagues: string[];
+  userLeagues: Array<{ league_id: string; role: string }>;
   emailAddress: string;
   username: string;
   hasBeenChecked: boolean;
-  isRegistered: boolean;
   stripeCustomerId?: string;
   isPro?: boolean;
   productId?: string;
+  isAuthenticated: boolean;
 };
 
 // Define a type for the context value
 type UserContextType = {
   userData: UserDataType;
   updateUser: (newData: any) => void;
+  signOut: () => Promise<void>;
+  refreshUserData: () => Promise<void>;
 };
 
 // Create a context with a default value
@@ -47,22 +60,133 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     leagues: [],
     quinipolosToAnswer: [],
     userId: localStorage.getItem("userId") ?? "",
-    moderatedLeagues: [],
+    userLeagues: [],
     emailAddress: "",
     username: localStorage.getItem("username") ?? "",
     hasBeenChecked: false,
-    isRegistered: false,
+    isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
   });
 
-  const updateUser = (newData: any) => {
-    localStorage.setItem("userId", newData.userId);
-    localStorage.setItem("username", newData.username);
-    localStorage.setItem("emailAddress", newData.emailAddress);
-    setUserData({ ...userData, ...newData });
-  };
+  const updateUser = useCallback((newData: Partial<UserDataType>) => {
+    setUserData((prevData) => {
+      const merged = { ...prevData, ...newData };
+      // Only update if something actually changed
+      const changed = Object.keys(newData).some(
+        (key) =>
+          merged[key as keyof UserDataType] !==
+          prevData[key as keyof UserDataType]
+      );
+      if (changed) {
+        // Optionally update localStorage for specific fields
+        if (newData.userId) localStorage.setItem("userId", newData.userId);
+        if (newData.username)
+          localStorage.setItem("username", newData.username);
+        if (newData.emailAddress)
+          localStorage.setItem("emailAddress", newData.emailAddress);
+        return merged;
+      }
+      return prevData;
+    });
+  }, []);
+
+  const signOut = useCallback(async () => {
+    try {
+      await supabase.auth.signOut();
+      // Clear user data
+      setUserData({
+        role: "",
+        leagues: [],
+        quinipolosToAnswer: [],
+        userId: "",
+        userLeagues: [],
+        emailAddress: "",
+        username: "",
+        hasBeenChecked: false,
+        isAuthenticated: false,
+      });
+      // Clear localStorage
+      // move the user to the home page
+      window.location.href = "/";
+      localStorage.removeItem("userId");
+      localStorage.removeItem("username");
+      localStorage.removeItem("emailAddress");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  }, []);
+
+  // Function to manually refresh user data
+  const refreshUserData = useCallback(async () => {
+    if (userData.isAuthenticated && userData.userId) {
+      try {
+        const profile = await apiGet<UserDataType>("/api/users/me/profile");
+
+        // Sort leagues to put global league first
+        const leagues = profile.leagues || [];
+        leagues.sort((a, b) =>
+          a.leagueId === "global" ? -1 : b.leagueId === "global" ? 1 : 0
+        );
+
+        updateUser({
+          ...profile,
+          leagues,
+          hasBeenChecked: true,
+        });
+      } catch (error: any) {
+        console.error("Error refreshing user profile:", error);
+        // If it's an authentication error, clear the session
+        if (error.response?.status === 401) {
+          await signOut();
+        }
+      }
+    }
+  }, [userData.isAuthenticated, userData.userId, updateUser, signOut]);
+
+  // Fetch user profile data on mount if authenticated
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (
+        userData.isAuthenticated &&
+        userData.userId &&
+        !userData.hasBeenChecked
+      ) {
+        try {
+          const profile = await apiGet<UserDataType>("/api/users/me/profile");
+
+          // Sort leagues to put global league first
+          const leagues = profile.leagues || [];
+          leagues.sort((a, b) =>
+            a.leagueId === "global" ? -1 : b.leagueId === "global" ? 1 : 0
+          );
+
+          updateUser({
+            ...profile,
+            leagues,
+            hasBeenChecked: true,
+          });
+        } catch (error: any) {
+          console.error("Error fetching user profile on page reload:", error);
+          // If it's an authentication error, clear the session
+          if (error.response?.status === 401) {
+            await signOut();
+          }
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, [
+    userData.isAuthenticated,
+    userData.userId,
+    userData.hasBeenChecked,
+    updateUser,
+    signOut,
+  ]);
 
   return (
-    <UserContext.Provider value={{ userData, updateUser }}>
+    <UserContext.Provider
+      value={{ userData, updateUser, signOut, refreshUserData }}
+    >
       {children}
     </UserContext.Provider>
   );
@@ -76,3 +200,6 @@ export const useUser = () => {
   }
   return context;
 };
+
+// Alias for backward compatibility
+export const useUserData = useUser;

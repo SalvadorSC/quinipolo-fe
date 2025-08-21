@@ -4,7 +4,7 @@ import { Paper, Button } from "@mui/material";
 import style from "../QuinipoloSuccess/QuinipoloSuccess.module.scss";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import Leaderboard from "../../Components/Leaderboard/Leaderboard";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 export type Result = {
   username: string;
@@ -65,16 +65,19 @@ const CorrectionSuccess = () => {
       month: "numeric",
       day: "numeric",
     });
-    let message = `*${t('resultsTitle', { n: results[0]?.nQuinipolosParticipated, date: formattedDate })}*\n\n`;
+    let message = `*${t("resultsTitle", {
+      n: results[0]?.nQuinipolosParticipated,
+      date: formattedDate,
+    })}*\n\n`;
 
     // Points Earned Distribution
-    message += `*${t('pointsEarnedThisQuinipolo')}*\n`;
+    message += `*${t("pointsEarnedThisQuinipolo")}*\n`;
     for (const [points, usernames] of sorted_points_earned) {
       message += `- ${usernames.join(", ")}: *${points}p*\n`;
     }
 
     // Total Points Distribution (Leaderboard)
-    message += `\n*${t('leaderboardTitle')}*\n`;
+    message += `\n*${t("leaderboardTitle")}*\n`;
     let position = 1; // To keep track of the current position
     for (const [points, usernames] of sorted_total_points) {
       let prefix = `${position}.-`;
@@ -92,18 +95,20 @@ const CorrectionSuccess = () => {
         (result) => result.correct15thGame && result.pointsEarned === 15
       )
     ) {
-      message += `\n *${t('quinipoloWinners')}:* \n`;
+      message += `\n *${t("quinipoloWinners")}:* \n`;
       results.forEach((result) => {
+        console.log(result.pointsEarned);
         if (result.correct15thGame && result.pointsEarned === 15) {
-          message += `- ${result.username}: ${result.totalPoints}p *(+${result.pointsEarned})* 🌟\n`;
+          message += `- ${result.username}: ${result.totalPoints}p *${
+            result.pointsEarned > 0 ? "+" : ""
+          }${result.pointsEarned}* 🌟\n`;
         }
       });
     } else {
-      message += `\n ${t('noWinner')} 😢\n`;
+      message += `\n ${t("noWinner")} 😢\n`;
     }
 
-    // Add additional information if necessary
-    message += `\n${t('thanksForParticipating')}\n`;
+    message += `\n${t("thanksForParticipating")}\n`;
     return message;
   };
 
@@ -113,14 +118,14 @@ const CorrectionSuccess = () => {
       .writeText(messageToShare)
       .then(() => {
         setFeedback({
-          message: t('messageCopied'),
+          message: t("messageCopied"),
           severity: "success",
           open: true,
         });
       })
       .catch((err) => {
         setFeedback({
-          message: t('errorCopyingMessage'),
+          message: t("errorCopyingMessage"),
           severity: "error",
           open: true,
         });
@@ -142,20 +147,16 @@ const CorrectionSuccess = () => {
             borderRadius: results.length > 0 ? "10px 10px 0 0" : null,
           }}
         >
-          <h2>{t('quinipoloCorrectedSuccess')}</h2>
+          <h2>{t("quinipoloCorrectedSuccess")}</h2>
 
           <p
             className={style.copyCorrection}
             style={results.length > 0 ? {} : { marginTop: 40 }}
           >
-            {results.length > 0
-              ? t('resultsTableInfo')
-              : t('noOneAnswered')}
+            {results.length > 0 ? t("resultsTableInfo") : t("noOneAnswered")}
           </p>
           {results.length > 0 ? null : (
-            <p className={style.copyCorrection}>
-              {t('communicateWell')}
-            </p>
+            <p className={style.copyCorrection}>{t("communicateWell")}</p>
           )}
         </Paper>
         {results.length > 0 ? (
@@ -175,13 +176,13 @@ const CorrectionSuccess = () => {
           marginTop: "20px",
         }}
       >
-        <p className={style.reminder}>{t('dontForgetToShare')}</p>
+        <p className={style.reminder}>{t("dontForgetToShare")}</p>
         <Button
           style={{ marginTop: 16 }}
           variant="contained"
           onClick={copyMessageToClipboard}
         >
-          {t('copyMessage')}
+          {t("copyMessage")}
         </Button>
         <Button
           variant="contained"
@@ -194,7 +195,7 @@ const CorrectionSuccess = () => {
             style={{ color: "white", textDecoration: "none" }}
             rel="noopener noreferrer"
           >
-            {t('shareOnWhatsApp')}
+            {t("shareOnWhatsApp")}
           </a>
         </Button>
         <Button
@@ -205,10 +206,9 @@ const CorrectionSuccess = () => {
           className={style.returnButton}
           style={{ marginTop: 16 }}
         >
-          {t('returnToMainMenu')}
+          {t("returnToMainMenu")}
         </Button>
       </Paper>
-      {/* Additional component content... */}
     </div>
   );
 };

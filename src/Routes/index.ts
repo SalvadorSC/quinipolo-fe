@@ -1,1 +1,18 @@
+export { default as Landing } from "./Landing/Landing";
 export * from "./Landing";
+
+export { default as AnswersForm } from "./AnswersForm/AnswersForm";
+export { default as CorrectionSuccess } from "./CorrectionSuccess/CorrectionSuccess";
+export { default as CreateLeague } from "./CreateLeague/CreateLeague";
+export { default as Dashboard } from "./Dashboard/Dashboard";
+export { default as LeagueDashboard } from "./LeagueDashboard/LeagueDashboard";
+export { default as LeagueList } from "./LeagueList/LeagueList";
+export { default as LeagueSuccess } from "./LeagueSuccess/LeagueSuccess";
+export { default as LoginForm } from "./LoginForm/LoginForm";
+export { default as NewLeague } from "./NewLeague/NewLeague";
+export { default as QuinipoloSuccess } from "./QuinipoloSuccess/QuinipoloSuccess";
+export { default as ResetPassword } from "./ResetPassword/ResetPassword";
+export { default as SignUpForm } from "./SignUpForm/SignUpForm";
+export { default as EmailConfirmation } from "./EmailConfirmation/EmailConfirmation";
+export { default as SurveyForm } from "./SurveyForm/SurveyForm";
+export { default as Profile } from "./Profile/Profile";

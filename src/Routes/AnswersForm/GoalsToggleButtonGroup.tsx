@@ -11,6 +11,7 @@ interface GoalsToggleButtonGroupProps {
   onChange: (event: React.MouseEvent<HTMLElement>, newValue: string) => void;
   seeUserAnswersModeOn: string | null;
   quinipoloHasBeenCorrected: boolean;
+  disabled?: boolean;
 }
 
 const GoalsToggleButtonGroup: React.FC<GoalsToggleButtonGroupProps> = ({
@@ -22,6 +23,7 @@ const GoalsToggleButtonGroup: React.FC<GoalsToggleButtonGroupProps> = ({
   onChange,
   seeUserAnswersModeOn,
   quinipoloHasBeenCorrected,
+  disabled = false,
 }) => {
   const values =
     matchType === "waterpolo"
@@ -30,28 +32,43 @@ const GoalsToggleButtonGroup: React.FC<GoalsToggleButtonGroupProps> = ({
 
   const getButtonClassName = (value: string) => {
     if (!seeUserAnswersModeOn || !quinipoloHasBeenCorrected) return "";
-    else if (correctGoals === value) return style.correctAnswer;
-    else if (goals === value) return style.answerIsWrong;
+
+    // Extract the goal value from the button value
+    const goalValue = value.split("__")[0];
+
+    // Determine the styling based on whether we're showing user answers and have corrections
+    // Extract the goal value from the correct answer (remove team suffix if present)
+    const correctGoalValue = correctGoals?.split("__")[0] || "";
+
+    if (correctGoalValue === goalValue) {
+      // This is the correct answer - always show in green
+      return style.correctAnswer;
+    } else if (goals === goalValue && goals !== correctGoalValue) {
+      // This is the user's answer and it's wrong - show in red
+      return style.answerIsWrong;
+    }
+
     return "";
   };
 
   return (
     <div>
-      <p>Gols {teamName}:</p>
+      <p>Goals {teamName}:</p>
       <ToggleButtonGroup
         color="primary"
-        value={goals}
+        value={goals ? `${goals}__${teamType}` : ""}
         exclusive
         onChange={onChange}
         aria-label="Match winner"
+        disabled={disabled}
       >
-        <ToggleButton value={`-__${teamType}`}>
+        <ToggleButton value={`-__${teamType}`} disabled={disabled}>
           <span className={getButtonClassName(`-__${teamType}`)}>-</span>
         </ToggleButton>
-        <ToggleButton value={values[1]}>
+        <ToggleButton value={values[1]} disabled={disabled}>
           <span className={getButtonClassName(values[1])}>{values[0]} </span>
         </ToggleButton>
-        <ToggleButton value={`+__${teamType}`}>
+        <ToggleButton value={`+__${teamType}`} disabled={disabled}>
           <span className={getButtonClassName(`+__${teamType}`)}>+</span>
         </ToggleButton>
       </ToggleButtonGroup>

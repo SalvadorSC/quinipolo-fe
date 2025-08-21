@@ -1,25 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { CircularProgress, Paper, Stack } from "@mui/material";
+import { CircularProgress, Paper, Stack, Box } from "@mui/material";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { LoadingButton } from "@mui/lab";
 import styles from "./LeagueDashboard.module.scss";
 import QuinipolosToAnswer from "../../Components/QuinipolosToAnswer/QuinipolosToAnswer";
-import { useUser as useClerkUserData } from "@clerk/clerk-react";
 import { useUser } from "../../Context/UserContext/UserContext";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
-import { apiGet, apiPost } from "../../utils/apiUtils";
+import { apiGet, apiPost, apiPut } from "../../utils/apiUtils";
 import Leaderboard from "../../Components/Leaderboard/Leaderboard";
 import Stats from "../../Components/Stats/Stats";
 import RequestsTable from "../../Components/RequestsTable/RequestsTable";
+import LeagueInfo from "../../Components/LeagueInfo/LeagueInfo";
+import LeagueEditModal from "../../Components/LeagueEditModal/LeagueEditModal";
+import ModeratorManagementModal from "../../Components/ModeratorManagementModal/ModeratorManagementModal";
 import { Tabs, TabsProps } from "antd";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 export type LeaguesTypes = {
   quinipolosToAnswer: any[];
   leaguesToCorrect: any[];
   moderatorArray: string[];
-  leagueName: string;
+  league_name: string;
   isPrivate: boolean;
+  id: string;
+  created_at?: string;
+  created_by?: string;
+  creator?: {
+    username: string;
+    full_name?: string;
+  };
+  description?: string;
   moderatorPetitions: {
     userId: string;
     username: string;
@@ -35,8 +46,9 @@ export type LeaguesTypes = {
     status: "pending" | "accepted" | "rejected" | "cancelled";
   }[];
   participants: {
+    user_id: string;
     username: string;
-    puntos: number;
+    role: string;
   }[];
 };
 
@@ -61,21 +73,25 @@ const LeagueDashboard = () => {
     quinipolosToAnswer: [],
     leaguesToCorrect: [],
     moderatorArray: [],
-    leagueName: "",
+    league_name: "",
+    id: "",
     moderatorPetitions: [],
     participantPetitions: [],
     participants: [],
     isPrivate: false,
   });
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
-  const [isUserModeratorInThisLeague, setIsUserModeratorInThisLeague] =
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isSavingLeague, setIsSavingLeague] = useState<boolean>(false);
+  const [isModeratorModalOpen, setIsModeratorModalOpen] =
     useState<boolean>(false);
+  const [isSavingModerators, setIsSavingModerators] = useState<boolean>(false);
+  // Remove isUserModeratorInThisLeague state
   const queryParams = new URLSearchParams(window.location.search);
   const leagueId = queryParams.get("id");
   const { setFeedback } = useFeedback();
   const { t } = useTranslation();
 
-  const { isSignedIn } = useClerkUserData();
   const { userData } = useUser();
 
   const MAX_RETRIES = 5;
@@ -88,23 +104,28 @@ const LeagueDashboard = () => {
           quinipolosToAnswer: data.quinipolosToAnswer,
           leaguesToCorrect: data.leaguesToCorrect,
           moderatorArray: data.moderatorArray,
-          leagueName: data.leagueName,
+          league_name: data.league_name,
+          id: data.id,
+          created_at: data.created_at,
+          created_by: data.created_by,
+          creator: data.creator,
+          description: data.description,
           moderatorPetitions: data.moderatorPetitions,
           participantPetitions: data.participantPetitions,
           participants: data.participants,
-          isPrivate: data.isPrivate,
+          isPrivate:
+            data.isPrivate !== undefined
+              ? data.isPrivate
+              : data.is_private !== undefined
+              ? data.is_private
+              : false,
         });
-        if (userData.username !== "") {
-          setIsUserModeratorInThisLeague(
-            data.moderatorArray?.includes(userData.username)
-          );
-        }
         setLoading(false);
       })
       .catch((error) => {
         console.error(error);
         setFeedback({
-          message: t('errorLoadingLeagueData'),
+          message: t("errorLoadingLeagueData"),
           severity: "error",
           open: true,
         });
@@ -115,13 +136,6 @@ const LeagueDashboard = () => {
   const getLeagueLeaderBoardData = async (retries = 0) => {
     apiGet(`/api/leagues/${leagueId}/leaderboard`)
       .then((data: any) => {
-        /* if (
-          (data.participantsLeaderboard.length === 0 &&
-            retries < MAX_RETRIES) ||
-          leaderboardData.length === 0
-        ) {
-          setTimeout(() => getLeagueLeaderBoardData(retries + 1), RETRY_DELAY);
-        } else { */
         const transformedLeaderboardData = data.participantsLeaderboard.map(
           (score: LeaderboardScore) => {
             return {
@@ -132,17 +146,12 @@ const LeagueDashboard = () => {
             };
           }
         );
-
-        console.log(transformedLeaderboardData, data.participantsLeaderboard);
-
         const sortedScores = transformedLeaderboardData.sort(
           (a: TransformedLeaderboardScore, b: TransformedLeaderboardScore) =>
             b.totalPoints - a.totalPoints
         );
-
         setLeaderboardData(sortedScores);
         setLoading(false);
-        /* } */
       })
       .catch((error) => {
         console.error(error);
@@ -155,21 +164,39 @@ const LeagueDashboard = () => {
       });
   };
 
-  useEffect(() => {
-    const fetchLeagueData = async () => {
-      setLoading(true);
-      getLeagueData();
-      getLeagueLeaderBoardData();
-    };
+  const hasFetched = useRef(false);
 
-    // Redirect to sign-in if not authenticated
-    if (isSignedIn === false) {
-      navigate("/sign-in");
-    } else {
-      fetchLeagueData();
+  useEffect(() => {
+    if (!userData || userData.username === "" || hasFetched.current) {
+      if (!userData || userData.username === "") navigate("/sign-in");
+      return;
     }
+    hasFetched.current = true;
+    setLoading(true);
+    getLeagueData();
+    getLeagueLeaderBoardData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [userData.username]);
+
+  // Derived value for moderator status
+  const isUserModeratorInThisLeague = !!leagueData.participants.find(
+    (p) =>
+      p.username === userData.username &&
+      p.role &&
+      p.role.toLowerCase() === "moderator"
+  );
+
+  // Derived value for creator status
+  const isUserCreator = leagueData.created_by === userData.userId;
+
+  // Debug: Find the specific participant entry for current user
+  const currentUserParticipant = leagueData.participants.find(
+    (p) => p.username === userData.username
+  );
+  console.log(
+    "🔍 DEBUG: Current user participant entry:",
+    currentUserParticipant
+  );
 
   const handleSolicitarPermisos = () => {
     setLoading(true);
@@ -180,7 +207,7 @@ const LeagueDashboard = () => {
     })
       .then(() => {
         setFeedback({
-          message: t('success'),
+          message: t("success"),
           severity: "success",
           open: true,
         });
@@ -189,7 +216,7 @@ const LeagueDashboard = () => {
       .catch((error) => {
         console.error(error);
         setFeedback({
-          message: t('error'),
+          message: t("error"),
           severity: "error",
           open: true,
         });
@@ -202,26 +229,118 @@ const LeagueDashboard = () => {
       handleSolicitarPermisos();
       return;
     }
+
     // Logic to handle creation of new Quinipolo
     navigate(`/crear-quinipolo?leagueId=${leagueId}`);
   };
 
+  const handleOpenEditLeague = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditLeague = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleSaveLeagueEdits = async (data: {
+    leagueName: string;
+    description?: string;
+  }) => {
+    try {
+      setIsSavingLeague(true);
+      await apiPut(`/api/leagues/${leagueId}`, { ...data });
+      setLeagueData((prev) => ({
+        ...prev,
+        league_name: data.leagueName || prev.league_name,
+        description:
+          data.description !== undefined ? data.description : prev.description,
+      }));
+      setFeedback({ message: t("success"), severity: "success", open: true });
+      setIsEditModalOpen(false);
+    } catch (e) {
+      console.error(e);
+      setFeedback({ message: t("error"), severity: "error", open: true });
+    } finally {
+      setIsSavingLeague(false);
+    }
+  };
+
+  const handleOpenManageModerators = () => {
+    setIsModeratorModalOpen(true);
+  };
+
+  const handleCloseManageModerators = () => {
+    setIsModeratorModalOpen(false);
+  };
+
+  const handleSaveModerators = async (moderatorIds: string[]) => {
+    try {
+      setIsSavingModerators(true);
+      // TODO: Implement API call to update moderator roles
+      // For now, just update the local state optimistically
+      setLeagueData((prev) => ({
+        ...prev,
+        participants: prev.participants.map((p) => ({
+          ...p,
+          role: moderatorIds.includes(p.user_id) ? "moderator" : "participant",
+        })),
+      }));
+      setFeedback({ message: t("success"), severity: "success", open: true });
+      setIsModeratorModalOpen(false);
+    } catch (e) {
+      console.error(e);
+      setFeedback({ message: t("error"), severity: "error", open: true });
+    } finally {
+      setIsSavingModerators(false);
+    }
+  };
+
+  const sortedLeaderboardData = useMemo(() => {
+    return leaderboardData
+      .slice()
+      .sort(
+        (a: TransformedLeaderboardScore, b: TransformedLeaderboardScore) =>
+          b.totalPoints - a.totalPoints
+      );
+  }, [leaderboardData]);
+
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: t('points'),
-      children: <Leaderboard sortedResults={leaderboardData} />,
+      label: t("points"),
+      children: <Leaderboard sortedResults={sortedLeaderboardData} />, // use memoized data
     },
     {
       key: "2",
-      label: t('stats'),
+      label: t("stats"),
       children: <Stats results={leaderboardData} />,
+    },
+    {
+      key: "3",
+      label: t("info"),
+      children: (
+        <LeagueInfo
+          leagueData={leagueData}
+          isUserModerator={isUserModeratorInThisLeague}
+          isUserCreator={isUserCreator}
+          onEditLeague={handleOpenEditLeague}
+          onManageModerators={handleOpenManageModerators}
+        />
+      ),
     },
   ];
 
   return (
     <div className={styles.leagueDashboardContainer}>
-      <Paper elevation={3} sx={{ width: "100%", p: 4, borderRadius: "20px" }}>
+      <Paper
+        elevation={3}
+        sx={{
+          width: "100%",
+          p: 4,
+          borderRadius: "20px",
+          marginBottom: "100px",
+        }}
+      >
         {loading ? (
           <CircularProgress />
         ) : (
@@ -232,27 +351,22 @@ const LeagueDashboard = () => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 marginBottom: 20,
+                gap: 12,
               }}
             >
-              <h1 className={styles.leagueTitle}>{leagueData.leagueName}</h1>
-
-              {isUserModeratorInThisLeague ||
-              !leagueData.moderatorPetitions.find(
-                (petition) => petition.username === userData.username
-              ) ? (
-                <span>
+              <h1 className={styles.leagueTitle}>{leagueData.league_name}</h1>
+              {isUserModeratorInThisLeague && (
+                <Box sx={{ display: { xs: "none", md: "block" } }}>
                   <LoadingButton
+                    size="small"
                     variant="contained"
-                    style={{ margin: "20px 0" }}
                     onClick={handleBasicActionButtonClick}
                     loading={!leagueData || loading}
                   >
-                    {isUserModeratorInThisLeague
-                      ? t('createQuinipolo')
-                      : t('edit')}
+                    {t("createQuinipolo")}
                   </LoadingButton>
-                </span>
-              ) : null}
+                </Box>
+              )}
             </div>
 
             <QuinipolosToAnswer
@@ -265,31 +379,105 @@ const LeagueDashboard = () => {
             </Stack>
             {isUserModeratorInThisLeague ? (
               <>
-                <h2 className={styles.actionsTitle}>{t('actions')}</h2>
+                <h2 className={styles.actionsTitle}>{t("actions")}</h2>
                 <hr style={{ marginBottom: 16 }} />
-                {leagueData.isPrivate ? (
-                  <RequestsTable
-                    leagueId={leagueId!}
-                    requests={leagueData.participantPetitions.filter(
+                {(() => {
+                  const participantRequests =
+                    leagueData.isPrivate &&
+                    leagueData.participantPetitions?.filter(
                       (petition) => petition.status === "pending"
-                    )}
-                    setLeagueData={setLeagueData}
-                    requestType="participant"
-                  />
-                ) : null}
-                <RequestsTable
-                  leagueId={leagueId!}
-                  requests={leagueData.moderatorPetitions.filter(
-                    (petition) => petition.status === "pending"
-                  )}
-                  setLeagueData={setLeagueData}
-                  requestType="moderator"
-                />
+                    );
+                  const moderatorRequests =
+                    leagueData.moderatorPetitions?.filter(
+                      (petition) => petition.status === "pending"
+                    );
+
+                  if (
+                    (!participantRequests ||
+                      participantRequests.length === 0) &&
+                    (!moderatorRequests || moderatorRequests.length === 0)
+                  ) {
+                    return (
+                      <div className={styles.noActionsToHandle}>
+                        {t("noActionsToHandle")}
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <>
+                      {leagueData.isPrivate &&
+                        participantRequests &&
+                        participantRequests.length > 0 && (
+                          <RequestsTable
+                            leagueId={leagueId!}
+                            requests={participantRequests}
+                            setLeagueData={setLeagueData}
+                            requestType="participant"
+                          />
+                        )}
+                      {moderatorRequests?.length > 0 && (
+                        <RequestsTable
+                          leagueId={leagueId!}
+                          requests={moderatorRequests}
+                          setLeagueData={setLeagueData}
+                          requestType="moderator"
+                        />
+                      )}
+                    </>
+                  );
+                })()}
+                {/* Removed bottom button; sticky CTA handles mobile */}
               </>
             ) : null}
+            {isUserModeratorInThisLeague && (
+              <Box
+                sx={{
+                  position: "sticky",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  pt: 1,
+                  pb: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
+                  mt: 2,
+                  px: 2,
+                  display: { xs: "block", md: "none" },
+                  zIndex: 1,
+                }}
+              >
+                <LoadingButton
+                  fullWidth
+                  variant="contained"
+                  onClick={handleBasicActionButtonClick}
+                  loading={!leagueData || loading}
+                  startIcon={<AddRoundedIcon />}
+                  className={styles.stickyCtaButton}
+                  classes={{
+                    root: `${styles.stickyCtaButton} gradient-primary`,
+                  }}
+                >
+                  {t("createQuinipolo")}
+                </LoadingButton>
+              </Box>
+            )}
           </>
         )}
       </Paper>
+      <LeagueEditModal
+        open={isEditModalOpen}
+        initialName={leagueData.league_name}
+        initialDescription={leagueData.description}
+        isSaving={isSavingLeague}
+        onClose={handleCloseEditLeague}
+        onSave={handleSaveLeagueEdits}
+      />
+      <ModeratorManagementModal
+        open={isModeratorModalOpen}
+        participants={leagueData.participants}
+        creatorId={leagueData.created_by}
+        onClose={handleCloseManageModerators}
+        onSave={handleSaveModerators}
+      />
     </div>
   );
 

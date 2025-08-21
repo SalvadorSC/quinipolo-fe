@@ -1,11 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Alert,
-  Box,
-  Button,
   CircularProgress,
-  Collapse,
   Paper,
   Table,
   TableBody,
@@ -14,7 +10,6 @@ import {
   TableHead,
   TableRow,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import styles from "./LeagueList.module.scss";
@@ -24,15 +19,19 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { apiGet, apiPost, apiPut } from "../../utils/apiUtils";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import LockIcon from "@mui/icons-material/Lock";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 type LeaguesTypes = {
   quinipolosToAnswer: any[];
   leaguesToCorrect: any[];
   moderatorArray: string[];
-  leagueName: string;
-  leagueId: string;
-  participants: string[];
+  league_name: string;
+  id: string;
+  participants: {
+    user_id: string;
+    username: string;
+    role: string;
+  }[];
   isPrivate: boolean;
   participantPetitions: {
     userId: string;
@@ -52,10 +51,28 @@ const LeagueList = () => {
 
   const { userData } = useUser();
 
+  // Helper function to check if user is in a league
+  const isUserInLeague = (league: LeaguesTypes) => {
+    console.log(
+      league.participants.find(
+        (participant) => participant.username === userData.username
+      )
+    );
+    return league.participants.some(
+      (participant) => participant.username === userData.username
+    );
+  };
+
+  // Helper function to check if user has a pending petition
+  const hasPendingPetition = (league: LeaguesTypes) => {
+    return league.participantPetitions.some(
+      (petition) => petition.username === userData.username
+    );
+  };
+
   const participantIsInMoreThan2Leagues =
-    leagueListData.filter((league) =>
-      league.participants.includes(userData.username)
-    ).length > 2 && userData.role === "user";
+    leagueListData.filter((league) => isUserInLeague(league)).length > 2 &&
+    userData.role === "user";
 
   const fetchLeagueListData = useCallback(async () => {
     // Fetch data logic
@@ -76,11 +93,11 @@ const LeagueList = () => {
 
   const handleJoinLeague = (index: number) => {
     // Logic to handle joining a league
-    if (leagueListData?.[index]?.participants.includes(userData.username)) {
-      navigate("/league-dashboard?id=" + leagueListData[index].leagueId);
+    if (leagueListData?.[index] && isUserInLeague(leagueListData[index])) {
+      navigate("/league-dashboard?id=" + leagueListData[index].id);
     } else if (leagueListData?.[index]?.isPrivate) {
       apiPost(
-        `/api/leagues/${leagueListData?.[index].leagueId}/request-participant`,
+        `/api/leagues/${leagueListData?.[index].id}/request-participant`,
         {
           userId: userData.userId,
           username: userData.username,
@@ -89,7 +106,7 @@ const LeagueList = () => {
         .then((data: any) => {
           setLeagueListData(data);
           setFeedback({
-            message: "Solicitud enviada",
+            message: t("requestSent"),
             severity: "success",
             open: true,
           });
@@ -97,24 +114,28 @@ const LeagueList = () => {
         .catch((error) => {
           console.log(error);
           setFeedback({
-            message: "Error al unirse a la liga",
+            message: t("errorJoiningLeague"),
             severity: "error",
             open: true,
           });
         });
     } else {
-      apiPut(`/api/leagues/${leagueListData[index].leagueId}/join`, {
-        leagueId: leagueListData[index].leagueId,
+      apiPut(`/api/leagues/${leagueListData[index].id}/join`, {
+        leagueId: leagueListData[index].id,
         username: userData.username,
       })
         .then((data) => {
           setLeagueListData((prevData) => {
             const newData = [...prevData];
-            newData[index].participants.push(userData.username);
+            newData[index].participants.push({
+              user_id: userData.userId,
+              username: userData.username,
+              role: "user",
+            });
             return newData;
           });
           setFeedback({
-            message: "Te has unido a la liga",
+            message: t("joinedLeague"),
             severity: "success",
             open: true,
           });
@@ -123,7 +144,7 @@ const LeagueList = () => {
         .catch((error) => {
           console.log(error);
           setFeedback({
-            message: "Error al unirse a la liga",
+            message: t("errorJoiningLeague"),
             severity: "error",
             open: true,
           });
@@ -138,48 +159,26 @@ const LeagueList = () => {
 
   return (
     <div className={styles.leagueListContainer}>
-      <Paper elevation={3} sx={{ width: "100%", p: 4, borderRadius: "20px" }}>
-        <h1 style={{ marginBottom: 20 }}>{t('leagues')}</h1>
-        {/* {participantIsInMoreThan2Leagues ? (
-          <Collapse in={open}>
-            <Alert
-              severity={"warning"}
-              onClick={() => {
-                setOpen(false);
-              }}
-            >
-              <Box
-                display={{ sm: "flex", md: "flex" }}
-                justifyContent={"center"}
-                alignItems={"center"}
-              >
-                <Typography variant="body1">
-                  Debes ser usuario <b>PRO</b> o <b>Moderador</b> para
-                  pertenecer a más de 2 ligas
-                </Typography>
-                <Button
-                  startIcon={<WorkSpacePremiumIcon />}
-                  endIcon={<WorkSpacePremiumIcon />}
-                  variant="contained"
-                  color="warning"
-                  sx={{ ml: { sm: 0, md: 2 }, mt: { xs: 2, sm: 2, md: 0 } }}
-                  size="small"
-                  onClick={() => navigate("/subscribe")}
-                >
-                  Hacerse PRO
-                </Button>
-              </Box>
-            </Alert>
-          </Collapse>
-        ) : null} */}
+      <Paper
+        elevation={3}
+        sx={{
+          width: "100%",
+          p: 2,
+          pt: 4,
+          pb: 4,
+          borderRadius: "20px",
+          marginBottom: "100px",
+        }}
+      >
+        <h1 style={{ marginBottom: 20 }}>{t("leagues")}</h1>
         {loading || leagueListData.length === 0 ? (
           <CircularProgress sx={{ m: 4 }} />
         ) : (
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{ boxShadow: "none" }}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>{t('name')}</TableCell>
+                  <TableCell>{t("name")}</TableCell>
                   <TableCell align="center">
                     <EmojiPeopleIcon />
                   </TableCell>
@@ -194,13 +193,13 @@ const LeagueList = () => {
               <TableBody>
                 {leagueListData?.map((league) => (
                   <TableRow
-                    key={league.leagueName}
+                    key={league.league_name}
                     sx={{
                       "&:last-child td, &:last-child th": { border: 0 },
                     }}
                   >
                     <TableCell component="th" scope="row">
-                      {league.leagueName}
+                      {league.league_name}
                     </TableCell>
                     <TableCell
                       style={{ paddingLeft: 0, paddingRight: 0 }}
@@ -209,39 +208,32 @@ const LeagueList = () => {
                       {league.participants.length}
                     </TableCell>
                     <TableCell align="left">
-                      {league.isPrivate ? t('private') : t('public')}
+                      {league.isPrivate ? t("private") : t("public")}
                     </TableCell>
                     <TableCell align="center">
                       <Tooltip
                         title={
-                          league.participants.includes(userData.username)
-                            ? t('goToLeague')
-                            : league.participantPetitions.find((petition) => {
-                                return petition.username === userData.username;
-                              })
-                            ? t('pendingRequest')
-                            : t('joinLeague')
+                          isUserInLeague(league)
+                            ? t("goToLeague")
+                            : hasPendingPetition(league)
+                            ? t("pendingRequest")
+                            : t("joinLeague")
                         }
                       >
                         <LoadingButton
                           variant="contained"
                           style={{ width: "80px" }}
-                          onClick={() => handleJoinLeague(leagueListData?.indexOf(league))}
+                          className={`gradient-primary`}
+                          onClick={() =>
+                            handleJoinLeague(leagueListData?.indexOf(league))
+                          }
                           loading={!leagueListData}
-                          /* disabled={
-                            !league.participants.includes(
-                              userData.username
-                            ) &&
-                            participantIsInMoreThan2Leagues
-                          } */
                         >
-                          {league.participants.includes(userData.username)
-                            ? t('go')
-                            : league.participantPetitions.find((petition) => {
-                                return petition.username === userData.username;
-                              })
-                            ? t('pending')
-                            : t('join')}
+                          {isUserInLeague(league)
+                            ? t("go")
+                            : hasPendingPetition(league)
+                            ? t("pending")
+                            : t("join")}
                         </LoadingButton>
                       </Tooltip>
                     </TableCell>

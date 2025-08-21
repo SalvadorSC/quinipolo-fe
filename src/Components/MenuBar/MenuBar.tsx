@@ -3,8 +3,7 @@ import { styled } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import logoNew from "../../assets/LOGOS/QUINIPOLO_NEW_LOGO.svg";
-import { UserButton, useUser } from "@clerk/clerk-react";
-import { checkUser } from "../../utils/checkUser";
+
 import {
   UserDataType,
   useUser as useUserData,
@@ -21,25 +20,24 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import { Select } from "antd";
+import { Divider, Select } from "antd";
 import MenuIcon from "@mui/icons-material/Menu";
 import { apiGet } from "../../utils/apiUtils";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { useTheme } from "../../Context/ThemeContext/ThemeContext";
-import { dark } from "@clerk/themes";
+import LanguagePicker from "../LanguagePicker/LanguagePicker";
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import { useTranslation } from "react-i18next";
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 
 const drawerWidth = 240;
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
-
-const customerPortalLink =
-  process.env.REACT_APP_ENV === "development"
-    ? "https://billing.stripe.com/p/login/test_14kbLs7HL4fE8mI4gg"
-    : process.env.REACT_APP_CUSTOMER_PORTAL_LINK;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -72,53 +70,53 @@ const LANGUAGES = [
 
 export const MenuBar = () => {
   const navigate = useNavigate();
-  const { user, isSignedIn } = useUser();
+  const { updateUser: updateUserData, userData, signOut } = useUserData();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
-  const { updateUser: updateUserData, userData } = useUserData();
   const [open, setOpen] = useState(false);
   const { t, i18n } = useTranslation();
   const isMobile = useMediaQuery("(max-width:600px)");
 
-  const getUserData = async (user: any) => {
-    const data = await apiGet<UserDataType>(
-      `/api/users/user/data/${user.username}`
-    );
-    updateUserData({
-      role: data.role,
-      leagues: data.leagues,
-      quinipolosToAnswer: data.quinipolosToAnswer,
-      moderatedLeagues: data.moderatedLeagues,
-      username: user?.username,
-      emailAddress: user.primaryEmailAddress?.emailAddress,
-      userId: data.userId,
-      hasBeenChecked: true,
-    });
+  const getUserData = async (username: string) => {
+    try {
+      const data = await apiGet<UserDataType>(
+        `/api/users/user/data/${username}`
+      );
+      updateUserData({
+        role: data.role,
+        leagues: data.leagues,
+        quinipolosToAnswer: data.quinipolosToAnswer,
+        userLeagues: data.userLeagues,
+        username: data.username,
+        emailAddress: data.emailAddress,
+        userId: data.userId,
+        hasBeenChecked: true,
+      });
+    } catch (error: any) {
+      console.error("Error fetching user data:", error);
+      if (error.response?.status === 401) {
+        await signOut();
+        navigate("/sign-in");
+      }
+    }
   };
 
   useEffect(() => {
     const fetchData = async () => {
       if (
-        user?.primaryEmailAddress?.emailAddress &&
-        user?.username &&
-        user?.fullName
+        userData?.emailAddress &&
+        userData?.username &&
+        userData.isAuthenticated
       ) {
-        const isaUserRegistered = await checkUser({
-          email: user.primaryEmailAddress?.emailAddress,
-          username: user.username,
-          fullName: user.fullName,
-          participateGlobalQuinipolo: true,
-        });
-        updateUserData({ isRegistered: isaUserRegistered });
-        getUserData(user);
+        getUserData(userData.username);
+        console.log("userData", userData);
       }
     };
-    // if path is dashboard
     if (!userData.hasBeenChecked || location.pathname === "/dashboard") {
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  }, [location.pathname, userData.isAuthenticated, userData.username]);
 
   const logoStyle = {
     width: "140px",
@@ -130,33 +128,17 @@ export const MenuBar = () => {
     setOpen(newOpen);
   };
 
-  const subscribeButton = () => {
-    return (
-      <>
-        {isSignedIn &&
-        userData.emailAddress === "sanchezcampossalvador@gmail.com" &&
-        userData.stripeCustomerId !== undefined ? (
-          <a
-            href={
-              customerPortalLink + "?prefilled_email=" + userData.emailAddress
-            }
-          >
-            <Button sx={{ mt: 4 }} variant="contained" color="primary">
-              Gestionar Suscripción
-            </Button>
-          </a>
-        ) : isSignedIn &&
-          userData.emailAddress === "sanchezcampossalvador@gmail.com" ? (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => navigate("/subscribe")}
-          >
-            {t('subscribe')}
-          </Button>
-        ) : null}
-      </>
-    );
+  // Replace isSignedIn with your own logic
+  const isSignedIn = userData.isAuthenticated;
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate("/sign-in");
+      setOpen(false);
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   // Language picker component
@@ -173,7 +155,7 @@ export const MenuBar = () => {
         marginRight: inDrawer ? 0 : 8,
         display: inDrawer ? "block" : isMobile ? "none" : "inline-block",
       }}
-      getPopupContainer={trigger => document.body}
+      getPopupContainer={(trigger) => document.body}
       dropdownStyle={{ zIndex: 3000 }}
     />
   );
@@ -227,38 +209,66 @@ export const MenuBar = () => {
                 onClick={() => navigate("/dashboard")}
               />
               <Box sx={{ display: { xs: "none", lg: "flex" } }}>
-                {subscribeButton()}
-                <IconButton onClick={toggleTheme}>
-                  {theme === "light" ? <DarkModeIcon /> : <LightModeIcon />}
-                </IconButton>
-                <UserButton
-                  appearance={{
-                    baseTheme: theme === "light" ? undefined : dark,
-                  }}
-                  showName
-                />
+                <ThemeToggle mode="icon" />
                 {!isMobile && (
-                  <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flex: 1 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flex: 1,
+                    }}
+                  >
                     <LanguagePicker />
                   </Box>
+                )}
+                {isSignedIn ? (
+                  <>
+                    <Button
+                      variant="text"
+                      onClick={() => navigate("/profile")}
+                      sx={{ ml: 2 }}
+                    >
+                      {t("profile") || "Profile"}
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={handleSignOut}
+                      sx={{ ml: 2 }}
+                    >
+                      {t("signOut")}
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate("/sign-in")}
+                    sx={{ ml: 2 }}
+                  >
+                    {t("signIn")}
+                  </Button>
                 )}
               </Box>
             </Box>
 
             <Box sx={{ display: { sm: "", md: "none" } }}>
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="menu"
-                onClick={() => setOpen(true)}
-                sx={{ ml: 1 }}
-              >
-                <MenuIcon sx={{ color: theme === "light" ? "black" : "white" }} />
-              </IconButton>
+              {isSignedIn && (
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="menu"
+                  onClick={() => setOpen(true)}
+                  sx={{ ml: 1 }}
+                >
+                  <MenuIcon
+                    sx={{ color: theme === "light" ? "black" : "white" }}
+                  />
+                </IconButton>
+              )}
               <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
                 <Box
                   sx={{
-                    minWidth: "60dvw",
+                    minWidth: "70dvw",
                     p: 2,
                     backgroundColor: "background.paper",
                     flexGrow: 1,
@@ -271,30 +281,60 @@ export const MenuBar = () => {
                         justifyContent: "space-between",
                         alignItems: "center",
                         flexDirection: "column",
-                        maxWidth: "160px",
+                        maxWidth: "240px",
                         gap: 10,
                         margin: "0 auto",
                       }}
                     >
-                     
-                      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-around", gap: 1, p: 1, width: "100%" }}>
-                        <IconButton onClick={toggleTheme}>
-                          {theme === "light" ? (
-                            <DarkModeIcon />
-                          ) : (
-                            <LightModeIcon />
-                          )}
-                        </IconButton>
-                        <UserButton
-                          appearance={{
-                            baseTheme: theme === "light" ? undefined : dark,
+                      <List sx={{ width: "100%" }}>
+                        <ListItem
+                          sx={{
+                            display: "flex",
+                            gap: 1,
+                            justifyContent: "space-between",
+                            marginBottom: 2,
                           }}
-                        />
-                      </Box>
-                        {subscribeButton()} <ListItem>
-                        <ListItemText primary={t("language")} />
-                        <LanguagePicker inDrawer />
-                      </ListItem>
+                        >
+                          <LanguagePicker inDrawer />
+                          <ThemeToggle mode="icon" />
+                        </ListItem>
+                        <Divider />
+                        <ListItem
+                          button
+                          onClick={() => {
+                            navigate("/dashboard");
+                            setOpen(false);
+                          }}
+                          sx={{ borderRadius: 2 }}
+                        >
+                          <DashboardOutlinedIcon sx={{ mr: 1 }} />
+                          <ListItemText
+                            primary={t("dashboard") || "Dashboard"}
+                          />
+                        </ListItem>
+                        <ListItem
+                          button
+                          onClick={() => {
+                            navigate("/join-league");
+                            setOpen(false);
+                          }}
+                          sx={{ borderRadius: 2 }}
+                        >
+                          <GroupsOutlinedIcon sx={{ mr: 1 }} />
+                          <ListItemText primary={t("leagues") || "Leagues"} />
+                        </ListItem>
+                        <ListItem
+                          button
+                          onClick={() => {
+                            navigate("/profile");
+                            setOpen(false);
+                          }}
+                          sx={{ borderRadius: 2 }}
+                        >
+                          <AccountCircleOutlinedIcon sx={{ mr: 1 }} />
+                          <ListItemText primary={t("profile") || "Profile"} />
+                        </ListItem>
+                      </List>
                     </div>
                   ) : null}
                 </Box>

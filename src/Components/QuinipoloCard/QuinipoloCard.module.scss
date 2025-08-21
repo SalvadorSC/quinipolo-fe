@@ -115,14 +115,6 @@
   margin-bottom: 0px !important;
 }
 
-.actionButtonCorrect {
-  background: #00b894 !important;
-}
-
-.actionButtonCorrect:hover {
-  background: #00a884 !important;
-}
-
 .actionButtonCorrect:disabled,
 .actionButtonCorrect:disabled:hover {
   color: rgba(0, 0, 0, 0.26) !important;
@@ -131,11 +123,9 @@
 }
 
 .actionButtonCorrect.dark {
-  background: #00b894 !important;
 }
 
 .actionButtonCorrect.dark:hover {
-  background: #00a884 !important;
 }
 
 .actionButtonCorrect.dark:disabled,

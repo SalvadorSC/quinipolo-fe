@@ -3,10 +3,9 @@
 }
 
 .buttonAccept {
-  background-color: #00b894 !important;
+  /* Use mint gradient utility class instead of hardcoded color */
 }
 .buttonAccept:hover {
-  background-color: #00a884 !important;
 }
 .buttonReject {
   margin-left: 16px !important;

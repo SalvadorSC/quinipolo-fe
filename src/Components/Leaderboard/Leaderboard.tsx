@@ -10,17 +10,15 @@ import {
 import React from "react";
 import { Result } from "../../Routes/CorrectionSuccess/CorrectionSuccess";
 import style from "./Leaderboard.module.scss";
-import { useTranslation } from 'react-i18next';
+import LeaderboardHead from "./LeaderboardHead/LeaderboardHead";
 
 const Leaderboard = ({ sortedResults }: { sortedResults: Result[] }) => {
-  const { t } = useTranslation();
-
   return (
     <TableContainer
       sx={{
-        borderRadius: "0 0 10px 10px ",
+        borderRadius: "16px",
       }}
-      component={Paper}
+      // component={Paper}
     >
       <Table
         sx={{
@@ -28,12 +26,7 @@ const Leaderboard = ({ sortedResults }: { sortedResults: Result[] }) => {
         }}
         aria-label="simple table"
       >
-        <TableHead>
-          <TableRow>
-            <TableCell>{t('user')}</TableCell>
-            <TableCell align="right">{t('points')}</TableCell>
-          </TableRow>
-        </TableHead>
+        <LeaderboardHead />
         <TableBody>
           {sortedResults.map((row: Result, i: number) => {
             let position;
@@ -60,11 +53,11 @@ const Leaderboard = ({ sortedResults }: { sortedResults: Result[] }) => {
             }
             return (
               <TableRow
-                key={`${row.username}-${row.totalPoints}`}
+                key={`@${row.username}-${row.totalPoints}`}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {position}. {row.username}
+                  {position}. @{row.username}
                 </TableCell>
                 <TableCell align="right" className={style.pointsCell}>
                   {row.totalPoints}{" "}
@@ -76,7 +69,9 @@ const Leaderboard = ({ sortedResults }: { sortedResults: Result[] }) => {
                           : ""
                       }
                     >
-                      (+{row.pointsEarned})
+                      {row.pointsEarned > 0
+                        ? `(+${row.pointsEarned})`
+                        : `(${row.pointsEarned})`}
                     </span>
                   ) : null}
                 </TableCell>
@@ -89,4 +84,4 @@ const Leaderboard = ({ sortedResults }: { sortedResults: Result[] }) => {
   );
 };
 
-export default Leaderboard;
+export default React.memo(Leaderboard);

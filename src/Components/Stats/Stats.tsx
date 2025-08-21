@@ -4,11 +4,9 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
 } from "@mui/material";
-import React from "react";
-import { useTranslation } from 'react-i18next';
+import LeaderboardHead from "../Leaderboard/LeaderboardHead/LeaderboardHead";
 
 type Result = {
   username: string;
@@ -20,8 +18,6 @@ type Result = {
 };
 
 const Stats = ({ results }: { results: Result[] }) => {
-  const { t } = useTranslation();
-
   // Calculate average points per participation and sort the results
   const sortedResults = results
     .map((row) => ({
@@ -35,9 +31,9 @@ const Stats = ({ results }: { results: Result[] }) => {
   return (
     <TableContainer
       sx={{
-        borderRadius: "0 0 10px 10px ",
+        borderRadius: "16px",
       }}
-      component={Paper}
+      // component={Paper}
     >
       <Table
         sx={{
@@ -45,12 +41,7 @@ const Stats = ({ results }: { results: Result[] }) => {
         }}
         aria-label="simple table"
       >
-        <TableHead>
-          <TableRow>
-            <TableCell>{t('user')}</TableCell>
-            <TableCell align="right">{t('averagePoints')}</TableCell>
-          </TableRow>
-        </TableHead>
+        <LeaderboardHead />
         <TableBody>
           {sortedResults.map((row: Result, i: number) => {
             let position;
@@ -78,11 +69,11 @@ const Stats = ({ results }: { results: Result[] }) => {
             }
             return (
               <TableRow
-                key={`${row.username}-${row.averagePoints}`}
+                key={`@${row.username}-${row.averagePoints}`}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {position}. {row.username} ({row.nQuinipolosParticipated})
+                  {position}. @{row.username} ({row.nQuinipolosParticipated})
                 </TableCell>
                 <TableCell align="right">
                   {row.averagePoints!.toFixed(2)}{" "}

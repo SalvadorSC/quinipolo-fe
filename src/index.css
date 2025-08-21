@@ -13,3 +13,38 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+/* Global gradient utility classes */
+.gradient-primary {
+  background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+}
+
+.gradient-primary-dark {
+  background: linear-gradient(90deg, #90caf9 0%, #42a5f5 100%);
+}
+
+.gradient-success {
+  background: linear-gradient(90deg, #2e7d32 0%, #66bb6a 100%);
+}
+
+.gradient-success-dark {
+  background: linear-gradient(90deg, #81c784 0%, #43a047 100%);
+}
+
+/* Secondary (dark blue) gradients for secondary buttons */
+.gradient-secondary {
+  background: linear-gradient(90deg, #0d47a1 0%, #1565c0 100%);
+}
+
+.gradient-secondary-dark {
+  background: linear-gradient(90deg, #3949ab 0%, #5c6bc0 100%);
+}
+
+/* Mint gradient based on previous green (#00b894) */
+.gradient-mint {
+  background: linear-gradient(90deg, #00b894 0%, #00a884 100%);
+}
+
+.gradient-mint-dark {
+  background: linear-gradient(90deg, #26c6a2 0%, #00b894 100%);
+}

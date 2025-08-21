@@ -1,32 +1,38 @@
 import { Box, Pagination, Tab } from "@mui/material";
 import React, { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { useUser } from "../../Context/UserContext/UserContext";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { apiGet } from "../../utils/apiUtils";
 import Skeleton from "antd/lib/skeleton";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import {
+  filterPendingQuinipolos,
+  filterPreviousQuinipolos,
+  filterAllQuinipolos,
+} from "../../utils/quinipoloFilters";
 
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import QuinipoloCard from "../QuinipoloCard/QuinipoloCard";
 import styles from "./QuinipolosToAnswer.module.scss";
+import {
+  QuinipolosToAnswerProps,
+  QuinipoloType,
+  TabPanelContentProps,
+} from "../../types/quinipolo";
 
 const QuinipolosToAnswer = ({
   leagueId,
   wrapperLoading = false,
   appLocation,
-}: {
-  leagueId?: string;
-  wrapperLoading?: boolean;
-  appLocation?: "league-dashboard" | "user-dashboard";
-}) => {
+}: QuinipolosToAnswerProps) => {
   const {
-    userData: { moderatedLeagues, username },
+    userData: { userLeagues, username },
   } = useUser();
+
   const [value, setValue] = useState<string>("1");
   const { setFeedback } = useFeedback();
   const [loading, setLoading] = useState<boolean>(false);
-  const [quinipolos, setQuinipolos] = useState<any[]>([]);
+  const [quinipolos, setQuinipolos] = useState<QuinipoloType[]>([]);
   const { t } = useTranslation();
 
   const fetchQuinipolos = useCallback(
@@ -39,15 +45,13 @@ const QuinipolosToAnswer = ({
             `/api/leagues/league/${leagueId}/leagueQuinipolos`
           );
         } else {
-          data = await apiGet(
-            `/api/users/user/quinipolos?username=${username}`
-          );
+          data = await apiGet(`/api/users/me/quinipolos`);
         }
         setQuinipolos(data);
       } catch (error) {
         console.error(error);
         setFeedback({
-          message: t('error'),
+          message: t("error"),
           severity: "error",
           open: true,
         });
@@ -55,7 +59,7 @@ const QuinipolosToAnswer = ({
         setLoading(false);
       }
     },
-    [appLocation, leagueId, setFeedback, username, t]
+    [appLocation, leagueId, setFeedback, t]
   );
 
   useEffect(() => {
@@ -69,8 +73,7 @@ const QuinipolosToAnswer = ({
   };
 
   return (
-    <div>
-      <hr />
+    <>
       <Box
         sx={{
           width: "100%",
@@ -82,85 +85,55 @@ const QuinipolosToAnswer = ({
           <Skeleton />
         ) : (
           <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList
-                onChange={handleChange}
-                aria-label="lab API tabs example"
-              >
-                <Tab label={t('pending')} value="1" />
-                <Tab label={t('previous')} value="2" />
-                <Tab label={t('all')} value="3" />
-              </TabList>
-            </Box>
+            <TabList onChange={handleChange} aria-label="Quinipolos">
+              <Tab label={t("pending")} value="1" />
+              <Tab label={t("previous")} value="2" />
+              <Tab label={t("all")} value="3" />
+            </TabList>
             <TabPanel sx={{ p: 0, mt: 2 }} value="1">
               <TabPanelContent
-                quinipolos={quinipolos.filter((quinipolo) => {
-                  if (quinipolo.isDeleted) return false;
-
-                  const today = new Date();
-                  const date30DaysAgo = new Date(today);
-                  date30DaysAgo.setDate(today.getDate() - 30);
-
-                  const isModeratedAndUncorrected =
-                    moderatedLeagues.includes(quinipolo.leagueName) &&
-                    !quinipolo.hasBeenCorrected;
-                  const isActiveAndUnanswered =
-                    quinipolo.endDate > today.toISOString() &&
-                    !quinipolo.participantsWhoAnswered.includes(username);
-                  const isRecentAndUncorrected =
-                    quinipolo.endDate > date30DaysAgo.toISOString() &&
-                    !quinipolo.hasBeenCorrected;
-
-                  return (
-                    isModeratedAndUncorrected ||
-                    isActiveAndUnanswered ||
-                    isRecentAndUncorrected
-                  );
+                quinipolos={filterPendingQuinipolos(quinipolos, {
+                  userLeagues,
+                  username,
                 })}
-                fallBackText={t('noPendingQuinipolos')}
+                fallBackText={t("noPendingQuinipolos")}
                 username={username}
-                moderatedLeagues={moderatedLeagues}
+                userLeagues={userLeagues}
               />
             </TabPanel>
             <TabPanel sx={{ p: 0, mt: 2 }} value="2">
               <TabPanelContent
-                quinipolos={quinipolos.filter(
-                  (quinipolo) =>
-                    quinipolo.endDate <= new Date().toISOString() &&
-                    (!leagueId || quinipolo.leagueId === leagueId) &&
-                    quinipolo.hasBeenCorrected
-                )}
+                quinipolos={filterPreviousQuinipolos(quinipolos, {
+                  leagueId,
+                  userLeagues,
+                  username,
+                })}
                 username={username}
-                moderatedLeagues={moderatedLeagues}
-                fallBackText={t('noPreviousQuinipolos')}
+                userLeagues={userLeagues}
+                fallBackText={t("noPreviousQuinipolos")}
               />
             </TabPanel>
             <TabPanel sx={{ p: 0, mt: 2 }} value="3">
               <TabPanelContent
                 quinipolos={quinipolos}
                 username={username}
-                moderatedLeagues={moderatedLeagues}
-                fallBackText={t('noQuinipolos')}
+                userLeagues={userLeagues}
+                fallBackText={t("noQuinipolos")}
               />
             </TabPanel>
           </TabContext>
         )}
       </Box>
-    </div>
+    </>
   );
 };
 
 const TabPanelContent = ({
   quinipolos,
   username,
-  moderatedLeagues,
+  userLeagues,
   fallBackText,
-}: {
-  quinipolos: any[];
-  username: string;
-  moderatedLeagues: string[];
-  fallBackText?: string;
-}) => {
+}: TabPanelContentProps) => {
   const itemsPerPage = 2;
   const totalItems = quinipolos.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -183,14 +156,14 @@ const TabPanelContent = ({
       ) : null}
       {quinipolos.length > 0 ? (
         currentItems.map((quinipolo) => {
-          const deadline = new Date(quinipolo.endDate);
+          const deadline = new Date(quinipolo.end_date);
           const deadlineIsInPast = deadline.getTime() < new Date().getTime();
           return (
             <QuinipoloCard
-              key={quinipolo._id}
+              key={quinipolo.id}
               deadlineIsInPast={deadlineIsInPast}
               quinipolo={quinipolo}
-              moderatedLeagues={moderatedLeagues}
+              userLeagues={userLeagues}
               username={username}
             />
           );

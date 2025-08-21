@@ -6,3 +6,15 @@
   color: #7cb305;
   font-weight: bold;
 }
+
+.tableHead {
+  background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+  > tr::first-child {
+    border-radius: 16px 16px 0 0 !important;
+  }
+}
+
+.tableHeadCell {
+  color: white !important;
+  font-weight: bold !important;
+}

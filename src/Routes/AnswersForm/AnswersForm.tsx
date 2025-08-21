@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { SurveyData } from "../SurveyForm/SurveyForm.types";
 import {
   Button,
   FormControl,
@@ -21,27 +20,13 @@ import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { apiGet, apiPost } from "../../utils/apiUtils";
 import { useUser } from "../../Context/UserContext/UserContext";
 import GoalsToggleButtonGroup from "./GoalsToggleButtonGroup";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import { isUserModerator } from "../../utils/moderatorUtils";
+import ScoreSummary from "./ScoreSummary";
 
-type RespostesType = {
-  matchNumber: number;
-  chosenWinner: string;
-  isGame15: boolean;
-  goalsHomeTeam: string;
-  goalsAwayTeam: string;
-};
+import { QuinipoloType, CorrectAnswer } from "../../types/quinipolo";
 
-type QuinipoloType = {
-  leagueName: string;
-  leagueId: string;
-  _id: string;
-  quinipolo: SurveyData[];
-  participantsWhoAnswered: string[];
-  correctAnswers: RespostesType[];
-  creationDate?: string;
-  hasBeenCorrected: boolean;
-  endDate?: string;
-};
+type AnswersType = CorrectAnswer;
 
 type CorrectionResponseType = {
   message: string;
@@ -62,30 +47,38 @@ const AnswersForm = () => {
   const { setFeedback } = useFeedback();
   const [loading, setLoading] = useState<boolean>(false);
   const [quinipolo, setQuinipolo] = useState<QuinipoloType>({
-    leagueName: "",
-    leagueId: "",
-    _id: "",
+    id: "",
+    league_id: "",
+    league_name: "",
     quinipolo: [],
-    participantsWhoAnswered: [],
-    hasBeenCorrected: false,
-    correctAnswers: [],
+    end_date: "",
+    has_been_corrected: false,
+    creation_date: "",
+    is_deleted: false,
+    participants_who_answered: [],
+    correct_answers: [],
   });
 
-  const initialRespostes: RespostesType[] = new Array(14)
-    .fill({
-      matchNumber: undefined,
-      chosenWinner: "",
-      isGame15: false,
-    })
-    .concat({
+  const initialAnswers: AnswersType[] = [
+    ...Array(14)
+      .fill(null)
+      .map((_, index) => ({
+        matchNumber: index + 1,
+        chosenWinner: "",
+        isGame15: false,
+        goalsHomeTeam: "",
+        goalsAwayTeam: "",
+      })),
+    {
       matchNumber: 15,
       chosenWinner: "",
       isGame15: true,
       goalsHomeTeam: "",
       goalsAwayTeam: "",
-    });
+    },
+  ];
 
-  const [respostes, setRespostes] = useState<RespostesType[]>(initialRespostes);
+  const [answers, setAnswers] = useState<AnswersType[]>(initialAnswers);
 
   // get via params if correcting or not
   const queryParams = new URLSearchParams(window.location.search);
@@ -100,6 +93,7 @@ const AnswersForm = () => {
       const queryParams = new URLSearchParams(window.location.search);
       const id = queryParams.get("id");
       let response: any;
+
       if (!id) {
         console.error("ID is missing in the query string");
         return;
@@ -109,15 +103,34 @@ const AnswersForm = () => {
         response = await apiGet<QuinipoloType>(
           `/api/quinipolos/quinipolo/${id}/correction-see`
         );
-        setRespostes(response.correctAnswers);
+
+        // Transform correct_answers to match the expected structure
+        if (response.correct_answers && response.correct_answers.length > 0) {
+          const transformedAnswers = initialAnswers.map(
+            (defaultAnswer, index) => {
+              const correctAnswer = response.correct_answers.find(
+                (ca: any) => ca.matchNumber === index + 1
+              );
+              return correctAnswer
+                ? {
+                    ...defaultAnswer,
+                    chosenWinner: correctAnswer.chosenWinner || "",
+                    goalsHomeTeam: correctAnswer.goalsHomeTeam || "",
+                    goalsAwayTeam: correctAnswer.goalsAwayTeam || "",
+                  }
+                : defaultAnswer;
+            }
+          );
+          setAnswers(transformedAnswers);
+        } else {
+          setAnswers(initialAnswers);
+        }
       } else if (seeUserAnswersModeOn) {
         // will show a quinipolo with the user's answers
         response = await apiGet<{
           quinipolo: QuinipoloType;
-          answers: RespostesType[];
-        }>(
-          `/api/quinipolos/quinipolo/${id}/answers-see/${user.userData.username}`
-        );
+          answers: AnswersType[];
+        }>(`/api/quinipolos/quinipolo/${id}/answers-see`);
         if (response.answers && response.answers.length === 0) {
           setFeedback({
             message: "No tens cap resposta per aquest Quinipolò",
@@ -126,8 +139,8 @@ const AnswersForm = () => {
           });
         }
 
-        if (response.answers && response!.answers.answers.length > 0) {
-          setRespostes(response!.answers.answers);
+        if (response.answers && response.answers.length > 0) {
+          setAnswers(response.answers);
         }
         setQuinipolo(response.quinipolo);
         setLoading(false);
@@ -151,99 +164,110 @@ const AnswersForm = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    fetchData();
+    // Only fetch data if user is authenticated
+    if (user.userData.isAuthenticated) {
+      setLoading(true);
+      fetchData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user.userData.isAuthenticated]);
 
   const submitQuinipolo = async () => {
     const answerToSubmit = {
       username: localStorage.getItem("username") ?? user.userData.username,
-      quinipoloId: quinipolo._id,
-      answers: respostes.map((resposta, index) => ({
+      quinipoloId: quinipolo.id,
+      answers: answers.map((answer, index) => ({
         matchNumber: index + 1,
-        chosenWinner: resposta.chosenWinner,
-        goalsHomeTeam: resposta.goalsHomeTeam,
-        goalsAwayTeam: resposta.goalsAwayTeam,
+        chosenWinner: answer.chosenWinner,
+        goalsHomeTeam: answer.goalsHomeTeam,
+        goalsAwayTeam: answer.goalsAwayTeam,
       })),
     };
-    if (
-      correctingModeOn &&
-      user.userData.moderatedLeagues.includes(quinipolo.leagueId)
-    ) {
-      console.log("Correcting mode on");
-      setLoading(true);
-      const response = await apiPost<CorrectionResponseType>(
-        `/api/quinipolos/quinipolo/${quinipolo._id}/submit-correction`,
-        answerToSubmit
-      );
-      navigate("/correction-success", {
-        state: { results: response.results },
-      });
-      setLoading(false);
-      setFeedback({
-        message: response.message,
-        severity: "success",
-        open: true,
-      });
-    } else if (
-      editCorrectionModeOn &&
-      user.userData.moderatedLeagues.includes(quinipolo.leagueId)
-    ) {
-      console.log("Editing correction mode on");
-      setLoading(true);
-      const response = await apiPost<CorrectionResponseType>(
-        `/api/quinipolos/quinipolo/${quinipolo._id}/submit-correction-edit`,
-        answerToSubmit
-      );
-      navigate("/correction-success", {
-        state: { results: response.results },
-      });
-      setLoading(false);
-      setFeedback({
-        message: response.message,
-        severity: "success",
-        open: true,
-      });
-    } else {
-      try {
-        const response = await apiPost<AnswerResponseType>(
-          `/api/quinipolos/quinipolo/answers`,
+
+    setLoading(true);
+
+    try {
+      if (
+        correctingModeOn &&
+        quinipolo.league_id &&
+        isUserModerator(user.userData.userLeagues, quinipolo.league_id)
+      ) {
+        const response = await apiPost<CorrectionResponseType>(
+          `/api/quinipolos/quinipolo/${quinipolo.id}/submit-correction`,
           answerToSubmit
         );
-        setLoading(true);
+        navigate("/correction-success", {
+          state: { results: response.results },
+        });
         setFeedback({
           message: response.message,
           severity: "success",
           open: true,
         });
-        setLoading(false);
+      } else if (
+        editCorrectionModeOn &&
+        quinipolo.league_id &&
+        isUserModerator(user.userData.userLeagues, quinipolo.league_id)
+      ) {
+        const response = await apiPost<CorrectionResponseType>(
+          `/api/quinipolos/quinipolo/${quinipolo.id}/submit-correction-edit`,
+          answerToSubmit
+        );
+        navigate("/correction-success", {
+          state: { results: response.results },
+        });
+        setFeedback({
+          message: response.message,
+          severity: "success",
+          open: true,
+        });
+      } else {
+        const response = await apiPost<AnswerResponseType>(
+          `/api/quinipolos/quinipolo/answers`,
+          answerToSubmit
+        );
+        setFeedback({
+          message: response.message,
+          severity: "success",
+          open: true,
+        });
         navigate("/dashboard");
-      } catch (error: unknown) {
-        console.error("Error submitting Quinipolo:", error);
+      }
+    } catch (error: unknown) {
+      console.error("Error submitting Quinipolo:", error);
+      setLoading(false);
 
-        // Check if error is of type AxiosError
-        if (axios.isAxiosError(error)) {
-          // Now TypeScript knows this is an AxiosError, you can access error.response etc.
-          if (error.response && error.response.status === 409) {
-            console.log(error.response);
-            setFeedback({
-              message: error.response.data,
-              severity: "error",
-              open: true,
-            });
-          }
-        } else {
-          // Handle non-Axios errors
-          setLoading(false);
+      // Check if error is of type AxiosError
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.status === 409) {
+          console.log(error.response);
           setFeedback({
-            message: "An unexpected error occurred",
+            message: error.response.data,
+            severity: "error",
+            open: true,
+          });
+        } else {
+          setFeedback({
+            message:
+              error.response?.data?.message ||
+              "An error occurred while submitting",
             severity: "error",
             open: true,
           });
         }
+      } else {
+        // Handle non-Axios errors
+        setFeedback({
+          message: "An unexpected error occurred",
+          severity: "error",
+          open: true,
+        });
       }
+      return; // Exit early on error
     }
+
+    // Only set loading to false on success
+    setLoading(false);
   };
 
   const handleChange = (
@@ -251,12 +275,15 @@ const AnswersForm = () => {
     newValue: string
   ) => {
     if (newValue === null || seeUserAnswersModeOn) return;
-    setRespostes((prevrespostes) => {
-      const index = parseInt(newValue.split("__")[1]);
-      const updatedData = [...prevrespostes];
+    setAnswers((prevAnswers) => {
+      const parts = newValue.split("__");
+      const teamName = parts[0];
+      const index = parseInt(parts[1]);
+      const updatedData = [...prevAnswers];
       updatedData[index] = {
         ...updatedData[index],
-        chosenWinner: newValue,
+        matchNumber: index + 1,
+        chosenWinner: teamName,
       };
       return updatedData;
     });
@@ -267,18 +294,22 @@ const AnswersForm = () => {
     newValue: string
   ) => {
     if (newValue === null || seeUserAnswersModeOn) return;
-    setRespostes((prevrespostes) => {
-      const team = newValue.split("__")[1];
-      const updatedData = [...prevrespostes];
+    setAnswers((prevAnswers) => {
+      const parts = newValue.split("__");
+      const goalValue = parts[0];
+      const team = parts[1];
+      const updatedData = [...prevAnswers];
       if (team === "home") {
         updatedData[14] = {
           ...updatedData[14],
-          goalsHomeTeam: newValue,
+          matchNumber: 15,
+          goalsHomeTeam: goalValue,
         };
       } else {
         updatedData[14] = {
           ...updatedData[14],
-          goalsAwayTeam: newValue,
+          matchNumber: 15,
+          goalsAwayTeam: goalValue,
         };
       }
       return updatedData;
@@ -286,25 +317,30 @@ const AnswersForm = () => {
   };
 
   const matchOption = (value: string, index: number) => {
-    if (!quinipolo.hasBeenCorrected) {
+    if (!quinipolo.has_been_corrected) {
       return <span>{value}</span>;
     }
-    const answerIsCorrect = (answer: string) => {
-      return quinipolo.correctAnswers[index].chosenWinner === answer;
-    };
-    return (
-      <span
-        className={`${
-          seeUserAnswersModeOn &&
-          (answerIsCorrect(`${value}__${index}`)
-            ? style.correctAnswer
-            : respostes[index].chosenWinner === `${value}__${index}` &&
-              style.answerIsWrong)
-        }`}
-      >
-        {value}
-      </span>
-    );
+
+    // The button value includes the index suffix, but stored answers don't
+    const userAnswer = answers[index]?.chosenWinner;
+    const correctAnswer = quinipolo.correct_answers?.[index]?.chosenWinner;
+
+    // Determine the styling based on whether we're showing user answers and have corrections
+    let className = "";
+    if (seeUserAnswersModeOn && quinipolo.has_been_corrected) {
+      // Extract the team name from the correct answer (remove index suffix if present)
+      const correctAnswerTeam = correctAnswer?.split("__")[0] || "";
+
+      if (correctAnswerTeam === value) {
+        // This is the correct answer - always show in green
+        className = style.correctAnswer;
+      } else if (userAnswer === value && userAnswer !== correctAnswerTeam) {
+        // This is the user's answer and it's wrong - show in red
+        className = style.answerIsWrong;
+      }
+    }
+
+    return <span className={className}>{value}</span>;
   };
   if (!quinipolo.quinipolo) {
     setFeedback({
@@ -316,118 +352,152 @@ const AnswersForm = () => {
     navigate("/dashboard");
   }
 
-  if (loading) {
-    return <Loader />;
-  } else {
-    return (
-      <FormControl>
-        <TableContainer sx={{ mb: 8 }} component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" sx={{ marginBottom: 16 }}>
-                  {correctingModeOn
-                    ? t('edit')
-                    : `${t('answers')} Quinipolo ${quinipolo.leagueName}`}
-                </TableCell>
-              </TableRow>
-            </TableHead>
+  return (
+    <FormControl>
+      {seeUserAnswersModeOn ? (
+        <ScoreSummary
+          userAnswers={answers}
+          correctAnswers={quinipolo.correct_answers || []}
+          hasBeenCorrected={quinipolo.has_been_corrected}
+        />
+      ) : null}
+      <TableContainer sx={{ mb: 8 }} component={Paper}>
+        <Table aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center" sx={{ marginBottom: 16 }}>
+                {correctingModeOn
+                  ? t("correct")
+                  : `${t("answers")} Quinipolo ${quinipolo.league_name}`}
+              </TableCell>
+            </TableRow>
+          </TableHead>
 
-            {/* Partits */}
-            <TableBody>
-              {quinipolo.quinipolo.map((match, index) => {
-                return (
-                  <TableRow
-                    key={`${match.homeTeam}${match.awayTeam}__${index}`}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell align="center" component="th" scope="row">
-                      <p className={style.matchName}>Partido {index + 1}</p>
-                      <ToggleButtonGroup
-                        color="primary"
-                        className={style.teamAnswerButtonContainer}
-                        value={respostes[index].chosenWinner}
-                        exclusive
-                        onChange={handleChange}
-                        aria-label="Match winner"
+          {/* Partits */}
+          <TableBody>
+            {quinipolo.quinipolo.map((match, index) => {
+              // Safety check to ensure answers[index] exists
+              const currentAnswer = answers[index] || {
+                matchNumber: index + 1,
+                chosenWinner: "",
+                isGame15: index === 14,
+                goalsHomeTeam: "",
+                goalsAwayTeam: "",
+              };
+              return (
+                <TableRow
+                  key={`${match.homeTeam}${match.awayTeam}__${index}`}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell align="center" component="th" scope="row">
+                    <p className={style.matchName}>Match {index + 1}</p>
+                    <ToggleButtonGroup
+                      color="primary"
+                      className={style.teamAnswerButtonContainer}
+                      value={
+                        currentAnswer.chosenWinner
+                          ? `${currentAnswer.chosenWinner}__${index}`
+                          : ""
+                      }
+                      exclusive
+                      onChange={handleChange}
+                      aria-label="Match winner"
+                      disabled={loading}
+                    >
+                      <ToggleButton
+                        className={`${style.teamAnswerButton}`}
+                        value={`${match.homeTeam}__${index}`}
+                        disabled={loading}
                       >
-                        <ToggleButton
-                          className={`${style.teamAnswerButton}`}
-                          value={`${match.homeTeam}__${index}`}
-                        >
-                          {matchOption(match.homeTeam, index)}
-                        </ToggleButton>
-                        <ToggleButton value={`empat__${index}`}>
-                          {matchOption("empat", index)}
-                        </ToggleButton>
-                        <ToggleButton
-                          className={`${style.teamAnswerButton}`}
-                          value={`${match.awayTeam}__${index}`}
-                        >
-                          {matchOption(match.awayTeam, index)}
-                        </ToggleButton>
-                      </ToggleButtonGroup>
-                      {index === 14 && (
-                        <div className={style.goalsContainer}>
-                          <GoalsToggleButtonGroup
-                            teamType="home"
-                            teamName={quinipolo.quinipolo[14].homeTeam}
-                            goals={respostes[index].goalsHomeTeam}
-                            correctGoals={
-                              quinipolo.correctAnswers.length > 0
-                                ? quinipolo.correctAnswers[index].goalsHomeTeam
-                                : ""
-                            }
-                            matchType={match.gameType}
-                            onChange={handleGame15Change}
-                            seeUserAnswersModeOn={seeUserAnswersModeOn}
-                            quinipoloHasBeenCorrected={
-                              quinipolo.hasBeenCorrected
-                            }
-                          />
-                          <GoalsToggleButtonGroup
-                            teamType="away"
-                            teamName={quinipolo.quinipolo[14].awayTeam}
-                            goals={respostes[index].goalsAwayTeam}
-                            correctGoals={
-                              quinipolo.correctAnswers.length > 0
-                                ? quinipolo.correctAnswers[index].goalsAwayTeam
-                                : ""
-                            }
-                            matchType={match.gameType}
-                            onChange={handleGame15Change}
-                            seeUserAnswersModeOn={seeUserAnswersModeOn}
-                            quinipoloHasBeenCorrected={
-                              quinipolo.hasBeenCorrected
-                            }
-                          />
-                        </div>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-            {/* Submit button */}
-            {seeUserAnswersModeOn ? null : (
-              <Button
-                variant="contained"
-                onClick={submitQuinipolo}
-                className={style.submitButton}
-                type="submit"
-                disabled={loading}
-              >
-                {editCorrectionModeOn &&
-                user.userData.moderatedLeagues.includes(quinipolo.leagueId)
-                  ? t('edit')
-                  : t('submit')}
-              </Button>
-            )}
-          </Table>
-        </TableContainer>
-      </FormControl>
-    );
-  }
+                        {matchOption(match.homeTeam, index)}
+                      </ToggleButton>
+                      <ToggleButton
+                        value={`empat__${index}`}
+                        disabled={loading}
+                      >
+                        {matchOption("empat", index)}
+                      </ToggleButton>
+                      <ToggleButton
+                        className={`${style.teamAnswerButton}`}
+                        value={`${match.awayTeam}__${index}`}
+                        disabled={loading}
+                      >
+                        {matchOption(match.awayTeam, index)}
+                      </ToggleButton>
+                    </ToggleButtonGroup>
+                    {index === 14 &&
+                      (() => {
+                        const correctAnswers = quinipolo.correct_answers;
+                        const hasCorrectAnswers =
+                          correctAnswers && correctAnswers.length > 0;
+                        const homeTeamGoals = hasCorrectAnswers
+                          ? correctAnswers[index]?.goalsHomeTeam || ""
+                          : "";
+                        const awayTeamGoals = hasCorrectAnswers
+                          ? correctAnswers[index]?.goalsAwayTeam || ""
+                          : "";
+                        const quinipoloHasBeenCorrected =
+                          quinipolo.has_been_corrected;
+
+                        return (
+                          <div className={style.goalsContainer}>
+                            <GoalsToggleButtonGroup
+                              teamType="home"
+                              teamName={quinipolo.quinipolo[14].homeTeam}
+                              goals={currentAnswer.goalsHomeTeam}
+                              correctGoals={homeTeamGoals}
+                              matchType={match.gameType}
+                              onChange={handleGame15Change}
+                              seeUserAnswersModeOn={seeUserAnswersModeOn}
+                              quinipoloHasBeenCorrected={
+                                quinipoloHasBeenCorrected
+                              }
+                              disabled={loading}
+                            />
+                            <GoalsToggleButtonGroup
+                              teamType="away"
+                              teamName={quinipolo.quinipolo[14].awayTeam}
+                              goals={currentAnswer.goalsAwayTeam}
+                              correctGoals={awayTeamGoals}
+                              matchType={match.gameType}
+                              onChange={handleGame15Change}
+                              seeUserAnswersModeOn={seeUserAnswersModeOn}
+                              quinipoloHasBeenCorrected={
+                                quinipoloHasBeenCorrected
+                              }
+                              disabled={loading}
+                            />
+                          </div>
+                        );
+                      })()}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+          {/* Submit button */}
+          {seeUserAnswersModeOn ? null : (
+            <Button
+              variant="contained"
+              onClick={submitQuinipolo}
+              className={style.submitButton}
+              type="submit"
+              disabled={loading}
+              startIcon={
+                loading ? <div className={style.spinner} /> : undefined
+              }
+            >
+              {editCorrectionModeOn &&
+              quinipolo.league_id &&
+              isUserModerator(user.userData.userLeagues, quinipolo.league_id)
+                ? t("edit")
+                : t("submit")}
+            </Button>
+          )}
+        </Table>
+      </TableContainer>
+    </FormControl>
+  );
 };
 
 export default AnswersForm;

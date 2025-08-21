@@ -1,34 +1,19 @@
-import { scan } from "react-scan";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { ClerkProvider } from "@clerk/clerk-react";
-import { esES } from "@clerk/localizations";
 import "./utils/i18n";
-/* if (typeof window !== "undefined") {
-  scan({
-    enabled: true,
-    log: true, // logs render info to console (default: false)
-  });
-} */
-
-if (!process.env.REACT_APP_VITE_CLERK_PUBLISHABLE_KEY) {
-  throw new Error("Missing Publishable Key");
-}
+import { UserProvider } from "./Context/UserContext/UserContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <ClerkProvider
-      publishableKey={process.env.REACT_APP_VITE_CLERK_PUBLISHABLE_KEY}
-      localization={esES}
-    >
+    <UserProvider>
       <App />
-    </ClerkProvider>
+    </UserProvider>
   </React.StrictMode>
 );
 
