@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { CircularProgress, Paper, Box } from "@mui/material";
@@ -87,7 +87,7 @@ const Dashboard = () => {
     hasFetchedProfile,
   ]);
 
-  const getLeaguesData = async () => {
+  const getLeaguesData = useCallback(async () => {
     const leaguesData = await Promise.all(
       userData.leagues.map((league) => {
         return apiGet<any>(`/api/leagues/${league}`).then((leagueData) => {
@@ -104,13 +104,13 @@ const Dashboard = () => {
       };
     });
     setLeagues(leaguesWithData);
-  };
+  }, [userData.leagues]);
 
   useEffect(() => {
     if (userData.leagues.length > 0) {
       getLeaguesData();
     }
-  }, [userData.leagues]);
+  }, [getLeaguesData, userData.leagues.length]);
 
   return (
     <div className={styles.dashboardContainer}>

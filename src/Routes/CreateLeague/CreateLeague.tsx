@@ -75,7 +75,7 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
     };
 
     fetchTiers();
-  }, [t]);
+  }, [t, setFeedback]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -70,7 +70,7 @@ const LeagueSuccess: React.FC<LeagueSuccessProps> = () => {
     };
 
     checkPaymentStatus();
-  }, [sessionId, t]);
+  }, [sessionId, t, setFeedback]);
 
   const handleGoToLeague = () => {
     if (leagueData) {
