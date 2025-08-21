@@ -27,3 +27,6 @@ export const getRedirectUrl = (path: string): string => {
 
 // Centralized storage key for Supabase auth token
 export const AUTH_TOKEN_STORAGE_KEY = "quinipolo-auth-token";
+
+// Quinipolo filtering configuration
+export const PENDING_QUINIPOLO_RECENT_DAYS = 30;

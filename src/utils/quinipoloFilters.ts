@@ -1,4 +1,5 @@
 import { QuinipoloType } from "../types/quinipolo";
+import { PENDING_QUINIPOLO_RECENT_DAYS } from "./config";
 import { isUserModerator, UserLeague } from "./moderatorUtils";
 
 export interface QuinipoloFilters {
@@ -27,8 +28,8 @@ export const filterPendingQuinipolos = (
     if (quinipolo.is_deleted) return false;
 
     const today = new Date();
-    const date30DaysAgo = new Date(today);
-    date30DaysAgo.setDate(today.getDate() - 30);
+    const dateRecentDaysAgo = new Date(today);
+    dateRecentDaysAgo.setDate(today.getDate() - PENDING_QUINIPOLO_RECENT_DAYS);
 
     const isModeratedAndUncorrected =
       isUserModerator(userLeagues, quinipolo.league_id) &&
@@ -39,7 +40,7 @@ export const filterPendingQuinipolos = (
       !quinipolo.participants_who_answered?.includes(username);
 
     const isRecentAndUncorrected =
-      quinipolo.end_date > date30DaysAgo.toISOString() &&
+      quinipolo.end_date > dateRecentDaysAgo.toISOString() &&
       !quinipolo.has_been_corrected;
 
     return (

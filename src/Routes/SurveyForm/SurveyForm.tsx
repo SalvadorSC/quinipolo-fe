@@ -40,8 +40,17 @@ const SurveyForm = () => {
     .concat(quinipolo.map((match) => match.homeTeam));
   const { t } = useTranslation();
 
-  const handleDateChange = (date: Dayjs | null, dateString: string) => {
-    setSelectedDate(dayjs(dateString, "DD/MM/YYYY hh:mm").toDate());
+  const handleDateChange: (
+    date: Dayjs | null,
+    dateString: string | string[]
+  ) => void = (date, dateString) => {
+    const dateStringSingle = Array.isArray(dateString)
+      ? dateString[0] || ""
+      : dateString;
+    const parsed = date
+      ? date.toDate()
+      : dayjs(dateStringSingle, "DD/MM/YYYY hh:mm").toDate();
+    setSelectedDate(parsed);
   };
 
   const handleHelpClick = () => {
@@ -156,7 +165,7 @@ const SurveyForm = () => {
       <div className={styles.datePickerContainer}>
         <DatePicker
           format="DD/MM/YYYY HH:mm"
-          onChange={handleDateChange as any}
+          onChange={handleDateChange}
           locale={locale}
           placeholder={t("date")}
           className={styles.datePicker}

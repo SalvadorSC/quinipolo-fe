@@ -12,20 +12,12 @@ if (process.env.NODE_ENV === "development") {
 
 // Check if environment variables are set
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error("Missing Supabase environment variables:");
-  console.error("REACT_APP_SUPABASE_URL:", supabaseUrl ? "Set" : "Missing");
-  console.error(
-    "REACT_APP_SUPABASE_ANON_KEY:",
-    supabaseAnonKey ? "Set" : "Missing"
+  throw new Error(
+    "Missing Supabase configuration. Please set REACT_APP_SUPABASE_URL and REACT_APP_SUPABASE_ANON_KEY in your .env file."
   );
-  console.error(
-    "Please create a .env file in the quinipolo-fe directory with:"
-  );
-  console.error("REACT_APP_SUPABASE_URL=your_supabase_url");
-  console.error("REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key");
 }
 
-export const supabase = createClient(supabaseUrl || "", supabaseAnonKey || "", {
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     storageKey: AUTH_TOKEN_STORAGE_KEY,

@@ -231,7 +231,6 @@ const SignUpForm = () => {
               type="primary"
               htmlType="submit"
               block
-              // disabled={true}
               disabled={loading}
               loading={loading}
               size="large"
