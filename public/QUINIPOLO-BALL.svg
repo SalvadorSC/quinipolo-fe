@@ -1,29 +1,84 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="81" height="81" viewBox="0 0 81 81" xml:space="preserve">
-<desc>Created with Fabric.js 5.3.0</desc>
-<defs>
-</defs>
-<g transform="matrix(1 0 0 1 40.5464733308 40.5452274889)" id="lVGhoueIh9esdC_Nqu6Dw"  >
-<g style=""   >
-		<g transform="matrix(0.1551137129 0 0 0.1551137129 -25.3894290742 14.2942819313)" id="BGvMusN3oszjV-Fm-x9AK"  >
-<path style="stroke: rgb(255,232,0); stroke-width: 20; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: evenodd; opacity: 1;"  transform=" translate(-86.3549282352, -342.156776837)" d="M 98.1 206.7 C 68.39999999999999 198 36.99999999999999 194.79999999999998 5.599999999999994 197.6 C -5.300000000000006 248.39999999999998 -0.6000000000000059 303 22.699999999999996 353.9 C 52.89999999999999 420.2 108.6 466.79999999999995 172.7 487.7 C 77.1 390 83.69999999999999 253.5 98.1 206.7 z" stroke-linecap="round" />
-</g>
-		<g transform="matrix(0.1551137129 0 0 0.1551137129 -1.862224748 16.0322831223)" id="8LdFroxtNPddrwWAiR8pO"  >
-<path style="stroke: rgb(255,232,0); stroke-width: 20; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: evenodd; opacity: 1;"  transform=" translate(-238.0320681333, -353.3614676347)" d="M 172.7 487.7 C 230.2 506.4 294.6 504.5 353.9 477.3 C 365.29999999999995 472.1 376.09999999999997 466.2 386.29999999999995 459.6 C 347.99999999999994 448.40000000000003 313.69999999999993 428.5 285.59999999999997 402.1 C 250.59999999999997 369.3 225.19999999999996 326.8 213.49999999999997 279.20000000000005 C 182.19999999999996 244.40000000000003 141.99999999999997 219.60000000000005 98.09999999999997 206.70000000000005 C 83.69999999999996 253.50000000000006 77.09999999999997 390.00000000000006 172.69999999999996 487.70000000000005 z" stroke-linecap="round" />
-</g>
-		<g transform="matrix(0.1551137129 0 0 0.1551137129 -13.19825568 -13.2549646537)" id="ZGdWx9m5DYEhx4GMVeg70"  >
-<path style="stroke: rgb(255,232,0); stroke-width: 20; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: evenodd; opacity: 1;"  transform=" translate(-164.95, -164.55)" d="M 5.6 197.6 C 37 194.79999999999998 68.39999999999999 198 98.1 206.7 C 142 219.6 182.2 244.39999999999998 213.5 279.2 C 258.7 252.7 297.6 210.29999999999998 324.3 161.29999999999998 C 281.3 110.39999999999998 196.60000000000002 55.69999999999999 100.20000000000002 49.89999999999998 C 51.000000000000014 86.69999999999997 18.100000000000023 139.59999999999997 5.600000000000023 197.59999999999997 z" stroke-linecap="round" />
-</g>
-		<g transform="matrix(0.1551137129 0 0 0.1551137129 22.1494737601 7.5845626695)" id="GxKt1bAngLrIadXRZvyHF"  >
-<path style="stroke: rgb(255,232,0); stroke-width: 20; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: evenodd; opacity: 1;"  transform=" translate(0.0000045335, 0)" d="M -107.23269 103.2 C -79.13269 129.6 -44.83269000000001 149.5 -6.532690000000002 160.7 C 95.66731 94.39999999999999 136.76731 -38.60000000000002 84.56730999999999 -152.8 C 83.36730999999999 -155.5 81.96731 -158.10000000000002 80.66730999999999 -160.70000000000002 C 62.667309999999986 -25.200000000000017 -15.73269000000002 49.19999999999999 -107.23269000000002 103.19999999999996 z" stroke-linecap="round" />
-</g>
-		<g transform="matrix(0.1551137129 0 0 0.1551137129 14.4972977518 -5.5303017531)" id="CKGvhIZtrC6RkvPKHYJac"  >
-<path style="stroke: rgb(255,232,0); stroke-width: 20; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: evenodd; opacity: 1;"  transform=" translate(0, 0)" d="M -19.2 -53.05 C -45.9 -4.049999999999997 -84.8 38.35000000000001 -130 64.85000000000001 C -118.3 112.45000000000002 -92.9 154.95 -57.900000000000006 187.75 C 33.599999999999994 133.75 112 59.349999999999994 130 -76.14999999999998 C 105 -126.24999999999997 65.3 -164.34999999999997 18.5 -187.74999999999997 C 17.7 -142.14999999999998 3.8000000000000007 -95.14999999999998 -19.200000000000003 -53.04999999999998 z" stroke-linecap="round" />
-</g>
-		<g transform="matrix(0.1549862442 0 0 0.1551137129 -2.9195232401 -26.2702860609)" id="7MafUmq73VRdi1BxMil9D"  >
-<path style="stroke: rgb(255,232,0); stroke-width: 20; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: evenodd; opacity: 1;"  transform=" translate(-231.1, -80.6417422008)" d="M 146.1 22.6 C 129.5 30.200000000000003 114.19999999999999 39.400000000000006 100.19999999999999 49.900000000000006 C 196.6 55.7 281.29999999999995 110.4 324.29999999999995 161.3 C 347.29999999999995 119.20000000000002 361.19999999999993 72.20000000000002 361.99999999999994 26.600000000000023 C 296.69999999999993 -6.09999999999998 217.69999999999993 -10.09999999999998 146.09999999999994 22.600000000000023 z" stroke-linecap="round" />
-</g>
-</g>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 81 81">
+  <!-- Generator: Adobe Illustrator 29.3.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 146)  -->
+  <defs>
+    <style>
+      .st0, .st1 {
+        fill: #1f3057;
+        stroke: #f9d602;
+        stroke-miterlimit: 10;
+      }
+
+      .st0, .st1, .st2, .st3 {
+        fill-rule: evenodd;
+      }
+
+      .st0, .st3 {
+        stroke-width: 3.1px;
+      }
+
+      .st1, .st2 {
+        stroke-width: 3.1px;
+      }
+
+      .st2, .st3 {
+        fill: #f9d602;
+        stroke: #1f3057;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .st4 {
+        display: none;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1">
+    <g id="lVGhoueIh9esdC_Nqu6Dw">
+      <g>
+        <g id="BGvMusN3oszjV-Fm-x9AK">
+          <path class="st1" d="M17,33.8c-4.6-1.3-9.5-1.8-14.3-1.4-1.7,7.9-1,16.3,2.7,24.2,4.7,10.3,13.3,17.5,23.3,20.8-14.8-15.2-13.8-36.3-11.6-43.6Z"/>
+        </g>
+        <g id="_x38_LdFroxtNPddrwWAiR8pO">
+          <path class="st1" d="M28.6,77.4c8.9,2.9,18.9,2.6,28.1-1.6,1.8-.8,3.4-1.7,5-2.7-5.9-1.7-11.3-4.8-15.6-8.9-5.4-5.1-9.4-11.7-11.2-19.1-4.9-5.4-11.1-9.2-17.9-11.2-2.2,7.3-3.3,28.4,11.6,43.6Z"/>
+        </g>
+        <g id="ZGdWx9m5DYEhx4GMVeg70">
+          <path class="st1" d="M2.6,32.4c4.9-.4,9.7,0,14.3,1.4,6.8,2,13,5.8,17.9,11.2,7-4.1,13-10.7,17.2-18.3-6.7-7.9-19.8-16.4-34.8-17.3-7.6,5.7-12.7,13.9-14.7,22.9Z"/>
+        </g>
+        <g id="GxKt1bAngLrIadXRZvyHF">
+          <path class="st1" d="M46.1,64.1c4.4,4.1,9.7,7.2,15.6,8.9,15.9-10.3,22.2-30.9,14.1-48.6-.2-.4-.4-.8-.6-1.2-2.8,21-15,32.6-29.1,40.9Z"/>
+        </g>
+        <g id="CKGvhIZtrC6RkvPKHYJac">
+          <path class="st1" d="M52.1,26.8c-4.1,7.6-10.2,14.2-17.2,18.3,1.8,7.4,5.8,14,11.2,19.1,14.2-8.4,26.4-19.9,29.1-40.9-3.9-7.8-10-13.7-17.3-17.3-.1,7.1-2.3,14.4-5.8,20.9Z"/>
+        </g>
+        <g id="_x37_MafUmq73VRdi1BxMil9D">
+          <path class="st0" d="M24.5,5.3c-2.6,1.2-4.9,2.6-7.1,4.2,14.9.9,28.1,9.4,34.7,17.3,3.6-6.5,5.7-13.8,5.8-20.9C47.8.8,35.6.2,24.5,5.3Z"/>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g id="Layer_2" class="st4">
+    <g id="lVGhoueIh9esdC_Nqu6Dw1" data-name="lVGhoueIh9esdC_Nqu6Dw">
+      <g>
+        <g id="BGvMusN3oszjV-Fm-x9AK1" data-name="BGvMusN3oszjV-Fm-x9AK">
+          <path class="st2" d="M17,33.8c-4.6-1.3-9.5-1.8-14.3-1.4-1.7,7.9-1,16.3,2.7,24.2,4.7,10.3,13.3,17.5,23.3,20.7-14.8-15.1-13.8-36.3-11.6-43.6Z"/>
+        </g>
+        <g id="_x38_LdFroxtNPddrwWAiR8pO1" data-name="_x38_LdFroxtNPddrwWAiR8pO">
+          <path class="st2" d="M28.5,77.3c8.9,2.9,18.9,2.6,28.1-1.6,1.8-.8,3.4-1.7,5-2.7-5.9-1.7-11.3-4.8-15.6-8.9-5.4-5.1-9.4-11.7-11.2-19.1-4.9-5.4-11.1-9.2-17.9-11.2-2.2,7.3-3.3,28.4,11.6,43.6Z"/>
+        </g>
+        <g id="ZGdWx9m5DYEhx4GMVeg701" data-name="ZGdWx9m5DYEhx4GMVeg70">
+          <path class="st2" d="M2.6,32.4c4.9-.4,9.7,0,14.3,1.4,6.8,2,13,5.8,17.9,11.2,7-4.1,13-10.7,17.2-18.3-6.7-7.9-19.8-16.4-34.7-17.3-7.6,5.7-12.7,13.9-14.7,22.9Z"/>
+        </g>
+        <g id="GxKt1bAngLrIadXRZvyHF1" data-name="GxKt1bAngLrIadXRZvyHF">
+          <path class="st2" d="M46,64.1c4.4,4.1,9.7,7.2,15.6,8.9,15.8-10.3,22.2-30.9,14.1-48.6-.2-.4-.4-.8-.6-1.2-2.8,21-14.9,32.5-29.1,40.9Z"/>
+        </g>
+        <g id="CKGvhIZtrC6RkvPKHYJac1" data-name="CKGvhIZtrC6RkvPKHYJac">
+          <path class="st2" d="M52,26.7c-4.1,7.6-10.2,14.2-17.2,18.3,1.8,7.4,5.8,14,11.2,19.1,14.2-8.4,26.3-19.9,29.1-40.9-3.9-7.8-10-13.7-17.3-17.3-.1,7.1-2.3,14.4-5.8,20.9Z"/>
+        </g>
+        <g id="_x37_MafUmq73VRdi1BxMil9D1" data-name="_x37_MafUmq73VRdi1BxMil9D">
+          <path class="st3" d="M24.4,5.2c-2.6,1.2-4.9,2.6-7.1,4.2,14.9.9,28.1,9.4,34.7,17.3,3.6-6.5,5.7-13.8,5.8-20.9C47.8.8,35.5.2,24.4,5.2Z"/>
+        </g>
+      </g>
+    </g>
+  </g>
 </svg>

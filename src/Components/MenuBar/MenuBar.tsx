@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import logoNew from "../../assets/LOGOS/QUINIPOLO_NEW_LOGO.svg";
+import logoNew from "../../assets/LOGOS_2025/logo_solo_letras_horizontal.svg";
 
 import {
   UserDataType,
@@ -23,10 +23,7 @@ import {
 import { Divider, Select } from "antd";
 import MenuIcon from "@mui/icons-material/Menu";
 import { apiGet } from "../../utils/apiUtils";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
 import { useTheme } from "../../Context/ThemeContext/ThemeContext";
-import LanguagePicker from "../LanguagePicker/LanguagePicker";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import { useTranslation } from "react-i18next";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
@@ -198,7 +195,8 @@ export const MenuBar = () => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                ml: "-18px",
+                mt: "6px",
+                ml: "-8px",
                 px: 0,
               }}
             >
