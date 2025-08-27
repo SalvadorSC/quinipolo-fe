@@ -54,35 +54,40 @@ const ModeratorManagementModal: React.FC<ModeratorManagementModalProps> = ({
     null
   );
   const [isSaving, setIsSaving] = useState(false);
-  const [currentModerators, setCurrentModerators] = useState<string[]>([]);
+  const [currentModerators, setCurrentModerators] = useState<Participant[]>([]);
 
   useEffect(() => {
     if (open) {
-      const moderatorIds = participants
-        .filter((p) => p.role === "moderator")
-        .map((p) => p.user_id);
-      setCurrentModerators(moderatorIds);
+      const moderators = participants.filter((p) => p.role === "moderator");
+      setCurrentModerators(moderators);
       setSelectedParticipant(null);
       setSelectedModerator(null);
     }
   }, [open, participants]);
 
   const regularParticipants = participants.filter(
-    (p) => p.role !== "moderator" && p.user_id !== creatorId
+    (p) =>
+      p.user_id !== creatorId &&
+      !currentModerators.some((m) => m.user_id === p.user_id)
   );
-  const moderators = participants.filter((p) => p.role === "moderator");
+  const moderators = currentModerators;
 
   const handleMoveToModerators = () => {
     if (selectedParticipant) {
-      setCurrentModerators((prev) => [...prev, selectedParticipant]);
-      setSelectedParticipant(null);
+      const participantToAdd = participants.find(
+        (p) => p.user_id === selectedParticipant
+      );
+      if (participantToAdd) {
+        setCurrentModerators((prev) => [...prev, participantToAdd]);
+        setSelectedParticipant(null);
+      }
     }
   };
 
   const handleRemoveFromModerators = () => {
     if (selectedModerator && selectedModerator !== creatorId) {
       setCurrentModerators((prev) =>
-        prev.filter((id) => id !== selectedModerator)
+        prev.filter((moderator) => moderator.user_id !== selectedModerator)
       );
       setSelectedModerator(null);
     }
@@ -91,7 +96,8 @@ const ModeratorManagementModal: React.FC<ModeratorManagementModalProps> = ({
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      await onSave(currentModerators);
+      const moderatorIds = currentModerators.map((m) => m.user_id);
+      await onSave(moderatorIds);
       onClose();
     } catch (error) {
       console.error("Error saving moderators:", error);
@@ -173,7 +179,16 @@ const ModeratorManagementModal: React.FC<ModeratorManagementModalProps> = ({
                 variant="outlined"
                 onClick={handleMoveToModerators}
                 disabled={!selectedParticipant}
-                startIcon={<ArrowForward />}
+                startIcon={
+                  <Box sx={{ display: { xs: "none", md: "block" } }}>
+                    <ArrowForward />
+                  </Box>
+                }
+                endIcon={
+                  <Box sx={{ display: { xs: "block", md: "none" } }}>
+                    <ArrowForward sx={{ transform: "rotate(90deg)" }} />
+                  </Box>
+                }
                 sx={{ minWidth: "auto" }}
               >
                 {t("makeModerator")}
@@ -182,7 +197,16 @@ const ModeratorManagementModal: React.FC<ModeratorManagementModalProps> = ({
                 variant="outlined"
                 onClick={handleRemoveFromModerators}
                 disabled={!selectedModerator || isCreator(selectedModerator)}
-                startIcon={<ArrowBack />}
+                startIcon={
+                  <Box sx={{ display: { xs: "none", md: "block" } }}>
+                    <ArrowBack />
+                  </Box>
+                }
+                endIcon={
+                  <Box sx={{ display: { xs: "block", md: "none" } }}>
+                    <ArrowBack sx={{ transform: "rotate(90deg)" }} />
+                  </Box>
+                }
                 sx={{ minWidth: "auto" }}
               >
                 {t("removeModerator")}

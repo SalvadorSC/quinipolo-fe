@@ -10,13 +10,13 @@ import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { apiGet, apiPost, apiPut } from "../../utils/apiUtils";
 import Leaderboard from "../../Components/Leaderboard/Leaderboard";
 import Stats from "../../Components/Stats/Stats";
-import RequestsTable from "../../Components/RequestsTable/RequestsTable";
 import LeagueInfo from "../../Components/LeagueInfo/LeagueInfo";
 import LeagueEditModal from "../../Components/LeagueEditModal/LeagueEditModal";
 import ModeratorManagementModal from "../../Components/ModeratorManagementModal/ModeratorManagementModal";
 import { Tabs, TabsProps } from "antd";
 import { useTranslation } from "react-i18next";
 import ActionRequests from "./ActionRequests";
+import { isSystemAdmin } from "../../utils/moderatorUtils";
 
 export type LeaguesTypes = {
   quinipolosToAnswer: any[];
@@ -86,17 +86,12 @@ const LeagueDashboard = () => {
   const [isSavingLeague, setIsSavingLeague] = useState<boolean>(false);
   const [isModeratorModalOpen, setIsModeratorModalOpen] =
     useState<boolean>(false);
-  const [isSavingModerators, setIsSavingModerators] = useState<boolean>(false);
-  // Remove isUserModeratorInThisLeague state
   const queryParams = new URLSearchParams(window.location.search);
   const leagueId = queryParams.get("id");
   const { setFeedback } = useFeedback();
   const { t } = useTranslation();
 
   const { userData } = useUser();
-
-  const MAX_RETRIES = 5;
-  const RETRY_DELAY = 3000; // 3 seconds
 
   const getLeagueData = async () => {
     apiGet(`/api/leagues/${leagueId}`)
@@ -180,12 +175,13 @@ const LeagueDashboard = () => {
   }, [userData.username]);
 
   // Derived value for moderator status
-  const isUserModeratorInThisLeague = !!leagueData.participants.find(
-    (p) =>
-      p.username === userData.username &&
-      p.role &&
-      p.role.toLowerCase() === "moderator"
-  );
+  const isUserModeratorInThisLeague =
+    !!leagueData.participants.find(
+      (p) =>
+        p.username === userData.username &&
+        p.role &&
+        p.role.toLowerCase() === "moderator"
+    ) || isSystemAdmin(userData.role);
 
   // Derived value for creator status
   const isUserCreator = leagueData.created_by === userData.userId;
@@ -193,10 +189,6 @@ const LeagueDashboard = () => {
   // Debug: Find the specific participant entry for current user
   const currentUserParticipant = leagueData.participants.find(
     (p) => p.username === userData.username
-  );
-  console.log(
-    "🔍 DEBUG: Current user participant entry:",
-    currentUserParticipant
   );
 
   const handleSolicitarPermisos = () => {
@@ -276,7 +268,6 @@ const LeagueDashboard = () => {
 
   const handleSaveModerators = async (moderatorIds: string[]) => {
     try {
-      setIsSavingModerators(true);
       // TODO: Implement API call to update moderator roles
       // For now, just update the local state optimistically
       setLeagueData((prev) => ({
@@ -291,8 +282,6 @@ const LeagueDashboard = () => {
     } catch (e) {
       console.error(e);
       setFeedback({ message: t("error"), severity: "error", open: true });
-    } finally {
-      setIsSavingModerators(false);
     }
   };
 

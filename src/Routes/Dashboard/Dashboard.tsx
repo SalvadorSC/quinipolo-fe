@@ -15,6 +15,7 @@ import SportsBarIcon from "@mui/icons-material/SportsBar";
 import PoolIcon from "@mui/icons-material/Pool";
 import { useTranslation } from "react-i18next";
 import { apiGet } from "../../utils/apiUtils";
+import { isSystemAdmin } from "../../utils/moderatorUtils";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -185,6 +186,17 @@ const Dashboard = () => {
                 gap: 2,
               }}
             >
+              {/* Admin Link - Only visible to system admins */}
+              {isSystemAdmin(userData.role) ? (
+                <LoadingButton
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => navigate("/admin")}
+                >
+                  {t("goToAdminPanel")}
+                </LoadingButton>
+              ) : null}
+
               <Button
                 className="gradient-secondary"
                 variant="contained"

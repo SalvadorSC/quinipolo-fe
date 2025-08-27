@@ -20,6 +20,7 @@ import { apiGet, apiPost, apiPut } from "../../utils/apiUtils";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import LockIcon from "@mui/icons-material/Lock";
 import { useTranslation } from "react-i18next";
+import { isSystemAdmin } from "../../utils/moderatorUtils";
 
 type LeagueParticipant = {
   user_id: string;
@@ -84,10 +85,6 @@ const LeagueList = () => {
     );
   };
 
-  const participantIsInMoreThan2Leagues =
-    leagueListData.filter((league) => isUserInLeague(league)).length > 2 &&
-    userData.role === "user";
-
   const fetchLeagueListData = useCallback(async () => {
     // Fetch data logic
     apiGet<LeaguesTypes[]>(`/api/leagues`)
@@ -107,7 +104,10 @@ const LeagueList = () => {
 
   const handleJoinLeague = (index: number) => {
     // Logic to handle joining a league
-    if (leagueListData?.[index] && isUserInLeague(leagueListData[index])) {
+    if (
+      leagueListData?.[index] &&
+      (isUserInLeague(leagueListData[index]) || isSystemAdmin(userData.role))
+    ) {
       navigate("/league-dashboard?id=" + leagueListData[index].id);
     } else if (leagueListData?.[index]?.is_private) {
       apiPost(
@@ -244,7 +244,8 @@ const LeagueList = () => {
                           loading={!leagueListData}
                           disabled={hasPendingPetition(league)}
                         >
-                          {isUserInLeague(league)
+                          {isUserInLeague(league) ||
+                          isSystemAdmin(userData.role)
                             ? t("go")
                             : hasPendingPetition(league)
                             ? t("pending")

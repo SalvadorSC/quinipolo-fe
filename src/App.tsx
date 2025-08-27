@@ -23,8 +23,10 @@ import {
   EmailConfirmation,
   SurveyForm,
   NoMatch,
+  Admin,
 } from "./Routes";
 import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
+import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 
 // Custom hook to handle URL cleanup
 function useUrlCleanup() {
@@ -93,6 +95,14 @@ function App() {
                       <Route
                         path="league-success"
                         element={<LeagueSuccess />}
+                      />
+                      <Route
+                        path="admin"
+                        element={
+                          <ProtectedRoute requireAdmin={true} fallbackPath="/">
+                            <Admin />
+                          </ProtectedRoute>
+                        }
                       />
                       <Route path="*" element={<Navigate to="/" />} />
                     </Route>

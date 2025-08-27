@@ -35,6 +35,16 @@ const SurveyForm = () => {
     football: string[];
   }>({ waterpolo: [], football: [] });
   const [helpModalOpen, setHelpModalOpen] = useState<boolean>(false);
+
+  // Check if this is for all leagues
+  const isForAllLeagues =
+    new URLSearchParams(window.location.search).get("allLeagues") === "true";
+
+  // Check if this is for managed leagues only
+  const isForManagedLeagues =
+    new URLSearchParams(window.location.search).get("managedLeagues") ===
+    "true";
+
   const selectedTeams = quinipolo
     .map((match) => match.awayTeam)
     .concat(quinipolo.map((match) => match.homeTeam));
@@ -80,24 +90,53 @@ const SurveyForm = () => {
       // Set loading state to prevent multiple submissions
       setLoading(true);
 
-      // Create quinipolo via backend API
-      const response = await apiPost<QuinipoloCreateResponseType>(
-        `/api/quinipolos`,
-        {
-          league_id: leagueId,
+      // Determine the API endpoint based on the type of creation
+      let endpoint = "/api/quinipolos";
+      let requestBody: any = {
+        league_id: leagueId,
+        quinipolo,
+        end_date: selectedDate,
+        creation_date: new Date(),
+      };
+
+      if (isForAllLeagues) {
+        endpoint = "/api/quinipolos/all-leagues";
+        requestBody = {
           quinipolo,
           end_date: selectedDate,
           creation_date: new Date(),
-        }
-      );
+        };
+      } else if (isForManagedLeagues) {
+        endpoint = "/api/quinipolos/managed-leagues";
+        requestBody = {
+          quinipolo,
+          end_date: selectedDate,
+          creation_date: new Date(),
+        };
+      }
+
+      // Create quinipolo via backend API
+      const response = await apiPost<any>(endpoint, requestBody);
+
+      let successMessage = t("quinipoloCreatedSuccess");
+      if (isForAllLeagues) {
+        successMessage = `Successfully created quinipolos for ${response.successfulCreations} out of ${response.totalLeagues} leagues`;
+      } else if (isForManagedLeagues) {
+        successMessage = `Successfully created quinipolos for ${response.successfulCreations} out of ${response.totalLeagues} managed leagues`;
+      }
 
       setFeedback({
-        message: t("quinipoloCreatedSuccess"),
+        message: successMessage,
         severity: "success",
         open: true,
       });
 
-      navigate("/quinipolo-success", { state: { quinipolo: response } });
+      // Navigate based on the type of creation
+      if (isForAllLeagues || isForManagedLeagues) {
+        navigate("/dashboard");
+      } else {
+        navigate("/quinipolo-success", { state: { quinipolo: response } });
+      }
     } catch (error) {
       setFeedback({
         message: t("errorCreatingQuinipolo"),

@@ -17,3 +17,4 @@ export { default as EmailConfirmation } from "./EmailConfirmation/EmailConfirmat
 export { default as SurveyForm } from "./SurveyForm/SurveyForm";
 export { default as Profile } from "./Profile/Profile";
 export { default as NoMatch } from "./NoMatch/NoMatch";
+export { default as Admin } from "./Admin/Admin";

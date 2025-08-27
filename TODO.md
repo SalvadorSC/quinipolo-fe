@@ -11,11 +11,11 @@ Extra TO DO:
 
 Future features (from League Info & Edit flow):
 
+- Make a way to create quinipolos at the same time for all leagues managed by the quinipolo team
 - Edit/add league photo in the edit modal (image upload and update)
 - Archive League action
 - Kick Participant action
 - Backend API for updating moderator roles (currently using optimistic updates)
-- Make a way to create quinipolos at the same time for all leagues managed by the quinipolo team
 
 COMPLETED:
 
