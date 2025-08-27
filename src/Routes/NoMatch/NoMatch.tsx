@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Typography, Box, Paper } from "@mui/material";
 import {
@@ -19,6 +19,13 @@ const NoMatch: React.FC = () => {
   const handleGoBack = () => {
     navigate(-1);
   };
+
+  // do a check to see if the url contains a hash and if so, remove it, use navigate to go to same page without hash
+  useEffect(() => {
+    if (window.location.hash) {
+      navigate(window.location.pathname);
+    }
+  }, []);
 
   return (
     <div className={styles.container}>
