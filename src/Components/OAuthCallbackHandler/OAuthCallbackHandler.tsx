@@ -3,15 +3,17 @@ import { useTranslation } from "react-i18next";
 import { Modal, Form, Input, Alert } from "antd";
 import { UserOutlined, IdcardOutlined } from "@ant-design/icons";
 import { supabase } from "../../lib/supabaseClient";
-import { apiPost } from "../../utils/apiUtils";
+import { apiGet, apiPost } from "../../utils/apiUtils";
 import { calculateAge } from "../../utils/calculateAge";
-import { useUser } from "../../Context/UserContext/UserContext";
+import { UserDataType, useUser } from "../../Context/UserContext/UserContext";
 import { User } from "@supabase/supabase-js";
+import { useNavigate } from "react-router-dom";
 
 type Props = { children: React.ReactNode };
 
 const OAuthCallbackHandler = ({ children }: Props) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
@@ -24,13 +26,11 @@ const OAuthCallbackHandler = ({ children }: Props) => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+      console.log("checkUserProfile", user);
       if (user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single();
-
+        // check if the user has a profile via the BE
+        const profile = await apiGet<UserDataType>("/api/users/me/profile");
+        console.log("profile", profile);
         if (!profile && user.app_metadata?.provider === "google") {
           setCurrentUser(user);
           setShowProfileModal(true);
@@ -73,6 +73,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
       setShowProfileModal(false);
       setCurrentUser(null);
       await refreshUserData();
+      navigate("/dashboard");
     } catch (error: any) {
       if (error?.response?.data?.error) {
         setError(error.response.data.error);

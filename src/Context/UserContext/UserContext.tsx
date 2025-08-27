@@ -133,6 +133,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
           ...profile,
           leagues,
           hasBeenChecked: true,
+          isAuthenticated: true,
         });
       } catch (error: any) {
         console.error("Error refreshing user profile:", error);
