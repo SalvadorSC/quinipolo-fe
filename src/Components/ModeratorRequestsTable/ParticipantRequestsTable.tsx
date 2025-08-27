@@ -122,7 +122,7 @@ const ParticipantRequestsTable = ({
                         color="primary"
                         onClick={() => handleAccept(request._id)}
                       >
-                        <CheckIcon />
+                        {t("accept")} <CheckIcon />
                       </Button>
                       <Button
                         className={`${style.buttonAction} ${style.buttonReject}`}
@@ -130,7 +130,7 @@ const ParticipantRequestsTable = ({
                         color="secondary"
                         onClick={() => handleReject(request._id)}
                       >
-                        <DoDisturbIcon />
+                        {t("reject")} <DoDisturbIcon />
                       </Button>
                     </TableCell>
                   </TableRow>

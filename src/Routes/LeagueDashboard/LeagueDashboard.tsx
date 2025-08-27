@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress, Paper, Stack, Box } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
@@ -16,6 +16,7 @@ import LeagueEditModal from "../../Components/LeagueEditModal/LeagueEditModal";
 import ModeratorManagementModal from "../../Components/ModeratorManagementModal/ModeratorManagementModal";
 import { Tabs, TabsProps } from "antd";
 import { useTranslation } from "react-i18next";
+import ActionRequests from "./ActionRequests";
 
 export type LeaguesTypes = {
   quinipolosToAnswer: any[];
@@ -381,85 +382,42 @@ const LeagueDashboard = () => {
               <>
                 <h2 className={styles.actionsTitle}>{t("actions")}</h2>
                 <hr style={{ marginBottom: 16 }} />
-                {(() => {
-                  const participantRequests =
-                    leagueData.isPrivate &&
-                    leagueData.participantPetitions?.filter(
-                      (petition) => petition.status === "pending"
-                    );
-                  const moderatorRequests =
-                    leagueData.moderatorPetitions?.filter(
-                      (petition) => petition.status === "pending"
-                    );
+                <ActionRequests
+                  leagueId={leagueId!}
+                  leagueData={leagueData}
+                  setLeagueData={setLeagueData}
+                />
 
-                  if (
-                    (!participantRequests ||
-                      participantRequests.length === 0) &&
-                    (!moderatorRequests || moderatorRequests.length === 0)
-                  ) {
-                    return (
-                      <div className={styles.noActionsToHandle}>
-                        {t("noActionsToHandle")}
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <>
-                      {leagueData.isPrivate &&
-                        participantRequests &&
-                        participantRequests.length > 0 && (
-                          <RequestsTable
-                            leagueId={leagueId!}
-                            requests={participantRequests}
-                            setLeagueData={setLeagueData}
-                            requestType="participant"
-                          />
-                        )}
-                      {moderatorRequests?.length > 0 && (
-                        <RequestsTable
-                          leagueId={leagueId!}
-                          requests={moderatorRequests}
-                          setLeagueData={setLeagueData}
-                          requestType="moderator"
-                        />
-                      )}
-                    </>
-                  );
-                })()}
-                {/* Removed bottom button; sticky CTA handles mobile */}
-              </>
-            ) : null}
-            {isUserModeratorInThisLeague && (
-              <Box
-                sx={{
-                  position: "sticky",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  pt: 1,
-                  pb: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
-                  mt: 2,
-                  px: 2,
-                  display: { xs: "block", md: "none" },
-                  zIndex: 1,
-                }}
-              >
-                <LoadingButton
-                  fullWidth
-                  variant="contained"
-                  onClick={handleBasicActionButtonClick}
-                  loading={!leagueData || loading}
-                  startIcon={<AddRoundedIcon />}
-                  className={styles.stickyCtaButton}
-                  classes={{
-                    root: `${styles.stickyCtaButton} gradient-primary`,
+                <Box
+                  sx={{
+                    position: "sticky",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    pt: 1,
+                    pb: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
+                    mt: 2,
+                    px: 2,
+                    display: { xs: "block", md: "none" },
+                    zIndex: 1,
                   }}
                 >
-                  {t("createQuinipolo")}
-                </LoadingButton>
-              </Box>
-            )}
+                  <LoadingButton
+                    fullWidth
+                    variant="contained"
+                    onClick={handleBasicActionButtonClick}
+                    loading={!leagueData || loading}
+                    startIcon={<AddRoundedIcon />}
+                    className={styles.stickyCtaButton}
+                    classes={{
+                      root: `${styles.stickyCtaButton} gradient-primary`,
+                    }}
+                  >
+                    {t("createQuinipolo")}
+                  </LoadingButton>
+                </Box>
+              </>
+            ) : null}
           </>
         )}
       </Paper>

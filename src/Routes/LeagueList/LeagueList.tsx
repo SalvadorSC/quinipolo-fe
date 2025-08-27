@@ -72,11 +72,6 @@ const LeagueList = () => {
 
   // Helper function to check if user is in a league
   const isUserInLeague = (league: LeaguesTypes) => {
-    console.log(
-      league.participants.find(
-        (participant) => participant.username === userData.username
-      )
-    );
     return league.participants.some(
       (participant) => participant.username === userData.username
     );
