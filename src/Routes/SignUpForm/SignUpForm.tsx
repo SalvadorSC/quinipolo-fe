@@ -16,6 +16,7 @@ import {
   SmileOutlined,
 } from "@ant-design/icons";
 import stylesSignUpForm from "./SignUpForm.module.scss";
+import { calculateAge } from "../../utils/calculateAge";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -43,16 +44,7 @@ const SignUpForm = () => {
       return;
     }
     // Calculate age from birthday
-    const birthDate = new Date(birthday);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (
-      monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < birthDate.getDate())
-    ) {
-      age--;
-    }
+    const age = calculateAge(birthday);
 
     if (age < 18) {
       setError(t("mustBe18OrOlder"));
@@ -269,17 +261,7 @@ const SignUpForm = () => {
                     validator: (_, value) => {
                       if (!value) return Promise.resolve();
 
-                      const birthDate = new Date(value);
-                      const today = new Date();
-                      let age = today.getFullYear() - birthDate.getFullYear();
-                      const monthDiff = today.getMonth() - birthDate.getMonth();
-                      if (
-                        monthDiff < 0 ||
-                        (monthDiff === 0 &&
-                          today.getDate() < birthDate.getDate())
-                      ) {
-                        age--;
-                      }
+                      const age = calculateAge(value);
 
                       if (age >= 18) return Promise.resolve();
                       return Promise.reject(
