@@ -96,6 +96,7 @@ function App() {
                         path="league-success"
                         element={<LeagueSuccess />}
                       />
+                      <Route path="*" element={<Navigate to="/" />} />
                     </Route>
                   ) : (
                     /* Unauthenticated Routes */
