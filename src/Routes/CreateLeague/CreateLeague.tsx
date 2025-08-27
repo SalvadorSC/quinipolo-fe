@@ -251,11 +251,11 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
                           color="text.secondary"
                           sx={{ textDecoration: "line-through", color: "grey" }}
                         >
-                          {formatPrice(4999, tier.currency || "eur")}
+                          {formatPrice(3999, tier.currency || "eur")}
                         </Typography>
                       )}
                       <Typography variant="h4" color="primary" gutterBottom>
-                        {formatPrice(3999, tier.currency || "eur")}
+                        {formatPrice(2999, tier.currency || "eur")}
                       </Typography>
                     </Box>
 
