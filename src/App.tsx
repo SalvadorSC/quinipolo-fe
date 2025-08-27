@@ -103,7 +103,7 @@ function App() {
                   )}
 
                   {/* 404 Page - Catch all unmatched routes */}
-                  <Route path="*" element={<NoMatch />} />
+                  {/* <Route path="*" element={<NoMatch />} /> */}
                 </Routes>
               </OAuthCallbackHandler>
             </ThemeProvider>
