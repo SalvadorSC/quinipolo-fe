@@ -133,8 +133,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
           ...profile,
           leagues,
           hasBeenChecked: true,
-          userId: profile.userId,
-          username: profile.username,
           isAuthenticated: true,
         });
       } catch (error: any) {
