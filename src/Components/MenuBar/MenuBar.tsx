@@ -71,7 +71,7 @@ const LANGUAGES = [
 export const MenuBar = () => {
   const navigate = useNavigate();
   const { updateUser: updateUserData, userData, signOut } = useUserData();
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const { t, i18n } = useTranslation();
@@ -206,7 +206,7 @@ export const MenuBar = () => {
                 src={logoNew}
                 style={logoStyle}
                 alt="logo of quinipolo"
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate("/")}
               />
               <Box sx={{ display: { xs: "none", lg: "flex" } }}>
                 <ThemeToggle mode="icon" />
