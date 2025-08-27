@@ -22,6 +22,7 @@ import {
   SignUpForm,
   EmailConfirmation,
   SurveyForm,
+  NoMatch,
 } from "./Routes";
 import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
 
@@ -95,14 +96,14 @@ function App() {
                         path="league-success"
                         element={<LeagueSuccess />}
                       />
-                      <Route path="*" element={<Navigate to="/dashboard" />} />
                     </Route>
                   ) : (
                     /* Unauthenticated Routes */
                     <Route path="/" element={<Landing />} />
                   )}
 
-                  {/* <Route path="*" element={<NoMatch />} /> */}
+                  {/* 404 Page - Catch all unmatched routes */}
+                  <Route path="*" element={<NoMatch />} />
                 </Routes>
               </OAuthCallbackHandler>
             </ThemeProvider>
