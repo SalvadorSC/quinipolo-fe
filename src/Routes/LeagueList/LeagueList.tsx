@@ -21,24 +21,43 @@ import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import LockIcon from "@mui/icons-material/Lock";
 import { useTranslation } from "react-i18next";
 
+type LeagueParticipant = {
+  user_id: string;
+  username: string;
+  role: string;
+};
+
+type LeaguePetition = {
+  userId: string;
+  username: string;
+  status: string;
+  date: string;
+};
+
 type LeaguesTypes = {
+  // DB fields
+  id: string;
+  league_name: string;
+  created_at?: string;
+  created_by?: string;
+  tier?: string;
+  status?: string;
+  is_private: boolean;
+  current_participants?: number;
+  updated_at?: string;
+  description?: string | null;
+
+  // Enriched fields from API
+  participants: LeagueParticipant[];
+  participantsCount?: number;
+  participantPetitions: LeaguePetition[];
+  moderatorPetitions?: LeaguePetition[];
+  moderatorArray: string[];
   quinipolosToAnswer: any[];
   leaguesToCorrect: any[];
-  moderatorArray: string[];
-  league_name: string;
-  id: string;
-  participants: {
-    user_id: string;
-    username: string;
-    role: string;
-  }[];
-  isPrivate: boolean;
-  participantPetitions: {
-    userId: string;
-    username: string;
-    status: string;
-    date: Date;
-  }[];
+
+  // Some endpoints (e.g., create) may return camelCase
+  isPrivate?: boolean;
 };
 
 const LeagueList = () => {
@@ -95,7 +114,7 @@ const LeagueList = () => {
     // Logic to handle joining a league
     if (leagueListData?.[index] && isUserInLeague(leagueListData[index])) {
       navigate("/league-dashboard?id=" + leagueListData[index].id);
-    } else if (leagueListData?.[index]?.isPrivate) {
+    } else if (leagueListData?.[index]?.is_private) {
       apiPost(
         `/api/leagues/${leagueListData?.[index].id}/request-participant`,
         {
@@ -208,7 +227,7 @@ const LeagueList = () => {
                       {league.participants.length}
                     </TableCell>
                     <TableCell align="left">
-                      {league.isPrivate ? t("private") : t("public")}
+                      {league.is_private ? t("private") : t("public")}
                     </TableCell>
                     <TableCell align="center">
                       <Tooltip

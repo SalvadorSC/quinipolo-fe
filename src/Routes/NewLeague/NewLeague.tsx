@@ -14,7 +14,7 @@ import { apiPost } from "../../utils/apiUtils";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { useUser } from "../../Context/UserContext/UserContext";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 // Define the response type for the image upload
 /* interface ImageUploadResponse {
@@ -32,7 +32,7 @@ interface LeagueCreationResponse {
 // Define the NewLeague component
 const NewLeague: React.FC = () => {
   const [leagueName, setLeagueName] = useState<string>("");
-  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [isPrivate, setIsPrivate] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const NewLeague: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!leagueName) {
-      setError(t('fillAllRequiredFields'));
+      setError(t("fillAllRequiredFields"));
       return;
     }
     const leagueId = leagueName.toLowerCase().replace(/\s/g, "_");
@@ -65,7 +65,7 @@ const NewLeague: React.FC = () => {
       );
 
       setFeedback({
-        message: t('leagueCreatedSuccess'),
+        message: t("leagueCreatedSuccess"),
         severity: "success",
         open: true,
       });
@@ -74,7 +74,7 @@ const NewLeague: React.FC = () => {
     } catch (error) {
       console.error("Error creating league:", error);
       setFeedback({
-        message: t('errorCreatingLeague'),
+        message: t("errorCreatingLeague"),
         severity: "error",
         open: true,
       });
@@ -93,13 +93,13 @@ const NewLeague: React.FC = () => {
       }}
     >
       <Typography variant="h4" component="h1" gutterBottom>
-        {t('createNewLeague')}
+        {t("createNewLeague")}
       </Typography>
       <form onSubmit={handleSubmit}>
         <Box mb={2}>
           <TextField
             fullWidth
-            label={t('leagueName')}
+            label={t("leagueName")}
             value={leagueName}
             onChange={(e) => setLeagueName(e.target.value)}
             required
@@ -115,7 +115,7 @@ const NewLeague: React.FC = () => {
                 color="primary"
               />
             }
-            label={t('privateLeague')}
+            label={t("privateLeague")}
           />
         </Box>
         {/*  <Box mb={2}>
@@ -140,7 +140,7 @@ const NewLeague: React.FC = () => {
           </Box>
         )} */}
         <Button type="submit" variant="contained" color="primary">
-          {t('createLeague')}
+          {t("createLeague")}
         </Button>
       </form>
       {error && (
