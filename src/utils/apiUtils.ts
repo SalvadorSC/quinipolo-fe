@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { supabase } from "../lib/supabaseClient";
 import { AUTH_TOKEN_STORAGE_KEY } from "./config";
+import { GoogleUser } from "../types/auth";
 
 // Base URL for the API
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -149,7 +150,7 @@ export const apiPatch = async <T>(
   config: AxiosRequestConfig = {}
 ): Promise<T> => apiCall<T>("patch", url, data, config);
 
-export const handleGoogleSignUp = async (user: any) => {
+export const handleGoogleSignUp = async (user: GoogleUser) => {
   try {
     const response = await apiPost("/api/auth/google-signup", {
       userId: user.id,

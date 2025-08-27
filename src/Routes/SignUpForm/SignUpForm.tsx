@@ -34,23 +34,10 @@ const SignUpForm = () => {
   }) => {
     setLoading(true);
     setError(null);
-    const { email, password, username, fullName, confirmPassword, birthday } =
-      values;
+    const { email, password, username, fullName, birthday } = values;
 
-    // Client-side validations
-    if (password !== confirmPassword) {
-      setError(t("passwordsDoNotMatch"));
-      setLoading(false);
-      return;
-    }
     // Calculate age from birthday
     const age = calculateAge(birthday);
-
-    if (age < 18) {
-      setError(t("mustBe18OrOlder"));
-      setLoading(false);
-      return;
-    }
 
     try {
       // Sign up with Supabase auth first
