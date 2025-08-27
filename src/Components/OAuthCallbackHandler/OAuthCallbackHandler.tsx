@@ -97,7 +97,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
       setCurrentUser(null);
 
       await refreshUserData();
-      navigate("/dashboard");
+      navigate("/");
     } catch (error: any) {
       if (error?.response?.data?.error) {
         setError(error.response.data.error);

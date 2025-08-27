@@ -79,7 +79,7 @@ const LeagueSuccess: React.FC<LeagueSuccessProps> = () => {
   };
 
   const handleGoToDashboard = () => {
-    navigate("/dashboard");
+    navigate("/");
   };
 
   if (loading) {

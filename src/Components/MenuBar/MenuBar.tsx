@@ -112,7 +112,7 @@ export const MenuBar = () => {
         console.log("userData", userData);
       }
     };
-    if (!userData.hasBeenChecked || location.pathname === "/dashboard") {
+    if (!userData.hasBeenChecked || location.pathname === "/") {
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -302,7 +302,7 @@ export const MenuBar = () => {
                         <ListItem
                           button
                           onClick={() => {
-                            navigate("/dashboard");
+                            navigate("/");
                             setOpen(false);
                           }}
                           sx={{ borderRadius: 2 }}

@@ -91,7 +91,7 @@ const QuinipoloSuccess = () => {
         <Button
           variant="contained"
           onClick={() => {
-            navigate("/dashboard");
+            navigate("/");
           }}
           className={`${style.returnButton} gradient-secondary`}
           style={{ marginTop: 16 }}

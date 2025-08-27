@@ -201,7 +201,7 @@ const CorrectionSuccess = () => {
         <Button
           variant="outlined"
           onClick={() => {
-            navigate("/dashboard");
+            navigate("/");
           }}
           className={style.returnButton}
           style={{ marginTop: 16 }}

@@ -231,7 +231,7 @@ const AnswersForm = () => {
           severity: "success",
           open: true,
         });
-        navigate("/dashboard");
+        navigate("/");
       }
     } catch (error: unknown) {
       console.error("Error submitting Quinipolo:", error);
@@ -349,7 +349,7 @@ const AnswersForm = () => {
       open: true,
     });
 
-    navigate("/dashboard");
+    navigate("/");
   }
 
   return (

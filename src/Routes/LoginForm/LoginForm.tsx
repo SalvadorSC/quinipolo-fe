@@ -45,7 +45,7 @@ const LoginForm = () => {
     if (error) {
       setError(t(error.code!) || error.message);
     } else {
-      navigate("/dashboard");
+      navigate("/");
     }
   };
 
@@ -55,7 +55,7 @@ const LoginForm = () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: getRedirectUrl("/dashboard"),
+        redirectTo: getRedirectUrl("/"),
       },
     });
     setLoading(false);

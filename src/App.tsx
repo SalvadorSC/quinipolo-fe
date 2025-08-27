@@ -83,7 +83,6 @@ function App() {
                       <Route path="quinipolo" element={<AnswersForm />}>
                         <Route path="correct" element={<AnswersForm />} />
                       </Route>
-                      <Route path="dashboard" element={<Dashboard />} />
                       <Route
                         path="league-dashboard"
                         element={<LeagueDashboard />}
