@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   CircularProgress,
@@ -81,7 +81,8 @@ const LeagueList = () => {
   // Helper function to check if user has a pending petition
   const hasPendingPetition = (league: LeaguesTypes) => {
     return league.participantPetitions.some(
-      (petition) => petition.username === userData.username
+      (petition) =>
+        petition.username === userData.username && petition.status === "pending"
     );
   };
 
