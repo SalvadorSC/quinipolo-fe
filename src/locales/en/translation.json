@@ -319,6 +319,7 @@
   "signUp": "Sign Up",
   "signUpWithGoogle": "Sign up with Google",
   "completeGoogleSignup": "Complete Google Signup",
+  "completeProfileMessage": "Please complete your profile to continue",
   "complete": "Complete",
   "checkYourEmail": "Check Your Email",
   "emailConfirmationSent": "We've sent a confirmation email to your inbox. Please check your email and click the confirmation link to activate your account.",

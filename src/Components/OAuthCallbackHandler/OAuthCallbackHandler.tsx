@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, Form, Input, Alert } from "antd";
-import { UserOutlined, IdcardOutlined } from "@ant-design/icons";
+import { Modal, Form, Input, Alert, Card, Button } from "antd";
+import { UserOutlined, IdcardOutlined, SmileOutlined } from "@ant-design/icons";
+import { Typography } from "@mui/material";
 import { supabase } from "../../lib/supabaseClient";
 import { apiGet, apiPost } from "../../utils/apiUtils";
 import { calculateAge } from "../../utils/calculateAge";
@@ -14,7 +15,7 @@ type Props = { children: React.ReactNode };
 const OAuthCallbackHandler = ({ children }: Props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(true);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -114,16 +115,41 @@ const OAuthCallbackHandler = ({ children }: Props) => {
     <>
       {children}
       <Modal
-        title={t("completeGoogleSignup") || "Complete Google Signup"}
         open={showProfileModal}
         onCancel={() => setShowProfileModal(false)}
-        onOk={() => profileForm.submit()}
-        confirmLoading={loading}
-        okText={t("complete") || "Complete"}
-        cancelText={t("cancel") || "Cancel"}
+        footer={null}
         closable={false}
         maskClosable={false}
+        width={480}
+        centered
+        styles={{
+          content: {
+            borderRadius: 24,
+            padding: 40,
+            top: 20,
+          },
+        }}
       >
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <SmileOutlined
+            style={{ fontSize: 36, color: "#1890ff", marginBottom: 24 }}
+          />
+
+          <Typography
+            variant="h5"
+            style={{ fontWeight: 700, marginTop: 8, marginBottom: 4 }}
+          >
+            {t("completeGoogleSignup") || "Complete Google Signup"}
+          </Typography>
+          <Typography
+            variant="body2"
+            style={{ color: "#666", fontSize: 14, marginBottom: 24 }}
+          >
+            {t("completeProfileMessage") ||
+              "Please complete your profile to continue"}
+          </Typography>
+        </div>
+
         <Form
           form={profileForm}
           layout="vertical"
@@ -131,7 +157,11 @@ const OAuthCallbackHandler = ({ children }: Props) => {
         >
           <Form.Item
             name="username"
-            label={t("username")}
+            label={
+              <span>
+                {t("username")} <span style={{ color: "#ff4d4f" }}>*</span>
+              </span>
+            }
             rules={[
               {
                 required: true,
@@ -159,11 +189,18 @@ const OAuthCallbackHandler = ({ children }: Props) => {
               placeholder={t("username")}
               size="large"
               autoComplete="username"
+              style={{ borderRadius: 8 }}
             />
           </Form.Item>
+
           <Form.Item
             name="birthday"
-            label={t("birthday") || "Birthday"}
+            label={
+              <span>
+                {t("birthday") || "Birthday"}{" "}
+                <span style={{ color: "#ff4d4f" }}>*</span>
+              </span>
+            }
             rules={[
               {
                 required: true,
@@ -190,16 +227,47 @@ const OAuthCallbackHandler = ({ children }: Props) => {
               placeholder={t("birthday") || "Birthday"}
               size="large"
               max={new Date().toISOString().split("T")[0]}
+              style={{ borderRadius: 8 }}
             />
           </Form.Item>
+
           {error && (
             <Alert
               message={error}
               type="error"
-              style={{ marginBottom: 16 }}
+              style={{ marginBottom: 16, borderRadius: 8 }}
               showIcon
             />
           )}
+
+          <div style={{ display: "flex", gap: 12, marginTop: 48 }}>
+            <Button
+              onClick={() => setShowProfileModal(false)}
+              size="large"
+              style={{
+                flex: 1,
+                borderRadius: 8,
+                fontWeight: 600,
+                borderColor: "#d9d9d9",
+                color: "#666",
+              }}
+            >
+              {t("cancel") || "Cancel"}
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => profileForm.submit()}
+              loading={loading}
+              size="large"
+              style={{
+                flex: 1,
+                borderRadius: 8,
+                fontWeight: 600,
+              }}
+            >
+              {t("complete") || "Complete"}
+            </Button>
+          </div>
         </Form>
       </Modal>
     </>

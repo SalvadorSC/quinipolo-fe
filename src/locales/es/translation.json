@@ -293,6 +293,7 @@
   "signUp": "Registrarse",
   "signUpWithGoogle": "Registrarse con Google",
   "completeGoogleSignup": "Completar Registro con Google",
+  "completeProfileMessage": "Por favor, completa tu perfil para continuar",
   "complete": "Completar",
   "checkYourEmail": "Revisa tu Email",
   "emailConfirmationSent": "Hemos enviado un email de confirmación a tu bandeja de entrada. Por favor, revisa tu email y haz clic en el enlace de confirmación para activar tu cuenta.",

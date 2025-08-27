@@ -285,5 +285,9 @@
   "role": "Rol",
   "rank": "Rang",
   "preferences": "Preferències",
-  "email_not_confirmed": "Correu electrònic no confirmat. Si us plau, revisa el teu correu electrònic i fes clic a l'enllaç de confirmació per activar el teu compte."
+  "email_not_confirmed": "Correu electrònic no confirmat. Si us plau, revisa el teu correu electrònic i fes clic a l'enllaç de confirmació per activar el teu compte.",
+  "signUpWithGoogle": "Registrar-se amb Google",
+  "completeGoogleSignup": "Completar Registre amb Google",
+  "completeProfileMessage": "Si us plau, completa el teu perfil per continuar",
+  "complete": "Completar"
 }
