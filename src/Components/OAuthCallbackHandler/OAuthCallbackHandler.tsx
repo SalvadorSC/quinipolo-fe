@@ -19,7 +19,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [profileForm] = Form.useForm();
-  const { refreshUserData } = useUser();
+  const { refreshUserData, updateUser } = useUser();
 
   useEffect(() => {
     const checkUserProfile = async () => {
@@ -28,6 +28,20 @@ const OAuthCallbackHandler = ({ children }: Props) => {
       } = await supabase.auth.getUser();
       console.log("checkUserProfile", user);
       if (user) {
+        // Ensure auth state is set so refreshUserData guard passes
+        try {
+          const { data: sessionData } = await supabase.auth.getSession();
+          const token = sessionData.session?.access_token ?? "";
+          localStorage.setItem("userId", user.id ?? "");
+          localStorage.setItem("isAuthenticated", "true");
+          if (token) localStorage.setItem("token", token);
+          updateUser({
+            userId: user.id ?? "",
+            isAuthenticated: true,
+          });
+        } catch (e) {
+          console.error("Error setting auth state after OAuth callback:", e);
+        }
         // check if the user has a profile via the BE
         try {
           const profile = await apiGet<UserDataType>("/api/users/me/profile");
@@ -82,6 +96,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
 
       setShowProfileModal(false);
       setCurrentUser(null);
+
       await refreshUserData();
       navigate("/dashboard");
     } catch (error: any) {
