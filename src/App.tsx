@@ -44,6 +44,8 @@ function useUrlCleanup() {
 function App() {
   const { userData } = useUser();
   const isAuthenticated = userData.isAuthenticated;
+  const authInitialized = userData.authInitialized;
+  const shouldShowAuthed = Boolean(authInitialized && isAuthenticated);
 
   // Use the URL cleanup hook
   useUrlCleanup();
@@ -64,11 +66,8 @@ function App() {
                   />
                   <Route path="/reset-password" element={<ResetPassword />} />
 
-                  {/* Auth callback route for magic link deep linking */}
-                  {/* <Route path="auth/callback" element={<AuthCallback />} /> */}
-
                   {/* Authenticated Routes */}
-                  {isAuthenticated ? (
+                  {shouldShowAuthed ? (
                     <Route path="/" element={<MenuBar />}>
                       <Route path="/" element={<Dashboard />} />
                       <Route path="crear-quinipolo" element={<SurveyForm />} />
@@ -103,7 +102,7 @@ function App() {
                   )}
 
                   {/* 404 Page - Catch all unmatched routes */}
-                  {/* <Route path="*" element={<NoMatch />} /> */}
+                  <Route path="*" element={<Landing />} />
                 </Routes>
               </OAuthCallbackHandler>
             </ThemeProvider>

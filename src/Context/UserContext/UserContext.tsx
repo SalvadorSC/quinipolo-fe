@@ -33,6 +33,7 @@ export type UserDataType = {
   isPro?: boolean;
   productId?: string;
   isAuthenticated: boolean;
+  authInitialized?: boolean;
 };
 
 // Define a type for the context value
@@ -63,6 +64,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     username: localStorage.getItem("username") ?? "",
     hasBeenChecked: false,
     isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
+    authInitialized: false,
   });
 
   const updateUser = useCallback((newData: Partial<UserDataType>) => {
@@ -101,6 +103,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         username: "",
         hasBeenChecked: false,
         isAuthenticated: false,
+        authInitialized: true,
       });
       // Clear localStorage
       // move the user to the home page
@@ -113,6 +116,66 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     } catch (error) {
       console.error("Error signing out:", error);
     }
+  }, []);
+
+  // Initialize auth state on mount and subscribe to auth changes
+  useEffect(() => {
+    let isMounted = true;
+    const init = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        if (!isMounted) return;
+        if (session?.user) {
+          const newUserId = session.user.id ?? "";
+          localStorage.setItem("userId", newUserId);
+          localStorage.setItem("isAuthenticated", "true");
+          setUserData((prev) => ({
+            ...prev,
+            userId: newUserId,
+            isAuthenticated: true,
+            authInitialized: true,
+          }));
+        } else {
+          setUserData((prev) => ({
+            ...prev,
+            isAuthenticated: false,
+            authInitialized: true,
+          }));
+        }
+      } catch (e) {
+        console.error("Error initializing auth:", e);
+        if (!isMounted) return;
+        setUserData((prev) => ({ ...prev, authInitialized: true }));
+      }
+    };
+
+    init();
+
+    const { data: subscription } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        const userId = session?.user?.id ?? "";
+        if (session?.user) {
+          localStorage.setItem("userId", userId);
+          localStorage.setItem("isAuthenticated", "true");
+        } else {
+          localStorage.removeItem("userId");
+          localStorage.setItem("isAuthenticated", "false");
+        }
+        setUserData((prev) => ({
+          ...prev,
+          userId,
+          isAuthenticated: Boolean(session?.user),
+          authInitialized: true,
+        }));
+      }
+    );
+
+    return () => {
+      isMounted = false;
+      subscription.subscription.unsubscribe();
+    };
   }, []);
 
   // Function to manually refresh user data

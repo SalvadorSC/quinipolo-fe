@@ -6,14 +6,16 @@ const { Readable } = require("stream");
 const links = [
   { url: "/", changefreq: "daily", priority: 1.0 },
   { url: "/sign-in", changefreq: "monthly", priority: 0.8 },
-  { url: "/dashboard", changefreq: "daily", priority: 0.9 },
   { url: "/crear-quinipolo", changefreq: "monthly", priority: 0.7 },
   { url: "/quinipolo-success", changefreq: "monthly", priority: 0.7 },
   { url: "/correction-success", changefreq: "monthly", priority: 0.7 },
   { url: "/quinipolo/correct", changefreq: "monthly", priority: 0.7 },
   { url: "/league-dashboard", changefreq: "monthly", priority: 0.7 },
   { url: "/join-league", changefreq: "monthly", priority: 0.7 },
-  // Add more routes as needed
+  { url: "/league-success", changefreq: "monthly", priority: 0.7 },
+  { url: "/signup", changefreq: "monthly", priority: 0.7 },
+  { url: "/email-confirmation", changefreq: "monthly", priority: 0.7 },
+  { url: "/survey-form", changefreq: "monthly", priority: 0.7 },
 ];
 
 // Create a stream to write to

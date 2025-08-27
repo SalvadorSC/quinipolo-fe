@@ -38,6 +38,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
           updateUser({
             userId: user.id ?? "",
             isAuthenticated: true,
+            authInitialized: true,
           });
         } catch (e) {
           console.error("Error setting auth state after OAuth callback:", e);
