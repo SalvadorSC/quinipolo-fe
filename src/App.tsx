@@ -48,40 +48,41 @@ function App() {
                   {/* Auth callback route for magic link deep linking */}
                   {/* <Route path="auth/callback" element={<AuthCallback />} /> */}
 
-                  <Route
-                    path="/"
-                    element={isAuthenticated ? <MenuBar /> : <Landing />}
-                  >
-                    <Route
-                      path="/"
-                      element={isAuthenticated ? <Dashboard /> : null}
-                    />
-                    <Route path="crear-quinipolo" element={<SurveyForm />} />
-                    <Route
-                      path="quinipolo-success"
-                      element={<QuinipoloSuccess />}
-                    />
-                    <Route
-                      path="correction-success"
-                      element={<CorrectionSuccess />}
-                    />
-
-                    <Route path="quinipolo" element={<AnswersForm />}>
-                      <Route path="correct" element={<AnswersForm />} />
+                  {/* Authenticated Routes */}
+                  {isAuthenticated ? (
+                    <Route path="/" element={<MenuBar />}>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="crear-quinipolo" element={<SurveyForm />} />
+                      <Route
+                        path="quinipolo-success"
+                        element={<QuinipoloSuccess />}
+                      />
+                      <Route
+                        path="correction-success"
+                        element={<CorrectionSuccess />}
+                      />
+                      <Route path="quinipolo" element={<AnswersForm />}>
+                        <Route path="correct" element={<AnswersForm />} />
+                      </Route>
+                      <Route path="dashboard" element={<Dashboard />} />
+                      <Route
+                        path="league-dashboard"
+                        element={<LeagueDashboard />}
+                      />
+                      <Route path="profile" element={<Profile />} />
+                      <Route path="join-league" element={<LeagueList />} />
+                      <Route path="crear-liga" element={<NewLeague />} />
+                      <Route path="create-league" element={<CreateLeague />} />
+                      <Route
+                        path="league-success"
+                        element={<LeagueSuccess />}
+                      />
+                      <Route path="*" element={<Navigate to="/dashboard" />} />
                     </Route>
-
-                    <Route path="dashboard" element={<Dashboard />} />
-                    <Route
-                      path="league-dashboard"
-                      element={<LeagueDashboard />}
-                    />
-                    <Route path="profile" element={<Profile />} />
-                    <Route path="join-league" element={<LeagueList />} />
-                    <Route path="crear-liga" element={<NewLeague />} />
-                    <Route path="create-league" element={<CreateLeague />} />
-                    <Route path="league-success" element={<LeagueSuccess />} />
-                    <Route path="*" element={<Navigate to="/dashboard" />} />
-                  </Route>
+                  ) : (
+                    /* Unauthenticated Routes */
+                    <Route path="/" element={<Landing />} />
+                  )}
 
                   {/* <Route path="*" element={<NoMatch />} /> */}
                 </Routes>
