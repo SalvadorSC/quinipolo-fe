@@ -63,7 +63,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
     };
 
     checkUserProfile();
-  }, []);
+  }, [updateUser]);
 
   const handleProfileSubmit = async (values: {
     username: string;
