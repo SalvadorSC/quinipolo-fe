@@ -15,7 +15,7 @@ type Props = { children: React.ReactNode };
 const OAuthCallbackHandler = ({ children }: Props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [showProfileModal, setShowProfileModal] = useState(true);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
