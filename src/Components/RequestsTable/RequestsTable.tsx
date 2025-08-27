@@ -131,7 +131,7 @@ const RequestsTable = ({
                         color="primary"
                         onClick={() => handleAccept(request._id)}
                       >
-                        <CheckIcon />
+                        {t("accept")} <CheckIcon />
                       </Button>
                       <Button
                         className={`${style.buttonAction} ${style.buttonReject}`}
@@ -139,7 +139,7 @@ const RequestsTable = ({
                         color="secondary"
                         onClick={() => handleReject(request._id)}
                       >
-                        <DoDisturbIcon />
+                        {t("reject")} <DoDisturbIcon />
                       </Button>
                     </TableCell>
                   </TableRow>

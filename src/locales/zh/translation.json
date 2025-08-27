@@ -107,6 +107,8 @@
   "pleaseWaitBeforeConfirming": "请在确认删除前稍等...",
   "acceptBtn": "接受",
   "rejectBtn": "拒绝",
+  "accept": "接受",
+  "reject": "拒绝",
   "noRequestsToModerate": "没有需要审核的请求",
   "noRequestsToJoin": "没有加入请求",
   "pendingRequests": "待处理请求",

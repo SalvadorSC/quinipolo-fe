@@ -113,6 +113,8 @@
   "pleaseWaitBeforeConfirming": "Si us plau, espera abans de confirmar l'eliminació...",
   "acceptBtn": "Acceptar",
   "rejectBtn": "Rebutjar",
+  "accept": "Acceptar",
+  "reject": "Rebutjar",
   "leagueInformation": "Informació de la Lliga",
   "leagueCreator": "Creador de la Lliga",
   "currentModerators": "Moderadors actuals",

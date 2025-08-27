@@ -107,6 +107,8 @@
   "pleaseWaitBeforeConfirming": "削除を確認する前にしばらくお待ちください...",
   "acceptBtn": "承認",
   "rejectBtn": "拒否",
+  "accept": "承認",
+  "reject": "拒否",
   "noRequestsToModerate": "モデレートするリクエストはありません",
   "noRequestsToJoin": "参加リクエストはありません",
   "pendingRequests": "保留中のリクエスト",

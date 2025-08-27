@@ -107,6 +107,8 @@
   "pleaseWaitBeforeConfirming": "Veuillez attendre avant de confirmer la suppression...",
   "acceptBtn": "Accepter",
   "rejectBtn": "Refuser",
+  "accept": "Accepter",
+  "reject": "Refuser",
   "noRequestsToModerate": "Aucune demande à modérer",
   "noRequestsToJoin": "Aucune demande d'adhésion",
   "pendingRequests": "Demandes en attente",

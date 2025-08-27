@@ -107,6 +107,8 @@
   "pleaseWaitBeforeConfirming": "Por favor, aguarde antes de confirmar a exclusão...",
   "acceptBtn": "Aceitar",
   "rejectBtn": "Rejeitar",
+  "accept": "Aceitar",
+  "reject": "Rejeitar",
   "noRequestsToModerate": "Nenhuma solicitação para moderar",
   "noRequestsToJoin": "Nenhuma solicitação para entrar",
   "pendingRequests": "Solicitações Pendentes",

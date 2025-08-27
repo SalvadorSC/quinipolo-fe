@@ -107,6 +107,8 @@
   "pleaseWaitBeforeConfirming": "Attendi prima di confermare l'eliminazione...",
   "acceptBtn": "Accetta",
   "rejectBtn": "Rifiuta",
+  "accept": "Accetta",
+  "reject": "Rifiuta",
   "noRequestsToModerate": "Nessuna richiesta da moderare",
   "noRequestsToJoin": "Nessuna richiesta di adesione",
   "pendingRequests": "Richieste in attesa",

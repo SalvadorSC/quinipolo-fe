@@ -236,12 +236,13 @@ const LeagueList = () => {
                       >
                         <LoadingButton
                           variant="contained"
-                          style={{ width: "80px" }}
+                          style={{ width: "80px", minWidth: "fit-content" }}
                           className={`gradient-primary`}
                           onClick={() =>
                             handleJoinLeague(leagueListData?.indexOf(league))
                           }
                           loading={!leagueListData}
+                          disabled={hasPendingPetition(league)}
                         >
                           {isUserInLeague(league)
                             ? t("go")

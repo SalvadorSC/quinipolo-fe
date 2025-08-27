@@ -145,6 +145,8 @@
   "pleaseWaitBeforeConfirming": "Por favor espera antes de confirmar la eliminación...",
   "acceptBtn": "Aceptar",
   "rejectBtn": "Rechazar",
+  "accept": "Aceptar",
+  "reject": "Rechazar",
   "noRequestsToModerate": "No hay solicitudes para moderar",
   "noRequestsToJoin": "No hay solicitudes para unirse",
   "pendingRequests": "Solicitudes pendientes",

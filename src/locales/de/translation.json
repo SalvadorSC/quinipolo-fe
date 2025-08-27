@@ -107,6 +107,8 @@
   "pleaseWaitBeforeConfirming": "Bitte warten Sie, bevor Sie die Löschung bestätigen...",
   "acceptBtn": "Akzeptieren",
   "rejectBtn": "Ablehnen",
+  "accept": "Akzeptieren",
+  "reject": "Ablehnen",
   "noRequestsToModerate": "Keine Anfragen zu moderieren",
   "noRequestsToJoin": "Keine Beitrittsanfragen",
   "pendingRequests": "Ausstehende Anfragen",

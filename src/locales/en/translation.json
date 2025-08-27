@@ -186,6 +186,8 @@
   "pleaseWaitBeforeConfirming": "Please wait before confirming deletion...",
   "acceptBtn": "Accept",
   "rejectBtn": "Reject",
+  "accept": "Accept",
+  "reject": "Reject",
   "noRequestsToModerate": "No requests to moderate",
   "noRequestsToJoin": "No requests to join",
   "pendingRequests": "Pending Requests",
