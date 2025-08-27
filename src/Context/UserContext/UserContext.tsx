@@ -110,6 +110,8 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       localStorage.removeItem("userId");
       localStorage.removeItem("username");
       localStorage.removeItem("emailAddress");
+      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("token");
     } catch (error) {
       console.error("Error signing out:", error);
     }

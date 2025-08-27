@@ -148,3 +148,18 @@ export const apiPatch = async <T>(
   data: any,
   config: AxiosRequestConfig = {}
 ): Promise<T> => apiCall<T>("patch", url, data, config);
+
+export const handleGoogleSignUp = async (user: any) => {
+  try {
+    const response = await apiPost("/api/auth/google-signup", {
+      userId: user.id,
+      email: user.email,
+      fullName: user.user_metadata?.full_name || user.user_metadata?.name,
+      username: user.user_metadata?.username,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error in Google signup:", error);
+    throw error;
+  }
+};
