@@ -41,20 +41,11 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
   const { userData } = useUser();
   const { setFeedback } = useFeedback();
   const { t } = useTranslation();
-  const flaggedFeatures = new Set(["Custom branding", "Advanced analytics"]);
-  const featureKeyMap: Record<string, string> = {
-    "Professional league management": "featureProfessionalManagement",
-    "24/7 support": "feature247Support",
-    "Advanced analytics": "featureAdvancedAnalytics",
-    "Custom branding": "featureCustomBranding",
-    "Priority support": "featurePrioritySupport",
-    "Full league control": "featureFullControl",
-    "Basic support": "featureBasicSupport",
-    "Standard analytics": "featureStandardAnalytics",
-    "Community features": "featureCommunityFeatures",
-  };
-  const getFeatureLabel = (feature: string) =>
-    t(featureKeyMap[feature] || feature);
+  const flaggedFeatures = new Set([
+    "featureCustomBranding",
+    "featureAdvancedAnalytics",
+  ]);
+  const getFeatureLabel = (feature: string) => t(feature);
 
   // Fetch available league tiers
   useEffect(() => {
@@ -234,7 +225,7 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
                 >
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
-                      {tier.name}
+                      {t(tier.name)}
                     </Typography>
 
                     <Box
@@ -264,7 +255,7 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
                       color="text.secondary"
                       sx={{ mb: 2 }}
                     >
-                      {tier.description}
+                      {t(tier.description)}
                     </Typography>
 
                     <Box sx={{ mt: 2 }}>
