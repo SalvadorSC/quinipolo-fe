@@ -23,66 +23,69 @@ import {
   EmailConfirmation,
   SurveyForm,
 } from "./Routes";
+import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
 
 function App() {
   const { userData } = useUser();
   const isAuthenticated = userData.isAuthenticated;
-  console.log("isAuthenticated", isAuthenticated);
+
   return (
     <React.StrictMode>
       <BrowserRouter>
         <FeedbackProvider>
           <UserProvider>
             <ThemeProvider>
-              <Routes>
-                <Route path="/sign-in" element={<LoginForm />} />
-                <Route path="/signup" element={<SignUpForm />} />
-                <Route
-                  path="/email-confirmation"
-                  element={<EmailConfirmation />}
-                />
-                <Route path="/reset-password" element={<ResetPassword />} />
+              <OAuthCallbackHandler>
+                <Routes>
+                  <Route path="/sign-in" element={<LoginForm />} />
+                  <Route path="/signup" element={<SignUpForm />} />
+                  <Route
+                    path="/email-confirmation"
+                    element={<EmailConfirmation />}
+                  />
+                  <Route path="/reset-password" element={<ResetPassword />} />
 
-                {/* Auth callback route for magic link deep linking */}
-                {/* <Route path="auth/callback" element={<AuthCallback />} /> */}
+                  {/* Auth callback route for magic link deep linking */}
+                  {/* <Route path="auth/callback" element={<AuthCallback />} /> */}
 
-                <Route
-                  path="/"
-                  element={isAuthenticated ? <MenuBar /> : <Landing />}
-                >
                   <Route
                     path="/"
-                    element={isAuthenticated ? <Dashboard /> : null}
-                  />
-                  <Route path="crear-quinipolo" element={<SurveyForm />} />
-                  <Route
-                    path="quinipolo-success"
-                    element={<QuinipoloSuccess />}
-                  />
-                  <Route
-                    path="correction-success"
-                    element={<CorrectionSuccess />}
-                  />
+                    element={isAuthenticated ? <MenuBar /> : <Landing />}
+                  >
+                    <Route
+                      path="/"
+                      element={isAuthenticated ? <Dashboard /> : null}
+                    />
+                    <Route path="crear-quinipolo" element={<SurveyForm />} />
+                    <Route
+                      path="quinipolo-success"
+                      element={<QuinipoloSuccess />}
+                    />
+                    <Route
+                      path="correction-success"
+                      element={<CorrectionSuccess />}
+                    />
 
-                  <Route path="quinipolo" element={<AnswersForm />}>
-                    <Route path="correct" element={<AnswersForm />} />
+                    <Route path="quinipolo" element={<AnswersForm />}>
+                      <Route path="correct" element={<AnswersForm />} />
+                    </Route>
+
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route
+                      path="league-dashboard"
+                      element={<LeagueDashboard />}
+                    />
+                    <Route path="profile" element={<Profile />} />
+                    <Route path="join-league" element={<LeagueList />} />
+                    <Route path="crear-liga" element={<NewLeague />} />
+                    <Route path="create-league" element={<CreateLeague />} />
+                    <Route path="league-success" element={<LeagueSuccess />} />
+                    <Route path="*" element={<Navigate to="/dashboard" />} />
                   </Route>
 
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route
-                    path="league-dashboard"
-                    element={<LeagueDashboard />}
-                  />
-                  <Route path="profile" element={<Profile />} />
-                  <Route path="join-league" element={<LeagueList />} />
-                  <Route path="crear-liga" element={<NewLeague />} />
-                  <Route path="create-league" element={<CreateLeague />} />
-                  <Route path="league-success" element={<LeagueSuccess />} />
-                  <Route path="*" element={<Navigate to="/dashboard" />} />
-                </Route>
-
-                {/* <Route path="*" element={<NoMatch />} /> */}
-              </Routes>
+                  {/* <Route path="*" element={<NoMatch />} /> */}
+                </Routes>
+              </OAuthCallbackHandler>
             </ThemeProvider>
           </UserProvider>
         </FeedbackProvider>
