@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { UserProvider, useUser } from "./Context/UserContext/UserContext";
@@ -25,9 +25,27 @@ import {
 } from "./Routes";
 import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
 
+// Custom hook to handle URL cleanup
+function useUrlCleanup() {
+  useEffect(() => {
+    // Clean up trailing hash fragments (like /dashboard#)
+    if (window.location.hash === "#") {
+      // Remove the empty hash without triggering a page reload
+      window.history.replaceState(
+        null,
+        "",
+        window.location.pathname + window.location.search
+      );
+    }
+  }, []);
+}
+
 function App() {
   const { userData } = useUser();
   const isAuthenticated = userData.isAuthenticated;
+
+  // Use the URL cleanup hook
+  useUrlCleanup();
 
   return (
     <React.StrictMode>

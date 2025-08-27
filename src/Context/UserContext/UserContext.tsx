@@ -130,10 +130,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
           a.leagueId === "global" ? -1 : b.leagueId === "global" ? 1 : 0
         );
 
-        console.log("profile", profile);
-        console.log("leagues", leagues);
-        console.log("profile", profile);
-
         updateUser({
           ...profile,
           leagues,

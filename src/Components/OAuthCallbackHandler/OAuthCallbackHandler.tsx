@@ -27,7 +27,6 @@ const OAuthCallbackHandler = ({ children }: Props) => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      console.log("checkUserProfile", user);
       if (user) {
         // Ensure auth state is set so refreshUserData guard passes
         try {
@@ -46,7 +45,6 @@ const OAuthCallbackHandler = ({ children }: Props) => {
         // check if the user has a profile via the BE
         try {
           const profile = await apiGet<UserDataType>("/api/users/me/profile");
-          console.log("profile", profile);
         } catch (error: any) {
           // If the profile does not exist yet, BE returns 404
           if (
