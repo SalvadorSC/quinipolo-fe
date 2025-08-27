@@ -32,6 +32,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
         const profile = await apiGet<UserDataType>("/api/users/me/profile");
         console.log("profile", profile);
         if (!profile && user.app_metadata?.provider === "google") {
+          console.log("user profile not found, showing modal");
           setCurrentUser(user);
           setShowProfileModal(true);
         }

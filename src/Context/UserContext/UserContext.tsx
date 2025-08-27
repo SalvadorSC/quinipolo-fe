@@ -1,15 +1,13 @@
-import React, {
+import {
   createContext,
   useState,
   useContext,
   ReactNode,
   useEffect,
-  useMemo,
   useCallback,
 } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import { apiGet } from "../../utils/apiUtils";
-import { useNavigate } from "react-router-dom";
 
 // Define a type for Leagues
 
