@@ -29,12 +29,21 @@ const OAuthCallbackHandler = ({ children }: Props) => {
       console.log("checkUserProfile", user);
       if (user) {
         // check if the user has a profile via the BE
-        const profile = await apiGet<UserDataType>("/api/users/me/profile");
-        console.log("profile", profile);
-        if (!profile && user.app_metadata?.provider === "google") {
-          console.log("user profile not found, showing modal");
-          setCurrentUser(user);
-          setShowProfileModal(true);
+        try {
+          const profile = await apiGet<UserDataType>("/api/users/me/profile");
+          console.log("profile", profile);
+        } catch (error: any) {
+          // If the profile does not exist yet, BE returns 404
+          if (
+            error?.response?.status === 404 &&
+            user.app_metadata?.provider === "google"
+          ) {
+            console.log("user profile not found (404), showing modal");
+            setCurrentUser(user);
+            setShowProfileModal(true);
+          } else {
+            console.error("Error checking user profile:", error);
+          }
         }
       }
     };
