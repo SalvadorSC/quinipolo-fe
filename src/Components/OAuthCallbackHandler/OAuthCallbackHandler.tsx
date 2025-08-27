@@ -6,14 +6,14 @@ import { supabase } from "../../lib/supabaseClient";
 import { apiPost } from "../../utils/apiUtils";
 import { calculateAge } from "../../utils/calculateAge";
 import { useUser } from "../../Context/UserContext/UserContext";
-import { GoogleUser } from "../../types/auth";
+import { User } from "@supabase/supabase-js";
 
 type Props = { children: React.ReactNode };
 
 const OAuthCallbackHandler = ({ children }: Props) => {
   const { t } = useTranslation();
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState<GoogleUser | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [profileForm] = Form.useForm();

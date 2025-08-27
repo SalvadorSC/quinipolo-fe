@@ -34,7 +34,14 @@ const SignUpForm = () => {
   }) => {
     setLoading(true);
     setError(null);
-    const { email, password, username, fullName, birthday } = values;
+    const { email, password, username, fullName, birthday, confirmPassword } =
+      values;
+
+    if (password !== confirmPassword) {
+      setError(t("passwordsDoNotMatch") || "Passwords do not match");
+      setLoading(false);
+      return;
+    }
 
     // Calculate age from birthday
     const age = calculateAge(birthday);
