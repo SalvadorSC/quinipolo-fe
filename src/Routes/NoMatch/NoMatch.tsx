@@ -25,7 +25,7 @@ const NoMatch: React.FC = () => {
     if (window.location.hash) {
       navigate(window.location.pathname);
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <div className={styles.container}>

@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./LoginForm.module.scss";
 import MenuBar from "../../Components/MenuBar/MenuBar";
 import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
