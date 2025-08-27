@@ -118,7 +118,8 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   // Function to manually refresh user data
   const refreshUserData = useCallback(async () => {
     console.log("refreshUserData");
-    console.log("userData", userData);
+    console.log("userData.isAuthenticated", userData.isAuthenticated);
+    console.log("userData.userId", userData.userId);
     if (userData.isAuthenticated && userData.userId) {
       try {
         const profile = await apiGet<UserDataType>("/api/users/me/profile");
