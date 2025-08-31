@@ -15,7 +15,6 @@ import {
 import axios from "axios";
 import style from "./AnswersForm.module.scss";
 import { useNavigate } from "react-router-dom";
-import Loader from "../../Components/Loader/Loader";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { apiGet, apiPost } from "../../utils/apiUtils";
 import { useUser } from "../../Context/UserContext/UserContext";
@@ -98,6 +97,7 @@ const AnswersForm = () => {
         console.error("ID is missing in the query string");
         return;
       }
+
       if (editCorrectionModeOn) {
         // will show a quinipolo, the corrections selected and give option to edit them.
         response = await apiGet<QuinipoloType>(
@@ -352,6 +352,17 @@ const AnswersForm = () => {
     navigate("/");
   }
 
+  // Determine header text based on mode
+  const getHeaderText = () => {
+    if (correctingModeOn) {
+      return t("correct");
+    } else if (seeUserAnswersModeOn) {
+      return t("yourAnswersWithResults");
+    } else {
+      return t("selectTheResultForEachMatch");
+    }
+  };
+
   return (
     <FormControl>
       {seeUserAnswersModeOn ? (
@@ -361,14 +372,12 @@ const AnswersForm = () => {
           hasBeenCorrected={quinipolo.has_been_corrected}
         />
       ) : null}
-      <TableContainer sx={{ mb: 8 }} component={Paper}>
+      <TableContainer sx={{ mb: 8, borderRadius: 4 }} component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell align="center" sx={{ marginBottom: 16 }}>
-                {correctingModeOn
-                  ? t("correct")
-                  : `${t("answers")} Quinipolo ${quinipolo.league_name}`}
+                {getHeaderText()}
               </TableCell>
             </TableRow>
           </TableHead>
@@ -390,7 +399,9 @@ const AnswersForm = () => {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell align="center" component="th" scope="row">
-                    <p className={style.matchName}>Match {index + 1}</p>
+                    <p className={style.matchName}>
+                      {t("match")} {index + 1}
+                    </p>
                     <ToggleButtonGroup
                       color="primary"
                       className={style.teamAnswerButtonContainer}

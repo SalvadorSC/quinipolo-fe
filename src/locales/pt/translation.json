@@ -374,5 +374,8 @@
   "userLeagues": "Ligas",
   "userEmail": "E-mail",
   "creator": "Criador",
-  "creatorCannotBeRemoved": "Criadores não podem ser removidos como moderadores"
+  "creatorCannotBeRemoved": "Criadores não podem ser removidos como moderadores",
+  "match": "Partida",
+  "selectTheResultForEachMatch": "Selecione o resultado para cada partida",
+  "yourAnswersWithResults": "Estas são suas respostas, as corretas em verde e as incorretas em vermelho."
 }
