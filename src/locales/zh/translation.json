@@ -374,5 +374,8 @@
   "userLeagues": "联盟",
   "userEmail": "电子邮件",
   "creator": "创建者",
-  "creatorCannotBeRemoved": "创建者不能作为版主被移除"
+  "creatorCannotBeRemoved": "创建者不能作为版主被移除",
+  "match": "比赛",
+  "selectTheResultForEachMatch": "选择每场比赛的结果",
+  "yourAnswersWithResults": "这些是您的答案，正确答案用绿色显示，错误答案用红色显示。"
 }

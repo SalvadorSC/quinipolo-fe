@@ -65,7 +65,6 @@ const LeagueList = () => {
   const navigate = useNavigate();
   const [leagueListData, setLeagueListData] = useState<LeaguesTypes[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [open, setOpen] = useState<boolean>(true);
   const { setFeedback } = useFeedback();
   const { t } = useTranslation();
 
@@ -213,7 +212,11 @@ const LeagueList = () => {
                       "&:last-child td, &:last-child th": { border: 0 },
                     }}
                   >
-                    <TableCell component="th" scope="row">
+                    <TableCell
+                      style={{ fontWeight: "bold" }}
+                      component="th"
+                      scope="row"
+                    >
                       {league.league_name}
                     </TableCell>
                     <TableCell
@@ -225,7 +228,7 @@ const LeagueList = () => {
                     <TableCell align="left">
                       {league.is_private ? t("private") : t("public")}
                     </TableCell>
-                    <TableCell align="center">
+                    <TableCell align="left">
                       <Tooltip
                         title={
                           isUserInLeague(league)
@@ -237,7 +240,12 @@ const LeagueList = () => {
                       >
                         <LoadingButton
                           variant="contained"
-                          style={{ width: "80px", minWidth: "fit-content" }}
+                          style={{
+                            minWidth: "fit-content",
+                            width: "100%",
+                            justifyContent: "flex-start",
+                            textAlign: "left",
+                          }}
                           className={`gradient-primary`}
                           onClick={() =>
                             handleJoinLeague(leagueListData?.indexOf(league))

@@ -374,5 +374,8 @@
   "userLeagues": "Ligen",
   "userEmail": "E-Mail",
   "creator": "Ersteller",
-  "creatorCannotBeRemoved": "Ersteller können nicht als Moderatoren entfernt werden"
+  "creatorCannotBeRemoved": "Ersteller können nicht als Moderatoren entfernt werden",
+  "match": "Spiel",
+  "selectTheResultForEachMatch": "Wählen Sie das Ergebnis für jedes Spiel",
+  "yourAnswersWithResults": "Das sind Ihre Antworten, richtige in grün und falsche in rot."
 }

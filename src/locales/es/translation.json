@@ -374,5 +374,8 @@
   "makeModerator": "Hacer Moderador",
   "removeModerator": "Remover Moderador",
   "creator": "Creador",
-  "creatorCannotBeRemoved": "Los creadores no pueden ser removidos como moderadores"
+  "creatorCannotBeRemoved": "Los creadores no pueden ser removidos como moderadores",
+  "match": "Partido",
+  "selectTheResultForEachMatch": "Selecciona que resultado habrá en cada partido",
+  "yourAnswersWithResults": "Estas son tus respuestas, en verde los aciertos y en rojo los fallos."
 }

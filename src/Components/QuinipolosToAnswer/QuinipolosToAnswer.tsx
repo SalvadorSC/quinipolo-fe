@@ -147,13 +147,6 @@ const TabPanelContent = ({
 
   return (
     <>
-      {totalPages > 1 ? (
-        <Pagination
-          onChange={handlePageChange}
-          count={totalPages}
-          className={styles.pagination}
-        />
-      ) : null}
       {quinipolos.length > 0 ? (
         currentItems.map((quinipolo) => {
           const deadline = new Date(quinipolo.end_date);
@@ -171,6 +164,13 @@ const TabPanelContent = ({
       ) : (
         <p className={styles.noActionsMessage}>{fallBackText}</p>
       )}
+      {totalPages > 1 ? (
+        <Pagination
+          onChange={handlePageChange}
+          count={totalPages}
+          className={styles.pagination}
+        />
+      ) : null}
     </>
   );
 };

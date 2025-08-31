@@ -72,14 +72,22 @@ const ScoreSummary: React.FC<ScoreSummaryProps> = ({
   return (
     <Paper
       elevation={2}
+      className="gradient-primary"
       sx={{
         p: 2,
         mb: 2,
         textAlign: "center",
-        backgroundColor: "#f5f5f5",
+        borderRadius: 4,
+        color: "white",
+        border: "2px solid white",
       }}
     >
-      <Typography variant="h5" component="h2" gutterBottom>
+      <Typography
+        variant="h5"
+        component="h2"
+        sx={{ fontWeight: "bold", color: "white" }}
+        gutterBottom
+      >
         {t("score")}: {correctCount}/15
       </Typography>
 
@@ -87,8 +95,7 @@ const ScoreSummary: React.FC<ScoreSummaryProps> = ({
         <Box sx={{ mt: 1 }}>
           <Typography
             variant="body2"
-            color="success.main"
-            sx={{ fontWeight: "bold" }}
+            sx={{ fontWeight: "bold", color: "white" }}
           >
             🎯 {t("game15FullyCorrect")}
           </Typography>
