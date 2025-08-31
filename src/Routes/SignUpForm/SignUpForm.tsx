@@ -84,7 +84,8 @@ const SignUpForm = () => {
           const errorMessage = backendError.response.data.error;
           if (
             errorMessage.includes("quinipolo") ||
-            errorMessage.includes("already exists")
+            errorMessage.includes("already exists") ||
+            errorMessage.includes("restricted words")
           ) {
             setError(errorMessage);
             setLoading(false);

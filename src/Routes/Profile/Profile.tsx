@@ -2,24 +2,20 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   List,
   ListItem,
   ListItemText,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { useUser } from "../../Context/UserContext/UserContext";
-import { apiGet, apiPatch } from "../../utils/apiUtils";
+import { apiGet } from "../../utils/apiUtils";
 import { useTranslation } from "react-i18next";
 import LanguagePicker from "../../Components/LanguagePicker/LanguagePicker";
 import ThemeToggle from "../../Components/ThemeToggle/ThemeToggle";
+import EditProfileDialog from "../../Components/EditProfileDialog/EditProfileDialog";
 
 type LeagueSummary = {
   id: string;
@@ -43,10 +39,6 @@ const Profile: React.FC = () => {
   const [leagues, setLeagues] = useState<LeagueSummary[]>([]);
   const [isLoadingLeagues, setIsLoadingLeagues] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [formUsername, setFormUsername] = useState(userData.username || "");
-  const [formEmail, setFormEmail] = useState(userData.emailAddress || "");
-  const [isSaving, setIsSaving] = useState(false);
-  const [usernameError, setUsernameError] = useState("");
 
   const userLeagueRoles = useMemo(() => {
     const map = new Map<string, string>();
@@ -101,58 +93,12 @@ const Profile: React.FC = () => {
     }
   }, [userData.userId, fetchLeagues]);
 
-  const openEdit = () => {
-    setFormUsername(userData.username || "");
-    setFormEmail(userData.emailAddress || "");
-    setUsernameError("");
-    setIsEditOpen(true);
-  };
+  const openEdit = () => setIsEditOpen(true);
 
   const closeEdit = () => setIsEditOpen(false);
 
-  const saveProfile = async () => {
-    try {
-      setIsSaving(true);
-      setUsernameError("");
-
-      // Client-side validation
-      if (formUsername.length < 3) {
-        setUsernameError("Username must be at least 3 characters long");
-        return;
-      }
-
-      if (formUsername.length > 15) {
-        setUsernameError("Username cannot exceed 15 characters");
-        return;
-      }
-
-      if (formUsername.toLowerCase().includes("quinipolo")) {
-        setUsernameError(t("usernameSecurityError"));
-        return;
-      }
-
-      const body: any = { username: formUsername, email: formEmail };
-      const updated = await apiPatch<{
-        id: string;
-        username: string;
-        email: string;
-      }>(`/api/users/me/profile`, body);
-      updateUser({ username: updated.username, emailAddress: updated.email });
-      setIsEditOpen(false);
-    } catch (e: any) {
-      // Handle server-side validation errors
-      if (e?.response?.data?.error) {
-        const errorMessage = e.response.data.error;
-        if (
-          errorMessage.includes("quinipolo") ||
-          errorMessage.includes("already exists")
-        ) {
-          setUsernameError(errorMessage);
-        }
-      }
-    } finally {
-      setIsSaving(false);
-    }
+  const handleProfileSave = (username: string, email: string) => {
+    updateUser({ username, emailAddress: email });
   };
 
   // Mobile-first layout wrapped in MUI Paper (consistent with other pages)
@@ -281,43 +227,13 @@ const Profile: React.FC = () => {
           </Button>
         </Box>
 
-        <Dialog open={isEditOpen} onClose={closeEdit} fullWidth maxWidth="xs">
-          <DialogTitle>{t("editProfile")}</DialogTitle>
-          <DialogContent>
-            <Box
-              sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
-            >
-              <TextField
-                label={t("username")}
-                value={formUsername}
-                onChange={(e) => {
-                  setFormUsername(e.target.value);
-                  setUsernameError("");
-                }}
-                error={!!usernameError}
-                helperText={usernameError}
-                fullWidth
-              />
-              <TextField
-                label={t("email")}
-                value={formEmail}
-                onChange={(e) => setFormEmail(e.target.value)}
-                type="email"
-                fullWidth
-              />
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={closeEdit}>{t("cancel")}</Button>
-            <Button
-              onClick={saveProfile}
-              variant="contained"
-              disabled={isSaving}
-            >
-              {t("save")}
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <EditProfileDialog
+          open={isEditOpen}
+          onClose={closeEdit}
+          onSave={handleProfileSave}
+          currentUsername={userData.username || ""}
+          currentEmail={userData.emailAddress || ""}
+        />
       </Box>
     </Paper>
   );
