@@ -380,5 +380,6 @@
   "creatorCannotBeRemoved": "Les créateurs ne peuvent pas être supprimés en tant que modérateurs",
   "match": "Match",
   "selectTheResultForEachMatch": "Sélectionnez le résultat pour chaque match",
-  "yourAnswersWithResults": "Voici vos réponses, les bonnes en vert et les mauvaises en rouge."
+  "yourAnswersWithResults": "Voici vos réponses, les bonnes en vert et les mauvaises en rouge.",
+  "invalid_credentials": "Identifiants invalides"
 }

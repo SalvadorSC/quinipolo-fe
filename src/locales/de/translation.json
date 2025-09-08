@@ -380,5 +380,6 @@
   "creatorCannotBeRemoved": "Ersteller können nicht als Moderatoren entfernt werden",
   "match": "Spiel",
   "selectTheResultForEachMatch": "Wählen Sie das Ergebnis für jedes Spiel",
-  "yourAnswersWithResults": "Das sind Ihre Antworten, richtige in grün und falsche in rot."
+  "yourAnswersWithResults": "Das sind Ihre Antworten, richtige in grün und falsche in rot.",
+  "invalid_credentials": "Ungültige Zugangsdaten"
 }

@@ -380,5 +380,6 @@
   "creatorCannotBeRemoved": "Criadores não podem ser removidos como moderadores",
   "match": "Partida",
   "selectTheResultForEachMatch": "Selecione o resultado para cada partida",
-  "yourAnswersWithResults": "Estas são suas respostas, as corretas em verde e as incorretas em vermelho."
+  "yourAnswersWithResults": "Estas são suas respostas, as corretas em verde e as incorretas em vermelho.",
+  "invalid_credentials": "Credenciais inválidas"
 }

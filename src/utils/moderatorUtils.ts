@@ -14,3 +14,13 @@ export const isUserModerator = (
 export const isSystemAdmin = (userRole: string): boolean => {
   return userRole === "admin" || userRole === "system_admin";
 };
+
+export const isSystemModerator = (userRole: string): boolean => {
+  // Treat moderator, admin, and system_admin as moderator-level visibility
+  return (
+    userRole === "moderator" ||
+    userRole === "admin" ||
+    userRole === "system_admin" ||
+    userRole === "system_moderator"
+  );
+};

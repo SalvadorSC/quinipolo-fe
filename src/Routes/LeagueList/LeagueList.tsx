@@ -21,6 +21,7 @@ import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import LockIcon from "@mui/icons-material/Lock";
 import { useTranslation } from "react-i18next";
 import { isSystemAdmin } from "../../utils/moderatorUtils";
+import { filterVisibleLeagues } from "../../utils/leagueVisibility";
 
 type LeagueParticipant = {
   user_id: string;
@@ -89,7 +90,11 @@ const LeagueList = () => {
     // Fetch data logic
     apiGet<LeaguesTypes[]>(`/api/leagues`)
       .then((data) => {
-        setLeagueListData(data);
+        const filtered = filterVisibleLeagues(
+          data as any,
+          userData.role
+        ) as any;
+        setLeagueListData(filtered as any);
       })
       .catch((error) => {
         console.log(error);

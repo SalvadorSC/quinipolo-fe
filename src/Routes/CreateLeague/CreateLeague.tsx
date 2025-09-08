@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Paper,
   TextField,
@@ -16,6 +17,8 @@ import { useUser } from "../../Context/UserContext/UserContext";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { useTranslation } from "react-i18next";
 import { apiPost, apiGet } from "../../utils/apiUtils";
+import { config } from "../../utils/config";
+import { createLeagueInDev } from "../../utils/leagueCreation";
 
 interface LeagueTier {
   id: string;
@@ -29,9 +32,10 @@ interface LeagueTier {
 interface CreateLeagueProps {}
 
 const CreateLeague: React.FC<CreateLeagueProps> = () => {
+  const navigate = useNavigate();
   const [leagueName, setLeagueName] = useState<string>("");
   const [leagueDescription, setLeagueDescription] = useState<string>("");
-  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [isPrivate, setIsPrivate] = useState<boolean>(true);
   const [selectedTier, setSelectedTier] = useState<string>("");
   const [tiers, setTiers] = useState<LeagueTier[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -47,6 +51,7 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
   ]);
   const getFeatureLabel = (feature: string) => t(feature);
 
+  const isDevelopment = config.isDevelopment;
   // Fetch available league tiers
   useEffect(() => {
     const fetchTiers = async () => {
@@ -80,7 +85,7 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
       return;
     }
 
-    if (!selectedTier) {
+    if (!selectedTier && !isDevelopment) {
       setFeedback({
         message: t("selectTierRequired"),
         severity: "error",
@@ -92,7 +97,20 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
     setLoading(true);
 
     try {
-      // Create Stripe checkout session
+      // In development, bypass Stripe and create the league directly
+      if (isDevelopment) {
+        const createdLeague = await createLeagueInDev({
+          leagueName,
+          isPrivate,
+          tier: selectedTier,
+          userId: userData.userId,
+          description: leagueDescription,
+        });
+        navigate(`/league-dashboard?id=${createdLeague.id}`);
+        return;
+      }
+
+      // Production: Create Stripe checkout session
       const response = await apiPost(
         "/api/league-stripe/create-checkout-session",
         {
@@ -291,7 +309,10 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
                   type="submit"
                   variant="contained"
                   size="large"
-                  disabled={loading || !selectedTier || !leagueName.trim()}
+                  disabled={
+                    (loading || !selectedTier || !leagueName.trim()) &&
+                    !isDevelopment
+                  }
                   sx={{ minWidth: 200 }}
                 >
                   {loading ? (

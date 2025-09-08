@@ -379,5 +379,6 @@
   "creatorCannotBeRemoved": "Els creadors no poden ser eliminats com a moderadors",
   "match": "Partit",
   "selectTheResultForEachMatch": "Selecciona quin resultat hi ha a cada partit",
-  "yourAnswersWithResults": "Aquestes són les teves respostes, en verd els encerts i en vermell les errades."
+  "yourAnswersWithResults": "Aquestes són les teves respostes, en verd els encerts i en vermell les errades.",
+  "invalid_credentials": "Credencials invàlides"
 }

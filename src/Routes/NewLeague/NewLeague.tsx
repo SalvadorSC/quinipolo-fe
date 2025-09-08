@@ -118,27 +118,7 @@ const NewLeague: React.FC = () => {
             label={t("privateLeague")}
           />
         </Box>
-        {/*  <Box mb={2}>
-          <Button
-            component="label"
-            role={undefined}
-            variant="contained"
-            tabIndex={-1}
-            startIcon={<CloudUploadIcon />}
-          >
-            {file ? "Cambiar Imagen" : "Subir Imagen"}
-            <VisuallyHiddenInput
-              onChange={handleFileChange}
-              type="file"
-              accept="image/*"
-            />
-          </Button>
-        </Box> */}
-        {/* {preview && (
-          <Box mb={2}>
-            <img src={preview} alt="Archivo seleccionado" width="100%" />
-          </Box>
-        )} */}
+
         <Button type="submit" variant="contained" color="primary">
           {t("createLeague")}
         </Button>
