@@ -34,6 +34,7 @@ interface IRequestsTable {
   leagueId: string;
   setLeagueData: React.Dispatch<SetStateAction<LeaguesTypes>>;
   requestType: "moderator" | "participant";
+  onAfterChange?: () => void;
 }
 
 const RequestsTable = ({
@@ -41,6 +42,7 @@ const RequestsTable = ({
   leagueId,
   setLeagueData,
   requestType,
+  onAfterChange,
 }: IRequestsTable) => {
   const { setFeedback } = useFeedback();
   const { t } = useTranslation();
@@ -49,6 +51,7 @@ const RequestsTable = ({
     apiPut(`/api/leagues/${leagueId}/${requestType}-petitions/${id}/accept`, {})
       .then((data: any) => {
         setLeagueData(data);
+        if (onAfterChange) onAfterChange();
         setFeedback({
           message: "Petición aceptada",
           severity: "success",
@@ -69,6 +72,7 @@ const RequestsTable = ({
     apiPut(`/api/leagues/${leagueId}/${requestType}-petitions/${id}/reject`, {})
       .then((data: any) => {
         setLeagueData(data);
+        if (onAfterChange) onAfterChange();
         setFeedback({
           message: "Petición rechazada",
           severity: "success",

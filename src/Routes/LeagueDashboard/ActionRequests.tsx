@@ -8,12 +8,14 @@ type ActionRequestsProps = {
   leagueId: string;
   leagueData: LeaguesTypes;
   setLeagueData: Dispatch<SetStateAction<LeaguesTypes>>;
+  onAfterChange?: () => void;
 };
 
 const ActionRequests = ({
   leagueId,
   leagueData,
   setLeagueData,
+  onAfterChange,
 }: ActionRequestsProps) => {
   const { t } = useTranslation();
 
@@ -52,6 +54,7 @@ const ActionRequests = ({
             requests={participantRequests}
             setLeagueData={setLeagueData}
             requestType="participant"
+            onAfterChange={onAfterChange}
           />
         )}
       {moderatorRequests?.length > 0 && (
@@ -60,6 +63,7 @@ const ActionRequests = ({
           requests={moderatorRequests}
           setLeagueData={setLeagueData}
           requestType="moderator"
+          onAfterChange={onAfterChange}
         />
       )}
     </>

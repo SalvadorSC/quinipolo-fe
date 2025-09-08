@@ -375,6 +375,11 @@ const LeagueDashboard = () => {
                   leagueId={leagueId!}
                   leagueData={leagueData}
                   setLeagueData={setLeagueData}
+                  onAfterChange={() => {
+                    // Refresh league and leaderboard after petitions change
+                    getLeagueLeaderBoardData();
+                    getLeagueData();
+                  }}
                 />
 
                 <Box
