@@ -12,7 +12,6 @@ export const filterVisibleLeagues = (
   userRole: string
 ): LeagueSummary[] => {
   const privileged = isSystemModerator(userRole);
-  console.log("privileged", privileged, userRole);
   if (privileged) return leagues;
   return leagues.filter((l) => l.league_name !== "Test");
 };

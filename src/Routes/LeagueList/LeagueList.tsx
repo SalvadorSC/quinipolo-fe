@@ -105,7 +105,7 @@ const LeagueList = () => {
         });
       });
     setLoading(false);
-  }, [setFeedback]);
+  }, [setFeedback, userData.role]);
 
   const handleJoinLeague = (index: number) => {
     // Logic to handle joining a league
