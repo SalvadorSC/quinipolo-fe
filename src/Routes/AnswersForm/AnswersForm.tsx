@@ -394,7 +394,6 @@ const AnswersForm = () => {
                 goalsHomeTeam: "",
                 goalsAwayTeam: "",
               };
-              console.log(currentAnswer);
               return (
                 <TableRow
                   key={`${match.homeTeam}${match.awayTeam}__${index}`}
