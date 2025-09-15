@@ -201,17 +201,7 @@ const SurveyForm = () => {
           style={{ cursor: "pointer" }}
         />
       </div>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={allowRepeatedTeams}
-            onChange={(e) => setAllowRepeatedTeams(e.target.checked)}
-            color="primary"
-          />
-        }
-        style={{ color: "white" }}
-        label={t("allowRepeatTeams")}
-      />
+
       <p className={styles.dateTimeDisclaimer}>{t("dateTimeDisclaimer")}</p>
       <div className={styles.datePickerContainer}>
         <DatePicker
@@ -225,7 +215,17 @@ const SurveyForm = () => {
           showTime={{ format: "HH:mm" }}
         />
       </div>
-
+      <FormControlLabel
+        control={
+          <Switch
+            checked={allowRepeatedTeams}
+            onChange={(e) => setAllowRepeatedTeams(e.target.checked)}
+            color="primary"
+          />
+        }
+        style={{ color: "white", marginLeft: 2, marginTop: 16 }}
+        label={t("allowRepeatTeams")}
+      />
       {matchArray.map((_, index) => (
         <MatchForm
           key={index}
