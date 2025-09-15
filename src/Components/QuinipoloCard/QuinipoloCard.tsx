@@ -38,16 +38,6 @@ const QuinipoloCard = ({
   username,
   userLeagues,
 }: QuinipoloCardProps) => {
-  console.log("QuinipoloCard - moderator check:", {
-    quinipoloId: quinipolo.id,
-    leagueId: quinipolo.league_id,
-    leagueName: quinipolo.league_name,
-    userLeagues,
-    isModerated: isUserModerator(userLeagues, quinipolo.league_id),
-    hasBeenCorrected: quinipolo.has_been_corrected,
-    deadlineIsInPast,
-    isDeleted: quinipolo.is_deleted,
-  });
   const navigate = useNavigate();
   const { theme } = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

@@ -317,8 +317,9 @@ const AnswersForm = () => {
   };
 
   const matchOption = (value: string, index: number) => {
+    const text = value === "empat" ? t("draw") : value;
     if (!quinipolo.has_been_corrected) {
-      return <span>{value}</span>;
+      return <span>{text}</span>;
     }
 
     // The button value includes the index suffix, but stored answers don't
@@ -340,7 +341,7 @@ const AnswersForm = () => {
       }
     }
 
-    return <span className={className}>{value}</span>;
+    return <span className={className}>{text}</span>;
   };
   if (!quinipolo.quinipolo) {
     setFeedback({
@@ -393,6 +394,7 @@ const AnswersForm = () => {
                 goalsHomeTeam: "",
                 goalsAwayTeam: "",
               };
+              console.log(currentAnswer);
               return (
                 <TableRow
                   key={`${match.homeTeam}${match.awayTeam}__${index}`}

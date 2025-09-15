@@ -381,5 +381,7 @@
   "match": "Match",
   "selectTheResultForEachMatch": "Select the result for each match",
   "yourAnswersWithResults": "These are your answers, correct ones in green and wrong ones in red.",
-  "invalid_credentials": "Invalid credentials"
+  "invalid_credentials": "Invalid credentials",
+  "allowRepeatTeams": "Allow repeated teams",
+  "draw": "Draw"
 }

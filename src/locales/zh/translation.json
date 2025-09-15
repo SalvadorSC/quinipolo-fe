@@ -381,5 +381,7 @@
   "match": "比赛",
   "selectTheResultForEachMatch": "选择每场比赛的结果",
   "yourAnswersWithResults": "这些是您的答案，正确答案用绿色显示，错误答案用红色显示。",
-  "invalid_credentials": "凭证无效"
+  "invalid_credentials": "凭证无效",
+  "allowRepeatTeams": "允许重复选择球队",
+  "draw": "平局"
 }

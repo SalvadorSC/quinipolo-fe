@@ -268,15 +268,9 @@ const LeagueDashboard = () => {
 
   const handleSaveModerators = async (moderatorIds: string[]) => {
     try {
-      // TODO: Implement API call to update moderator roles
-      // For now, just update the local state optimistically
-      setLeagueData((prev) => ({
-        ...prev,
-        participants: prev.participants.map((p) => ({
-          ...p,
-          role: moderatorIds.includes(p.user_id) ? "moderator" : "participant",
-        })),
-      }));
+      await apiPut(`/api/leagues/${leagueId}/moderators`, { moderatorIds });
+      // Refresh league data to reflect updated roles
+      await getLeagueData();
       setFeedback({ message: t("success"), severity: "success", open: true });
       setIsModeratorModalOpen(false);
     } catch (e) {

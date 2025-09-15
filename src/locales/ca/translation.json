@@ -22,7 +22,7 @@
   "participants": "Participants",
   "moderators": "Moderadors",
   "answers": "Respostes",
-  "correct": "Correcte",
+  "correct": "Corregir",
   "wrong": "Incorrecte",
   "edit": "Editar",
   "delete": "Eliminar",
@@ -380,5 +380,7 @@
   "match": "Partit",
   "selectTheResultForEachMatch": "Selecciona quin resultat hi ha a cada partit",
   "yourAnswersWithResults": "Aquestes són les teves respostes, en verd els encerts i en vermell les errades.",
-  "invalid_credentials": "Credencials invàlides"
+  "invalid_credentials": "Credencials invàlides",
+  "allowRepeatTeams": "Permetre repetir equips",
+  "draw": "Empat"
 }

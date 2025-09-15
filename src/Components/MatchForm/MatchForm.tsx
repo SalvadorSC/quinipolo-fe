@@ -28,6 +28,7 @@ interface MatchFormProps {
   index: number;
   setQuinipolo: Dispatch<SetStateAction<SurveyData[]>>;
   loading: boolean;
+  allowRepeatedTeams?: boolean;
 }
 
 const MatchForm = ({
@@ -36,6 +37,7 @@ const MatchForm = ({
   index,
   setQuinipolo,
   loading,
+  allowRepeatedTeams = false,
 }: MatchFormProps) => {
   const { t } = useTranslation();
   const muiTheme = useMuiTheme();
@@ -54,11 +56,20 @@ const MatchForm = ({
         teamOptions[matchData.gameType as "waterpolo" | "football"]) ||
       [];
     return teamsForSport
-      .filter(
-        (team: string) =>
-          !selectedTeams.includes(team) &&
-          team !== (type === "away" ? matchData.homeTeam : matchData.awayTeam)
-      )
+      .filter((team: string) => {
+        const isTeamUsedInOtherMatches = selectedTeams.includes(team);
+        const isTeamSelectedInThisMatch =
+          team === (type === "away" ? matchData.homeTeam : matchData.awayTeam);
+
+        // Always prevent selecting the same team for both home and away within the same match
+        if (isTeamSelectedInThisMatch) return false;
+
+        // If repeating teams across matches is allowed, do not filter out already used teams
+        if (allowRepeatedTeams) return true;
+
+        // Otherwise, exclude teams already used in other matches
+        return !isTeamUsedInOtherMatches;
+      })
       .sort((a: string, b: string) => -b.charAt(0).localeCompare(a.charAt(0)));
   };
 

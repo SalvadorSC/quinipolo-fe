@@ -8,6 +8,8 @@ import {
   DialogActions,
   Typography,
   Box,
+  FormControlLabel,
+  Switch,
 } from "@mui/material";
 import { SurveyData } from "../../types/quinipolo";
 import MatchForm from "../../Components/MatchForm/MatchForm";
@@ -22,8 +24,6 @@ import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { useTranslation } from "react-i18next";
 import { apiPost } from "../../utils/apiUtils";
 
-import { QuinipoloCreateResponseType } from "../../types/quinipolo";
-
 const SurveyForm = () => {
   const navigate = useNavigate();
   const { setFeedback } = useFeedback();
@@ -35,6 +35,7 @@ const SurveyForm = () => {
     football: string[];
   }>({ waterpolo: [], football: [] });
   const [helpModalOpen, setHelpModalOpen] = useState<boolean>(false);
+  const [allowRepeatedTeams, setAllowRepeatedTeams] = useState<boolean>(false);
 
   // Check if this is for all leagues
   const isForAllLeagues =
@@ -195,10 +196,22 @@ const SurveyForm = () => {
         }}
       >
         <h2>{t("createQuinipolo")}</h2>
-        <HelpOutlineRoundedIcon
-          onClick={handleHelpClick}
-          style={{ cursor: "pointer" }}
-        />
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={allowRepeatedTeams}
+                onChange={(e) => setAllowRepeatedTeams(e.target.checked)}
+                color="primary"
+              />
+            }
+            label={t("allowRepeatTeams")}
+          />
+          <HelpOutlineRoundedIcon
+            onClick={handleHelpClick}
+            style={{ cursor: "pointer" }}
+          />
+        </div>
       </div>
       <p className={styles.dateTimeDisclaimer}>{t("dateTimeDisclaimer")}</p>
       <div className={styles.datePickerContainer}>
@@ -222,6 +235,7 @@ const SurveyForm = () => {
           index={index}
           setQuinipolo={setQuinipolo}
           loading={loading}
+          allowRepeatedTeams={allowRepeatedTeams}
         />
       ))}
 

@@ -381,5 +381,7 @@
   "match": "試合",
   "selectTheResultForEachMatch": "各試合の結果を選択してください",
   "yourAnswersWithResults": "これらはあなたの回答です。正解は緑、不正解は赤で表示されています。",
-  "invalid_credentials": "無効な認証情報"
+  "invalid_credentials": "無効な認証情報",
+  "allowRepeatTeams": "チームの重複を許可",
+  "draw": "引き分け"
 }
