@@ -196,23 +196,21 @@ const SurveyForm = () => {
         }}
       >
         <h2>{t("createQuinipolo")}</h2>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={allowRepeatedTeams}
-                onChange={(e) => setAllowRepeatedTeams(e.target.checked)}
-                color="primary"
-              />
-            }
-            label={t("allowRepeatTeams")}
-          />
-          <HelpOutlineRoundedIcon
-            onClick={handleHelpClick}
-            style={{ cursor: "pointer" }}
-          />
-        </div>
+        <HelpOutlineRoundedIcon
+          onClick={handleHelpClick}
+          style={{ cursor: "pointer" }}
+        />
       </div>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={allowRepeatedTeams}
+            onChange={(e) => setAllowRepeatedTeams(e.target.checked)}
+            color="primary"
+          />
+        }
+        label={t("allowRepeatTeams")}
+      />
       <p className={styles.dateTimeDisclaimer}>{t("dateTimeDisclaimer")}</p>
       <div className={styles.datePickerContainer}>
         <DatePicker
@@ -231,7 +229,7 @@ const SurveyForm = () => {
         <MatchForm
           key={index}
           teamOptions={teamOptions}
-          selectedTeams={selectedTeams}
+          selectedTeams={allowRepeatedTeams ? [] : selectedTeams}
           index={index}
           setQuinipolo={setQuinipolo}
           loading={loading}
