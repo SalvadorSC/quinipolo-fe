@@ -209,6 +209,7 @@ const SurveyForm = () => {
             color="primary"
           />
         }
+        style={{ color: "white" }}
         label={t("allowRepeatTeams")}
       />
       <p className={styles.dateTimeDisclaimer}>{t("dateTimeDisclaimer")}</p>
