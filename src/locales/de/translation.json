@@ -383,5 +383,6 @@
   "yourAnswersWithResults": "Das sind Ihre Antworten, richtige in grün und falsche in rot.",
   "invalid_credentials": "Ungültige Zugangsdaten",
   "allowRepeatTeams": "Mehrfache Teams erlauben",
-  "draw": "Unentschieden"
+  "draw": "Unentschieden",
+  "missingAnswersForMatches": "Fehlende Antworten für Spiele: {{matches}}"
 }

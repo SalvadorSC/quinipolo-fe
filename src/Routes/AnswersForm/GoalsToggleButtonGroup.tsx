@@ -12,6 +12,7 @@ interface GoalsToggleButtonGroupProps {
   seeUserAnswersModeOn: string | null;
   quinipoloHasBeenCorrected: boolean;
   disabled?: boolean;
+  isMissing?: boolean;
 }
 
 const GoalsToggleButtonGroup: React.FC<GoalsToggleButtonGroupProps> = ({
@@ -24,6 +25,7 @@ const GoalsToggleButtonGroup: React.FC<GoalsToggleButtonGroupProps> = ({
   seeUserAnswersModeOn,
   quinipoloHasBeenCorrected,
   disabled = false,
+  isMissing = false,
 }) => {
   const values =
     matchType === "waterpolo"
@@ -52,7 +54,15 @@ const GoalsToggleButtonGroup: React.FC<GoalsToggleButtonGroupProps> = ({
   };
 
   return (
-    <div>
+    <div
+      style={{
+        outline: isMissing ? "2px solid rgba(255, 99, 71, 0.6)" : undefined,
+        borderRadius: isMissing ? 8 : undefined,
+        padding: isMissing ? 4 : undefined,
+        background: isMissing ? "rgba(255, 99, 71, 0.08)" : undefined,
+        transition: "background-color 0.2s ease",
+      }}
+    >
       <p>Goals {teamName}:</p>
       <ToggleButtonGroup
         color="primary"

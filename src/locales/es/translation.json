@@ -383,5 +383,6 @@
   "yourAnswersWithResults": "Estas son tus respuestas, en verde los aciertos y en rojo los fallos.",
   "invalid_credentials": "Credenciales inválidas",
   "allowRepeatTeams": "Permitir repetir equipos",
-  "draw": "Empate"
+  "draw": "Empate",
+  "missingAnswersForMatches": "Faltan respuestas en los partidos: {{matches}}"
 }

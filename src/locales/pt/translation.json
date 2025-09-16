@@ -383,5 +383,6 @@
   "yourAnswersWithResults": "Estas são suas respostas, as corretas em verde e as incorretas em vermelho.",
   "invalid_credentials": "Credenciais inválidas",
   "allowRepeatTeams": "Permitir repetição de times",
-  "draw": "Empate"
+  "draw": "Empate",
+  "missingAnswersForMatches": "Faltam respostas para as partidas: {{matches}}"
 }

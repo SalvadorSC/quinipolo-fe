@@ -383,5 +383,6 @@
   "yourAnswersWithResults": "Voici vos réponses, les bonnes en vert et les mauvaises en rouge.",
   "invalid_credentials": "Identifiants invalides",
   "allowRepeatTeams": "Autoriser la répétition des équipes",
-  "draw": "Match nul"
+  "draw": "Match nul",
+  "missingAnswersForMatches": "Réponses manquantes pour les matchs : {{matches}}"
 }

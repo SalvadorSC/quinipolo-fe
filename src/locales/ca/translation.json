@@ -382,5 +382,6 @@
   "yourAnswersWithResults": "Aquestes són les teves respostes, en verd els encerts i en vermell les errades.",
   "invalid_credentials": "Credencials invàlides",
   "allowRepeatTeams": "Permetre repetir equips",
-  "draw": "Empat"
+  "draw": "Empat",
+  "missingAnswersForMatches": "Falten respostes als partits: {{matches}}"
 }

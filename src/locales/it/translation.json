@@ -383,5 +383,6 @@
   "yourAnswersWithResults": "Queste sono le tue risposte, quelle corrette in verde e quelle sbagliate in rosso.",
   "invalid_credentials": "Credenziali non valide",
   "allowRepeatTeams": "Consentire squadre ripetute",
-  "draw": "Pareggio"
+  "draw": "Pareggio",
+  "missingAnswersForMatches": "Mancano risposte per le partite: {{matches}}"
 }

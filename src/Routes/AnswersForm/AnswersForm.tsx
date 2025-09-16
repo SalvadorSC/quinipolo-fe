@@ -78,6 +78,13 @@ const AnswersForm = () => {
   ];
 
   const [answers, setAnswers] = useState<AnswersType[]>(initialAnswers);
+  const [missingAnswerIndices, setMissingAnswerIndices] = useState<number[]>(
+    []
+  );
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState<boolean>(false);
+
+  // Refs to scroll to the first missing answer
+  const rowRefs = React.useRef<(HTMLTableRowElement | null)[]>([]);
 
   // get via params if correcting or not
   const queryParams = new URLSearchParams(window.location.search);
@@ -172,7 +179,51 @@ const AnswersForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.userData.isAuthenticated]);
 
+  // Auto-highlight missing answers as the user interacts (excluding view-only mode)
+  useEffect(() => {
+    if (seeUserAnswersModeOn) return;
+    if (!hasAttemptedSubmit) return;
+    const matches = quinipolo?.quinipolo || [];
+    if (!matches.length) return;
+    const missing: number[] = [];
+    answers.forEach((ans, idx) => {
+      if (!ans.chosenWinner) {
+        missing.push(idx);
+      }
+    });
+    setMissingAnswerIndices(missing);
+  }, [answers, quinipolo?.quinipolo, seeUserAnswersModeOn, hasAttemptedSubmit]);
+
   const submitQuinipolo = async () => {
+    // Validate all answers are provided before submitting
+    const missing: number[] = [];
+    answers.forEach((ans, idx) => {
+      const isWinnerMissing = !ans.chosenWinner;
+      if (isWinnerMissing) {
+        missing.push(idx);
+      }
+    });
+
+    if (missing.length > 0) {
+      setHasAttemptedSubmit(true);
+      setMissingAnswerIndices(missing);
+      setFeedback({
+        message: t("missingAnswersForMatches", {
+          matches: missing.map((i) => i + 1).join(", "),
+        }),
+        severity: "warning",
+        open: true,
+      });
+
+      // Scroll to first missing row
+      const firstMissing = missing[0];
+      const rowEl = rowRefs.current[firstMissing];
+      if (rowEl && typeof rowEl.scrollIntoView === "function") {
+        rowEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return;
+    }
+
     const answerToSubmit = {
       username: localStorage.getItem("username") ?? user.userData.username,
       quinipoloId: quinipolo.id,
@@ -275,6 +326,19 @@ const AnswersForm = () => {
     newValue: string
   ) => {
     if (newValue === null || seeUserAnswersModeOn) return;
+    // For match 15, only clear highlight when winner and both goals are set
+    const index = parseInt(newValue.split("__")[1]);
+    if (index !== 14) {
+      setMissingAnswerIndices((prev) => prev.filter((i) => i !== index));
+    } else {
+      const match15 = answers[14];
+      const bothGoalsSelected = !!(
+        match15?.goalsHomeTeam && match15?.goalsAwayTeam
+      );
+      if (bothGoalsSelected) {
+        setMissingAnswerIndices((prev) => prev.filter((i) => i !== 14));
+      }
+    }
     setAnswers((prevAnswers) => {
       const parts = newValue.split("__");
       const teamName = parts[0];
@@ -311,6 +375,14 @@ const AnswersForm = () => {
           matchNumber: 15,
           goalsAwayTeam: goalValue,
         };
+      }
+
+      // Only clear the missing mark for match 15 when BOTH goals are set
+      const bothGoalsSelected = !!(
+        updatedData[14].goalsHomeTeam && updatedData[14].goalsAwayTeam
+      );
+      if (bothGoalsSelected) {
+        setMissingAnswerIndices((prev) => prev.filter((i) => i !== 14));
       }
       return updatedData;
     });
@@ -395,95 +467,127 @@ const AnswersForm = () => {
                 goalsAwayTeam: "",
               };
               return (
-                <TableRow
+                <div
                   key={`${match.homeTeam}${match.awayTeam}__${index}`}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  style={{ marginBottom: 8 }}
                 >
-                  <TableCell align="center" component="th" scope="row">
-                    <p className={style.matchName}>
-                      {t("match")} {index + 1}
-                    </p>
-                    <ToggleButtonGroup
-                      color="primary"
-                      className={style.teamAnswerButtonContainer}
-                      value={
-                        currentAnswer.chosenWinner
-                          ? `${currentAnswer.chosenWinner}__${index}`
-                          : ""
-                      }
-                      exclusive
-                      onChange={handleChange}
-                      aria-label="Match winner"
-                      disabled={loading}
-                    >
-                      <ToggleButton
-                        className={`${style.teamAnswerButton}`}
-                        value={`${match.homeTeam}__${index}`}
+                  <TableRow
+                    ref={(el) => (rowRefs.current[index] = el)}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      backgroundColor:
+                        hasAttemptedSubmit &&
+                        missingAnswerIndices.includes(index)
+                          ? "rgba(255, 99, 71, 0.05)"
+                          : undefined,
+                      outline:
+                        hasAttemptedSubmit &&
+                        missingAnswerIndices.includes(index)
+                          ? "2px solid rgba(255, 99, 71, 0.6)"
+                          : undefined,
+                      outlineOffset: missingAnswerIndices.includes(index)
+                        ? "-2px"
+                        : undefined,
+                      transition: "background-color 0.2s ease",
+                      borderRadius: 2,
+                    }}
+                  >
+                    <TableCell align="center" component="th" scope="row">
+                      <p className={style.matchName}>
+                        {t("match")} {index + 1}
+                      </p>
+                      <ToggleButtonGroup
+                        color="primary"
+                        className={style.teamAnswerButtonContainer}
+                        value={
+                          currentAnswer.chosenWinner
+                            ? `${currentAnswer.chosenWinner}__${index}`
+                            : ""
+                        }
+                        exclusive
+                        onChange={handleChange}
+                        aria-label="Match winner"
                         disabled={loading}
                       >
-                        {matchOption(match.homeTeam, index)}
-                      </ToggleButton>
-                      <ToggleButton
-                        value={`empat__${index}`}
-                        disabled={loading}
-                      >
-                        {matchOption("empat", index)}
-                      </ToggleButton>
-                      <ToggleButton
-                        className={`${style.teamAnswerButton}`}
-                        value={`${match.awayTeam}__${index}`}
-                        disabled={loading}
-                      >
-                        {matchOption(match.awayTeam, index)}
-                      </ToggleButton>
-                    </ToggleButtonGroup>
-                    {index === 14 &&
-                      (() => {
-                        const correctAnswers = quinipolo.correct_answers;
-                        const hasCorrectAnswers =
-                          correctAnswers && correctAnswers.length > 0;
-                        const homeTeamGoals = hasCorrectAnswers
-                          ? correctAnswers[index]?.goalsHomeTeam || ""
-                          : "";
-                        const awayTeamGoals = hasCorrectAnswers
-                          ? correctAnswers[index]?.goalsAwayTeam || ""
-                          : "";
-                        const quinipoloHasBeenCorrected =
-                          quinipolo.has_been_corrected;
+                        <ToggleButton
+                          className={`${style.teamAnswerButton}`}
+                          value={`${match.homeTeam}__${index}`}
+                          disabled={loading}
+                        >
+                          {matchOption(match.homeTeam, index)}
+                        </ToggleButton>
+                        <ToggleButton
+                          value={`empat__${index}`}
+                          disabled={loading}
+                        >
+                          {matchOption("empat", index)}
+                        </ToggleButton>
+                        <ToggleButton
+                          className={`${style.teamAnswerButton}`}
+                          value={`${match.awayTeam}__${index}`}
+                          disabled={loading}
+                        >
+                          {matchOption(match.awayTeam, index)}
+                        </ToggleButton>
+                      </ToggleButtonGroup>
+                      {index === 14 &&
+                        (() => {
+                          const correctAnswers = quinipolo.correct_answers;
+                          const hasCorrectAnswers =
+                            correctAnswers && correctAnswers.length > 0;
+                          const homeTeamGoals = hasCorrectAnswers
+                            ? correctAnswers[index]?.goalsHomeTeam || ""
+                            : "";
+                          const awayTeamGoals = hasCorrectAnswers
+                            ? correctAnswers[index]?.goalsAwayTeam || ""
+                            : "";
+                          const quinipoloHasBeenCorrected =
+                            quinipolo.has_been_corrected;
 
-                        return (
-                          <div className={style.goalsContainer}>
-                            <GoalsToggleButtonGroup
-                              teamType="home"
-                              teamName={quinipolo.quinipolo[14].homeTeam}
-                              goals={currentAnswer.goalsHomeTeam}
-                              correctGoals={homeTeamGoals}
-                              matchType={match.gameType}
-                              onChange={handleGame15Change}
-                              seeUserAnswersModeOn={seeUserAnswersModeOn}
-                              quinipoloHasBeenCorrected={
-                                quinipoloHasBeenCorrected
-                              }
-                              disabled={loading}
-                            />
-                            <GoalsToggleButtonGroup
-                              teamType="away"
-                              teamName={quinipolo.quinipolo[14].awayTeam}
-                              goals={currentAnswer.goalsAwayTeam}
-                              correctGoals={awayTeamGoals}
-                              matchType={match.gameType}
-                              onChange={handleGame15Change}
-                              seeUserAnswersModeOn={seeUserAnswersModeOn}
-                              quinipoloHasBeenCorrected={
-                                quinipoloHasBeenCorrected
-                              }
-                              disabled={loading}
-                            />
-                          </div>
-                        );
-                      })()}
-                  </TableCell>
-                </TableRow>
+                          return (
+                            <div className={style.goalsContainer}>
+                              <GoalsToggleButtonGroup
+                                teamType="home"
+                                teamName={quinipolo.quinipolo[14].homeTeam}
+                                goals={currentAnswer.goalsHomeTeam}
+                                correctGoals={homeTeamGoals}
+                                matchType={match.gameType}
+                                onChange={handleGame15Change}
+                                seeUserAnswersModeOn={seeUserAnswersModeOn}
+                                quinipoloHasBeenCorrected={
+                                  quinipoloHasBeenCorrected
+                                }
+                                disabled={loading}
+                                isMissing={
+                                  hasAttemptedSubmit &&
+                                  !!answers[14]?.chosenWinner &&
+                                  !currentAnswer.goalsHomeTeam
+                                }
+                              />
+                              <GoalsToggleButtonGroup
+                                teamType="away"
+                                teamName={quinipolo.quinipolo[14].awayTeam}
+                                goals={currentAnswer.goalsAwayTeam}
+                                correctGoals={awayTeamGoals}
+                                matchType={match.gameType}
+                                onChange={handleGame15Change}
+                                seeUserAnswersModeOn={seeUserAnswersModeOn}
+                                quinipoloHasBeenCorrected={
+                                  quinipoloHasBeenCorrected
+                                }
+                                disabled={loading}
+                                isMissing={
+                                  hasAttemptedSubmit &&
+                                  !!answers[14]?.chosenWinner &&
+                                  !currentAnswer.goalsAwayTeam
+                                }
+                              />
+                            </div>
+                          );
+                        })()}
+                    </TableCell>
+                  </TableRow>
+                </div>
               );
             })}
           </TableBody>
