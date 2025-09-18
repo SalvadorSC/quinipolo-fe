@@ -13,6 +13,7 @@ import {
 } from "@ant-design/icons";
 import { useUser } from "../../Context/UserContext/UserContext";
 import { getRedirectUrl } from "../../utils/config";
+import { trackLogin } from "../../utils/analytics";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const LoginForm = () => {
     if (error) {
       setError(t(error.code!) || error.message);
     } else {
+      trackLogin("password");
       navigate("/");
     }
   };

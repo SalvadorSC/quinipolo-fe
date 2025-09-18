@@ -9,6 +9,7 @@ import { calculateAge } from "../../utils/calculateAge";
 import { UserDataType, useUser } from "../../Context/UserContext/UserContext";
 import { User } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
+import { trackLogin } from "../../utils/analytics";
 
 type Props = { children: React.ReactNode };
 
@@ -43,6 +44,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
         } catch (e) {
           console.error("Error setting auth state after OAuth callback:", e);
         }
+        trackLogin(user.app_metadata?.provider || "oauth");
         // check if the user has a profile via the BE
         try {
           const profile = await apiGet<UserDataType>("/api/users/me/profile");

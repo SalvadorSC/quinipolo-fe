@@ -5,10 +5,13 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./utils/i18n";
 import { UserProvider } from "./Context/UserContext/UserContext";
+import { initAnalytics } from "./utils/analytics";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+initAnalytics();
+
 root.render(
   <React.StrictMode>
     <UserProvider>
