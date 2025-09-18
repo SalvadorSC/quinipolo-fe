@@ -50,20 +50,39 @@ const getAccessToken = async (): Promise<string | null> => {
   }
 };
 
+type CacheOptions = {
+  ttlMs?: number; // how long to keep the cached value (default 15000ms)
+  key?: string; // override the cache key if needed
+  skip?: boolean; // set true to disable cache for this call
+};
+
+type RequestConfig = AxiosRequestConfig & { cache?: CacheOptions };
+
+const getParamsKey = (params: any): string => {
+  if (!params) return "";
+  try {
+    // Stable stringify params for cache key
+    const keys = Object.keys(params).sort();
+    const obj: Record<string, any> = {};
+    for (const k of keys) obj[k] = params[k];
+    return JSON.stringify(obj);
+  } catch {
+    return "";
+  }
+};
+
+const cacheStore = new Map<string, { timestamp: number; data: any }>();
+const inflightStore = new Map<string, Promise<any>>();
+
 /**
  * Makes an API call using Axios, always including the Supabase access token if available.
- *
- * @param method - The HTTP method ("get", "post", "put", or "patch").
- * @param url - The endpoint URL.
- * @param data - The data to be sent with the request (for POST, PUT, and PATCH requests).
- * @param config - Additional Axios request configuration.
- * @returns The response data of type T.
+ * Adds lightweight GET caching + in-flight deduplication.
  */
 const apiCall = async <T>(
   method: "get" | "post" | "put" | "patch",
   url: string,
   data: any = null,
-  config: AxiosRequestConfig = {}
+  config: RequestConfig = {}
 ): Promise<T> => {
   try {
     const token = await getAccessToken();
@@ -71,9 +90,56 @@ const apiCall = async <T>(
       ...(config.headers || {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
+    const fullUrl = `${API_BASE_URL}${url}`;
+
+    // GET caching and dedupe
+    if (method === "get") {
+      const ttlMs = config.cache?.ttlMs ?? 15000;
+      const paramsKey = getParamsKey(config.params);
+      const cacheKey = config.cache?.key || `${fullUrl}?${paramsKey}`;
+
+      if (!config.cache?.skip) {
+        const cached = cacheStore.get(cacheKey);
+        const now = Date.now();
+        if (cached && now - cached.timestamp < ttlMs) {
+          console.debug("[api-cache] hit", cacheKey);
+          return cached.data as T;
+        }
+
+        const inflight = inflightStore.get(cacheKey);
+        if (inflight) {
+          console.debug("[api-cache] dedupe waiting", cacheKey);
+          return inflight as Promise<T>;
+        }
+
+        const requestPromise = (async () => {
+          const response: AxiosResponse<T> = await axios({
+            method,
+            url: fullUrl,
+            data,
+            ...config,
+            headers,
+          });
+          cacheStore.set(cacheKey, {
+            timestamp: Date.now(),
+            data: response.data,
+          });
+          return response.data;
+        })();
+
+        inflightStore.set(cacheKey, requestPromise);
+        try {
+          const result = await requestPromise;
+          return result;
+        } finally {
+          inflightStore.delete(cacheKey);
+        }
+      }
+    }
+
     const response: AxiosResponse<T> = await axios({
       method,
-      url: `${API_BASE_URL}${url}`,
+      url: fullUrl,
       data,
       ...config,
       headers,
@@ -105,7 +171,7 @@ const apiCall = async <T>(
  */
 export const apiGet = async <T>(
   url: string,
-  config: AxiosRequestConfig = {}
+  config: RequestConfig = {}
 ): Promise<T> => apiCall<T>("get", url, null, config);
 
 /**

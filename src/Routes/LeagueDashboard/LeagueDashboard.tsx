@@ -94,7 +94,7 @@ const LeagueDashboard = () => {
   const { userData } = useUser();
 
   const getLeagueData = async () => {
-    apiGet(`/api/leagues/${leagueId}`)
+    apiGet(`/api/leagues/${leagueId}`, { cache: { ttlMs: 60000 } })
       .then((data: any) => {
         setLeagueData({
           quinipolosToAnswer: data.quinipolosToAnswer,
@@ -130,7 +130,7 @@ const LeagueDashboard = () => {
   };
 
   const getLeagueLeaderBoardData = async (retries = 0) => {
-    apiGet(`/api/leagues/${leagueId}/leaderboard`)
+    apiGet(`/api/leagues/${leagueId}/leaderboard`, { cache: { ttlMs: 30000 } })
       .then((data: any) => {
         const transformedLeaderboardData = data.participantsLeaderboard.map(
           (score: LeaderboardScore) => {
