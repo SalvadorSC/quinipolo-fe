@@ -158,10 +158,10 @@ const CorrectionSuccess = () => {
           {results.length > 0 ? null : (
             <p className={style.copyCorrection}>{t("communicateWell")}</p>
           )}
+          {results.length > 0 ? (
+            <Leaderboard sortedResults={sortedResults} />
+          ) : null}
         </Paper>
-        {results.length > 0 ? (
-          <Leaderboard sortedResults={sortedResults} />
-        ) : null}
       </div>
 
       <Paper

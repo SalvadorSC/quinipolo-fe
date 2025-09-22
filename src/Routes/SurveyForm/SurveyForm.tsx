@@ -2,10 +2,6 @@
 import React, { useState, FormEvent, useEffect } from "react";
 import {
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Typography,
   Box,
   FormControlLabel,
@@ -19,6 +15,7 @@ import { DatePicker } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/es";
 import styles from "./SurveyForm.module.scss";
+import HowQuinipoloWorksModal from "./HowQuinipoloWorksModal";
 import { useNavigate } from "react-router-dom";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { useTranslation } from "react-i18next";
@@ -250,33 +247,10 @@ const SurveyForm = () => {
       </div>
 
       {/* Help Modal */}
-      <Dialog
+      <HowQuinipoloWorksModal
         open={helpModalOpen}
         onClose={handleCloseHelpModal}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>{t("howQuinipoloWorksTitle")}</DialogTitle>
-        <DialogContent>
-          <Box sx={{ mt: 2 }}>
-            <Typography
-              variant="body1"
-              component="div"
-              sx={{
-                whiteSpace: "pre-line",
-                lineHeight: 1.6,
-              }}
-            >
-              {t("howQuinipoloWorksContent")}
-            </Typography>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseHelpModal} color="primary">
-            {t("close")}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      />
     </form>
   );
 };

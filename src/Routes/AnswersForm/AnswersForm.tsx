@@ -22,8 +22,10 @@ import GoalsToggleButtonGroup from "./GoalsToggleButtonGroup";
 import { useTranslation } from "react-i18next";
 import { isUserModerator } from "../../utils/moderatorUtils";
 import ScoreSummary from "./ScoreSummary";
+import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 
 import { QuinipoloType, CorrectAnswer } from "../../types/quinipolo";
+import { Tooltip } from "antd";
 
 type AnswersType = CorrectAnswer;
 
@@ -140,7 +142,7 @@ const AnswersForm = () => {
         }>(`/api/quinipolos/quinipolo/${id}/answers-see`);
         if (response.answers && response.answers.length === 0) {
           setFeedback({
-            message: "No tens cap resposta per aquest Quinipolò",
+            message: t("no-answer-available"),
             severity: "error",
             open: true,
           });
@@ -488,9 +490,20 @@ const AnswersForm = () => {
                   }}
                 >
                   <TableCell align="center" component="th" scope="row">
-                    <p className={style.matchName}>
-                      {t("match")} {index + 1}
-                    </p>
+                    {index === 14 ? (
+                      <div className={style.matchNameContainer}>
+                        <p>{t("game15")}</p>
+                        <Tooltip title={t("game15Help")}>
+                          <HelpOutlineRoundedIcon
+                            style={{ cursor: "pointer" }}
+                          />
+                        </Tooltip>
+                      </div>
+                    ) : (
+                      <p className={style.matchName}>
+                        {t("match")} {index + 1}
+                      </p>
+                    )}
                     <ToggleButtonGroup
                       color="primary"
                       className={style.teamAnswerButtonContainer}
