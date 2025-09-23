@@ -93,6 +93,12 @@ const AnswersForm = () => {
   const correctingModeOn = queryParams.get("correct"); // another submit
   const editCorrectionModeOn = queryParams.get("correctionEdit"); // show corrections selected
   const seeUserAnswersModeOn = queryParams.get("see"); // if user answered, show answers. If correction done, show corrections. If both, show corrected Answers
+  const answerModeOn = // none of the above
+    correctingModeOn === null &&
+    editCorrectionModeOn === null &&
+    seeUserAnswersModeOn === null
+      ? true
+      : false;
 
   const { t } = useTranslation();
 
@@ -490,10 +496,10 @@ const AnswersForm = () => {
                   }}
                 >
                   <TableCell align="center" component="th" scope="row">
-                    {index === 14 ? (
+                    {index === 14 && answerModeOn ? (
                       <div className={style.matchNameContainer}>
                         <p>{t("game15")}</p>
-                        <Tooltip title={t("game15Help")}>
+                        <Tooltip title={t("game15help")}>
                           <HelpOutlineRoundedIcon
                             style={{ cursor: "pointer" }}
                           />
