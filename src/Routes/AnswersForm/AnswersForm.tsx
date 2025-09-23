@@ -85,6 +85,23 @@ const AnswersForm = () => {
   );
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState<boolean>(false);
 
+  // Helper: map server-side correct_answers into our local answers shape
+  const mapCorrectAnswersToInitial = (correctAnswers: any[]): AnswersType[] => {
+    return initialAnswers.map((defaultAnswer, index) => {
+      const correctAnswer = correctAnswers.find(
+        (ca: any) => ca.matchNumber === index + 1
+      );
+      return correctAnswer
+        ? {
+            ...defaultAnswer,
+            chosenWinner: correctAnswer.chosenWinner || "",
+            goalsHomeTeam: correctAnswer.goalsHomeTeam || "",
+            goalsAwayTeam: correctAnswer.goalsAwayTeam || "",
+          }
+        : defaultAnswer;
+    });
+  };
+
   // Refs to scroll to the first missing answer
   const rowRefs = React.useRef<(HTMLTableRowElement | null)[]>([]);
 
@@ -93,10 +110,12 @@ const AnswersForm = () => {
   const correctingModeOn = queryParams.get("correct"); // another submit
   const editCorrectionModeOn = queryParams.get("correctionEdit"); // show corrections selected
   const seeUserAnswersModeOn = queryParams.get("see"); // if user answered, show answers. If correction done, show corrections. If both, show corrected Answers
+  const viewOnlyModeOn = queryParams.get("viewOnly"); // view quinipolo without fetching or showing user answers
   const answerModeOn = // none of the above
     correctingModeOn === null &&
     editCorrectionModeOn === null &&
-    seeUserAnswersModeOn === null
+    seeUserAnswersModeOn === null &&
+    viewOnlyModeOn === null
       ? true
       : false;
 
@@ -121,22 +140,7 @@ const AnswersForm = () => {
 
         // Transform correct_answers to match the expected structure
         if (response.correct_answers && response.correct_answers.length > 0) {
-          const transformedAnswers = initialAnswers.map(
-            (defaultAnswer, index) => {
-              const correctAnswer = response.correct_answers.find(
-                (ca: any) => ca.matchNumber === index + 1
-              );
-              return correctAnswer
-                ? {
-                    ...defaultAnswer,
-                    chosenWinner: correctAnswer.chosenWinner || "",
-                    goalsHomeTeam: correctAnswer.goalsHomeTeam || "",
-                    goalsAwayTeam: correctAnswer.goalsAwayTeam || "",
-                  }
-                : defaultAnswer;
-            }
-          );
-          setAnswers(transformedAnswers);
+          setAnswers(mapCorrectAnswersToInitial(response.correct_answers));
         } else {
           setAnswers(initialAnswers);
         }
@@ -161,6 +165,7 @@ const AnswersForm = () => {
         setLoading(false);
         return;
       } else {
+        // includes view-only mode case
         response = await apiGet<QuinipoloType>(
           `/api/quinipolos/quinipolo/${id}`
         );
@@ -190,6 +195,7 @@ const AnswersForm = () => {
   // Auto-highlight missing answers as the user interacts (excluding view-only mode)
   useEffect(() => {
     if (seeUserAnswersModeOn) return;
+    if (viewOnlyModeOn) return;
     if (!hasAttemptedSubmit) return;
     const matches = quinipolo?.quinipolo || [];
     if (!matches.length) return;
@@ -200,7 +206,13 @@ const AnswersForm = () => {
       }
     });
     setMissingAnswerIndices(missing);
-  }, [answers, quinipolo?.quinipolo, seeUserAnswersModeOn, hasAttemptedSubmit]);
+  }, [
+    answers,
+    quinipolo?.quinipolo,
+    seeUserAnswersModeOn,
+    viewOnlyModeOn,
+    hasAttemptedSubmit,
+  ]);
 
   const submitQuinipolo = async () => {
     // Validate all answers are provided before submitting
@@ -333,7 +345,7 @@ const AnswersForm = () => {
     event: React.MouseEvent<HTMLElement>,
     newValue: string
   ) => {
-    if (newValue === null || seeUserAnswersModeOn) return;
+    if (newValue === null || seeUserAnswersModeOn || viewOnlyModeOn) return;
     // For match 15, only clear highlight when winner and both goals are set
     const index = parseInt(newValue.split("__")[1]);
     if (index !== 14) {
@@ -365,7 +377,7 @@ const AnswersForm = () => {
     event: React.MouseEvent<HTMLElement>,
     newValue: string
   ) => {
-    if (newValue === null || seeUserAnswersModeOn) return;
+    if (newValue === null || seeUserAnswersModeOn || viewOnlyModeOn) return;
     setAnswers((prevAnswers) => {
       const parts = newValue.split("__");
       const goalValue = parts[0];
@@ -408,7 +420,10 @@ const AnswersForm = () => {
 
     // Determine the styling based on whether we're showing user answers and have corrections
     let className = "";
-    if (seeUserAnswersModeOn && quinipolo.has_been_corrected) {
+    if (
+      (seeUserAnswersModeOn || viewOnlyModeOn) &&
+      quinipolo.has_been_corrected
+    ) {
       // Extract the team name from the correct answer (remove index suffix if present)
       const correctAnswerTeam = correctAnswer?.split("__")[0] || "";
 
@@ -439,6 +454,8 @@ const AnswersForm = () => {
       return t("correct");
     } else if (seeUserAnswersModeOn) {
       return t("yourAnswersWithResults");
+    } else if (viewOnlyModeOn) {
+      return t("viewQuinipoloResults");
     } else {
       return t("selectTheResultForEachMatch");
     }
@@ -605,7 +622,7 @@ const AnswersForm = () => {
             })}
           </TableBody>
           {/* Submit button */}
-          {seeUserAnswersModeOn ? null : (
+          {seeUserAnswersModeOn || viewOnlyModeOn ? null : (
             <Button
               variant="contained"
               onClick={submitQuinipolo}

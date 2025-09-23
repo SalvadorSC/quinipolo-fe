@@ -185,21 +185,22 @@ const QuinipoloCard = ({
         </div>
 
         <div className={styles.quinipoloActions}>
-          {!quinipolo.participants_who_answered?.includes(username) && (
-            <Button
-              className={`${styles.actionButton} ${
-                currentDeadlineIsInPast || quinipolo.is_deleted
-                  ? ""
-                  : "gradient-primary"
-              }`}
-              disabled={currentDeadlineIsInPast || quinipolo.is_deleted}
-              onClick={() => navigate(`/quinipolo?id=${quinipolo.id}`)}
-              variant={"contained"}
-            >
-              <span>{t("answer")}</span>
-              <PlayCircleFilledIcon />
-            </Button>
-          )}
+          {!quinipolo.participants_who_answered?.includes(username) &&
+            !currentDeadlineIsInPast && (
+              <Button
+                className={`${styles.actionButton} ${
+                  currentDeadlineIsInPast || quinipolo.is_deleted
+                    ? ""
+                    : "gradient-primary"
+                }`}
+                disabled={currentDeadlineIsInPast || quinipolo.is_deleted}
+                onClick={() => navigate(`/quinipolo?id=${quinipolo.id}`)}
+                variant={"contained"}
+              >
+                <span>{t("answer")}</span>
+                <PlayCircleFilledIcon />
+              </Button>
+            )}
           {isUserModerator(userLeagues, quinipolo.league_id) &&
             !quinipolo.has_been_corrected &&
             currentDeadlineIsInPast && (
@@ -239,8 +240,7 @@ const QuinipoloCard = ({
                 <EditIcon />
               </Button>
             )}
-          {quinipolo.has_been_corrected ||
-          quinipolo.participants_who_answered?.includes(username) ? (
+          {quinipolo.participants_who_answered?.includes(username) ? (
             <Button
               className={`${styles.actionButton} ${
                 quinipolo.is_deleted ? "" : "gradient-primary"
@@ -251,10 +251,28 @@ const QuinipoloCard = ({
               disabled={quinipolo.is_deleted}
               variant={"contained"}
             >
-              <span>{t("answers")}</span>
+              <span>{t("viewAnswers")}</span>
               <VisibilityIcon />
             </Button>
           ) : null}
+
+          {/* New explicit View Quinipolo button when user hasn't answered and deadline passed */}
+          {!quinipolo.participants_who_answered?.includes(username) &&
+            currentDeadlineIsInPast && (
+              <Button
+                className={`${styles.actionButton} ${
+                  quinipolo.is_deleted ? "" : "gradient-primary"
+                }`}
+                onClick={() => {
+                  navigate(`/quinipolo?id=${quinipolo.id}&viewOnly=true`);
+                }}
+                disabled={quinipolo.is_deleted}
+                variant={"contained"}
+              >
+                <span>{t("viewQuinipolo")}</span>
+                <VisibilityIcon />
+              </Button>
+            )}
         </div>
       </div>
 

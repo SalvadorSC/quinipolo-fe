@@ -86,7 +86,6 @@ const ScoreSummary: React.FC<ScoreSummaryProps> = ({
         variant="h5"
         component="h2"
         sx={{ fontWeight: "bold", color: "white" }}
-        gutterBottom
       >
         {t("score")}: {correctCount}/15
       </Typography>
