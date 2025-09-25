@@ -53,11 +53,11 @@ const LeagueInfo: React.FC<LeagueInfoProps> = ({
   onEditLeague,
   onManageModerators,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return t("unknown");
-    return new Date(dateString).toLocaleDateString(undefined, {
+    return new Date(dateString).toLocaleDateString(i18n.language, {
       year: "numeric",
       month: "long",
       day: "numeric",

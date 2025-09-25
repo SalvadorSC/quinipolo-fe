@@ -59,7 +59,7 @@ const ScoreSummary: React.FC<ScoreSummaryProps> = ({
       // Game 15 is fully correct if winner and both goals are correct
       game15Correct = winnerCorrect && homeGoalsCorrect && awayGoalsCorrect;
 
-      if (winnerCorrect) {
+      if (game15Correct) {
         correctCount++;
       }
     }

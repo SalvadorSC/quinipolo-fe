@@ -1,6 +1,7 @@
 import React from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import style from "./AnswersForm.module.scss";
+import { GOAL_DISPLAY_CONFIG, DEFAULT_GOAL_DISPLAY } from "./goalDisplayConfig";
 
 interface GoalsToggleButtonGroupProps {
   teamType: "home" | "away";
@@ -10,6 +11,7 @@ interface GoalsToggleButtonGroupProps {
   matchType: "waterpolo" | "football";
   onChange: (event: React.MouseEvent<HTMLElement>, newValue: string) => void;
   seeUserAnswersModeOn: string | null;
+  viewOnlyModeOn?: string | null;
   quinipoloHasBeenCorrected: boolean;
   disabled?: boolean;
   isMissing?: boolean;
@@ -23,17 +25,24 @@ const GoalsToggleButtonGroup: React.FC<GoalsToggleButtonGroupProps> = ({
   matchType,
   onChange,
   seeUserAnswersModeOn,
+  viewOnlyModeOn,
   quinipoloHasBeenCorrected,
   disabled = false,
   isMissing = false,
 }) => {
-  const values =
-    matchType === "waterpolo"
-      ? ["9/10", `9/10__${teamType}`]
-      : ["1/2", `1/2__${teamType}`];
+  const cfg = GOAL_DISPLAY_CONFIG[matchType] || DEFAULT_GOAL_DISPLAY;
+  const values = [
+    cfg.centerPayload,
+    `${cfg.centerPayload}__${teamType}`,
+  ] as const;
+  // Display-only labels (payload values remain '-', centerPayload, '+')
+  const displayLeft = cfg.leftLabel;
+  const displayCenter = cfg.centerLabel;
+  const displayRight = cfg.rightLabel;
 
   const getButtonClassName = (value: string) => {
-    if (!seeUserAnswersModeOn || !quinipoloHasBeenCorrected) return "";
+    if (!(seeUserAnswersModeOn || viewOnlyModeOn) || !quinipoloHasBeenCorrected)
+      return "";
 
     // Extract the goal value from the button value
     const goalValue = value.split("__")[0];
@@ -73,13 +82,19 @@ const GoalsToggleButtonGroup: React.FC<GoalsToggleButtonGroupProps> = ({
         disabled={disabled}
       >
         <ToggleButton value={`-__${teamType}`} disabled={disabled}>
-          <span className={getButtonClassName(`-__${teamType}`)}>-</span>
+          <span className={getButtonClassName(`-__${teamType}`)}>
+            {displayLeft}
+          </span>
         </ToggleButton>
         <ToggleButton value={values[1]} disabled={disabled}>
-          <span className={getButtonClassName(values[1])}>{values[0]} </span>
+          <span className={getButtonClassName(values[1])}>
+            {displayCenter}{" "}
+          </span>
         </ToggleButton>
         <ToggleButton value={`+__${teamType}`} disabled={disabled}>
-          <span className={getButtonClassName(`+__${teamType}`)}>+</span>
+          <span className={getButtonClassName(`+__${teamType}`)}>
+            {displayRight}
+          </span>
         </ToggleButton>
       </ToggleButtonGroup>
     </div>

@@ -201,8 +201,16 @@ const AnswersForm = () => {
     if (!matches.length) return;
     const missing: number[] = [];
     answers.forEach((ans, idx) => {
-      if (!ans.chosenWinner) {
-        missing.push(idx);
+      if (idx === 14) {
+        const isWinnerMissing = !ans.chosenWinner;
+        const areGoalsMissing = !(ans.goalsHomeTeam && ans.goalsAwayTeam);
+        if (isWinnerMissing || (!isWinnerMissing && areGoalsMissing)) {
+          missing.push(idx);
+        }
+      } else {
+        if (!ans.chosenWinner) {
+          missing.push(idx);
+        }
       }
     });
     setMissingAnswerIndices(missing);
@@ -218,9 +226,17 @@ const AnswersForm = () => {
     // Validate all answers are provided before submitting
     const missing: number[] = [];
     answers.forEach((ans, idx) => {
-      const isWinnerMissing = !ans.chosenWinner;
-      if (isWinnerMissing) {
-        missing.push(idx);
+      if (idx === 14) {
+        const isWinnerMissing = !ans.chosenWinner;
+        const areGoalsMissing = !(ans.goalsHomeTeam && ans.goalsAwayTeam);
+        if (isWinnerMissing || (!isWinnerMissing && areGoalsMissing)) {
+          missing.push(idx);
+        }
+      } else {
+        const isWinnerMissing = !ans.chosenWinner;
+        if (isWinnerMissing) {
+          missing.push(idx);
+        }
       }
     });
 
@@ -585,6 +601,7 @@ const AnswersForm = () => {
                               matchType={match.gameType}
                               onChange={handleGame15Change}
                               seeUserAnswersModeOn={seeUserAnswersModeOn}
+                              viewOnlyModeOn={viewOnlyModeOn}
                               quinipoloHasBeenCorrected={
                                 quinipoloHasBeenCorrected
                               }
@@ -603,6 +620,7 @@ const AnswersForm = () => {
                               matchType={match.gameType}
                               onChange={handleGame15Change}
                               seeUserAnswersModeOn={seeUserAnswersModeOn}
+                              viewOnlyModeOn={viewOnlyModeOn}
                               quinipoloHasBeenCorrected={
                                 quinipoloHasBeenCorrected
                               }
