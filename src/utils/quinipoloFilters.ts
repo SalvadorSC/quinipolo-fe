@@ -62,12 +62,18 @@ export const filterPreviousQuinipolos = (
   quinipolos: QuinipoloType[],
   { leagueId }: QuinipoloFilters
 ): QuinipoloType[] => {
-  return quinipolos.filter(
-    (quinipolo) =>
-      quinipolo.end_date <= new Date().toISOString() &&
-      (!leagueId || quinipolo.league_id === leagueId) &&
-      quinipolo.has_been_corrected
-  );
+  return quinipolos
+    .filter(
+      (quinipolo) =>
+        quinipolo.end_date <= new Date().toISOString() &&
+        (!leagueId || quinipolo.league_id === leagueId) &&
+        quinipolo.has_been_corrected
+    )
+    .sort((a, b) => {
+      const aTime = new Date(a.end_date).getTime();
+      const bTime = new Date(b.end_date).getTime();
+      return bTime - aTime;
+    });
 };
 
 /**

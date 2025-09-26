@@ -47,7 +47,15 @@ const QuinipolosToAnswer = ({
         } else {
           data = await apiGet(`/api/users/me/quinipolos`);
         }
-        setQuinipolos(data);
+        // Ensure newest to oldest ordering by end_date
+        const sortedData = Array.isArray(data)
+          ? [...data].sort((a, b) => {
+              const aTime = new Date(a.end_date).getTime();
+              const bTime = new Date(b.end_date).getTime();
+              return bTime - aTime;
+            })
+          : data;
+        setQuinipolos(sortedData);
       } catch (error) {
         console.error(error);
         setFeedback({
