@@ -8,7 +8,14 @@
 }
 
 .tableHead {
-  background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+  background: #1976d2;
+
+  > tr {
+    > th {
+      background: #1976d2;
+      border-bottom: none;
+    }
+  }
   > tr::first-child {
     border-radius: 16px 16px 0 0 !important;
   }

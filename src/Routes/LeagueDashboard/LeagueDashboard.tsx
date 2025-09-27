@@ -322,7 +322,6 @@ const LeagueDashboard = () => {
           width: "100%",
           p: 4,
           borderRadius: "20px",
-          marginBottom: "100px",
         }}
       >
         {loading ? (

@@ -17,15 +17,11 @@ const Leaderboard = ({ sortedResults }: { sortedResults: Result[] }) => {
     <TableContainer
       sx={{
         borderRadius: "16px",
+        maxHeight: 500,
+        overflowY: "auto",
       }}
-      // component={Paper}
     >
-      <Table
-        sx={{
-          maxHeight: "50vh",
-        }}
-        aria-label="simple table"
-      >
+      <Table aria-label="simple table" stickyHeader>
         <LeaderboardHead />
         <TableBody>
           {sortedResults.map((row: Result, i: number) => {

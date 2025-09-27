@@ -1,5 +1,7 @@
 // Lightweight GA4 integration that loads gtag.js when a measurement ID is present
 
+import { hasConsent, CONSENT_CHANGED_EVENT } from "./consent";
+
 declare global {
   interface Window {
     dataLayer?: any[];
@@ -28,15 +30,40 @@ function loadGaScript(measurementId: string) {
   window.gtag("config", measurementId, { send_page_view: false });
 }
 
+let analyticsInitialized = false;
+
 export function initAnalytics() {
   if (!GA_MEASUREMENT_ID) return;
+  if (!hasConsent()) {
+    console.info("[Analytics] Skipped init (no consent)");
+    return;
+  }
+  if (analyticsInitialized) return;
   console.info("[Analytics] Initializing GA4 with ID:", GA_MEASUREMENT_ID);
   loadGaScript(GA_MEASUREMENT_ID);
+  analyticsInitialized = true;
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener(CONSENT_CHANGED_EVENT, (e: Event) => {
+    try {
+      const detail = (e as CustomEvent).detail;
+      if (detail === "accepted") {
+        initAnalytics();
+      }
+    } catch {
+      // no-op
+    }
+  });
 }
 
 export function trackPageView(path: string) {
   if (!GA_MEASUREMENT_ID) {
     console.debug("[Analytics] page_view skipped (no GA ID)", { path });
+    return;
+  }
+  if (!hasConsent()) {
+    console.debug("[Analytics] page_view skipped (no consent)", { path });
     return;
   }
   if (!window.gtag) {
@@ -56,6 +83,10 @@ export function trackLogin(method: string) {
     console.debug("[Analytics] login skipped (no GA ID)", { method });
     return;
   }
+  if (!hasConsent()) {
+    console.debug("[Analytics] login skipped (no consent)", { method });
+    return;
+  }
   if (!window.gtag) {
     console.debug("[Analytics] login queued/missed (gtag not ready)", {
       method,
@@ -71,6 +102,10 @@ export function trackLogin(method: string) {
 export function trackSignup(method: string) {
   if (!GA_MEASUREMENT_ID) {
     console.debug("[Analytics] sign_up skipped (no GA ID)", { method });
+    return;
+  }
+  if (!hasConsent()) {
+    console.debug("[Analytics] sign_up skipped (no consent)", { method });
     return;
   }
   if (!window.gtag) {
