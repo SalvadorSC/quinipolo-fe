@@ -7,36 +7,30 @@ import type { LeaguesTypes } from "./LeagueDashboard";
 type ActionRequestsProps = {
   leagueId: string;
   leagueData: LeaguesTypes;
-  setLeagueData: Dispatch<SetStateAction<LeaguesTypes>>;
-  onAfterChange?: () => void;
+  participantPetitions: any[];
+  onPetitionAccept: (petitionId: string) => void;
+  onPetitionReject: (petitionId: string) => void;
 };
 
 const ActionRequests = ({
   leagueId,
   leagueData,
-  setLeagueData,
-  onAfterChange,
+  participantPetitions,
+  onPetitionAccept,
+  onPetitionReject,
 }: ActionRequestsProps) => {
   const { t } = useTranslation();
 
-  const { participantRequests, moderatorRequests } = useMemo(() => {
+  const { participantRequests } = useMemo(() => {
     const pendingParticipant =
       leagueData.isPrivate &&
-      leagueData.participantPetitions?.filter(
-        (petition) => petition.status === "pending"
-      );
-    const pendingModerator = leagueData.moderatorPetitions?.filter(
-      (petition) => petition.status === "pending"
-    );
+      participantPetitions?.filter((petition) => petition.status === "pending");
     return {
       participantRequests: pendingParticipant || [],
-      moderatorRequests: pendingModerator || [],
     };
-  }, [leagueData]);
+  }, [leagueData.isPrivate, participantPetitions]);
 
-  const noActions =
-    (!participantRequests || participantRequests.length === 0) &&
-    (!moderatorRequests || moderatorRequests.length === 0);
+  const noActions = !participantRequests || participantRequests.length === 0;
 
   if (noActions) {
     return (
@@ -52,20 +46,11 @@ const ActionRequests = ({
           <RequestsTable
             leagueId={leagueId}
             requests={participantRequests}
-            setLeagueData={setLeagueData}
             requestType="participant"
-            onAfterChange={onAfterChange}
+            onAccept={onPetitionAccept}
+            onReject={onPetitionReject}
           />
         )}
-      {moderatorRequests?.length > 0 && (
-        <RequestsTable
-          leagueId={leagueId}
-          requests={moderatorRequests}
-          setLeagueData={setLeagueData}
-          requestType="moderator"
-          onAfterChange={onAfterChange}
-        />
-      )}
     </>
   );
 };

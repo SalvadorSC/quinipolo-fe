@@ -1,4 +1,4 @@
-import React, { SetStateAction } from "react";
+import React from "react";
 import {
   Table,
   TableBody,
@@ -16,10 +16,7 @@ import dayjs from "dayjs";
 import style from "./RequestsTable.module.scss";
 import CheckIcon from "@mui/icons-material/Check";
 import DoDisturbIcon from "@mui/icons-material/DoDisturb";
-import { apiPut } from "../../utils/apiUtils";
-import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { LeaguesTypes } from "../../Routes/LeagueDashboard/LeagueDashboard";
 import { useTranslation } from "react-i18next";
 
 interface IRequest {
@@ -32,61 +29,26 @@ interface IRequest {
 interface IRequestsTable {
   requests: IRequest[];
   leagueId: string;
-  setLeagueData: React.Dispatch<SetStateAction<LeaguesTypes>>;
   requestType: "moderator" | "participant";
-  onAfterChange?: () => void;
+  onAccept: (id: string) => void;
+  onReject: (id: string) => void;
 }
 
 const RequestsTable = ({
   requests,
   leagueId,
-  setLeagueData,
   requestType,
-  onAfterChange,
+  onAccept,
+  onReject,
 }: IRequestsTable) => {
-  const { setFeedback } = useFeedback();
   const { t } = useTranslation();
 
   const handleAccept = (id: string) => {
-    apiPut(`/api/leagues/${leagueId}/${requestType}-petitions/${id}/accept`, {})
-      .then((data: any) => {
-        setLeagueData(data);
-        if (onAfterChange) onAfterChange();
-        setFeedback({
-          message: "Petición aceptada",
-          severity: "success",
-          open: true,
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-        setFeedback({
-          message: "Error aceptando la petición",
-          severity: "error",
-          open: true,
-        });
-      });
+    onAccept(id);
   };
 
   const handleReject = (id: string) => {
-    apiPut(`/api/leagues/${leagueId}/${requestType}-petitions/${id}/reject`, {})
-      .then((data: any) => {
-        setLeagueData(data);
-        if (onAfterChange) onAfterChange();
-        setFeedback({
-          message: "Petición rechazada",
-          severity: "success",
-          open: true,
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-        setFeedback({
-          message: "Error rechazando la petición",
-          severity: "error",
-          open: true,
-        });
-      });
+    onReject(id);
   };
 
   return (

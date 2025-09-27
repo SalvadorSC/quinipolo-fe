@@ -82,6 +82,7 @@ const LeagueDashboard = () => {
     isPrivate: false,
   });
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
+  const [participantPetitions, setParticipantPetitions] = useState<any[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isSavingLeague, setIsSavingLeague] = useState<boolean>(false);
   const [isModeratorModalOpen, setIsModeratorModalOpen] =
@@ -116,6 +117,8 @@ const LeagueDashboard = () => {
               ? data.is_private
               : false,
         });
+        // Update separate petition states
+        setParticipantPetitions(data.participantPetitions || []);
         setLoading(false);
       })
       .catch((error) => {
@@ -279,6 +282,52 @@ const LeagueDashboard = () => {
     }
   };
 
+  // Handle petition acceptance - update both league data and petitions
+  const handlePetitionAccept = async (petitionId: string) => {
+    try {
+      const response = (await apiPut(
+        `/api/leagues/${leagueId}/participant-petitions/${petitionId}/accept`,
+        {}
+      )) as any;
+
+      // Update league data (participants, leaderboard, etc.)
+      setLeagueData((prev) => ({
+        ...prev,
+        participants: response.participants,
+        moderatorArray: response.moderatorArray,
+      }));
+
+      // Update petitions
+      setParticipantPetitions(response.participantPetitions || []);
+
+      // Refresh leaderboard to show new participant
+      getLeagueLeaderBoardData();
+
+      setFeedback({ message: t("success"), severity: "success", open: true });
+    } catch (e) {
+      console.error(e);
+      setFeedback({ message: t("error"), severity: "error", open: true });
+    }
+  };
+
+  // Handle petition rejection - update only petitions
+  const handlePetitionReject = async (petitionId: string) => {
+    try {
+      const response = (await apiPut(
+        `/api/leagues/${leagueId}/participant-petitions/${petitionId}/reject`,
+        {}
+      )) as any;
+
+      // Update only petitions, not league data
+      setParticipantPetitions(response.participantPetitions || []);
+
+      setFeedback({ message: t("success"), severity: "success", open: true });
+    } catch (e) {
+      console.error(e);
+      setFeedback({ message: t("error"), severity: "error", open: true });
+    }
+  };
+
   const sortedLeaderboardData = useMemo(() => {
     return leaderboardData
       .slice()
@@ -368,12 +417,9 @@ const LeagueDashboard = () => {
                 <ActionRequests
                   leagueId={leagueId!}
                   leagueData={leagueData}
-                  setLeagueData={setLeagueData}
-                  onAfterChange={() => {
-                    // Refresh league and leaderboard after petitions change
-                    getLeagueLeaderBoardData();
-                    getLeagueData();
-                  }}
+                  participantPetitions={participantPetitions}
+                  onPetitionAccept={handlePetitionAccept}
+                  onPetitionReject={handlePetitionReject}
                 />
 
                 <Box
