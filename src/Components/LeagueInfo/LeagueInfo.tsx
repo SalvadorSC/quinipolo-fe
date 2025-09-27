@@ -20,6 +20,7 @@ import {
   PersonRemove,
   Edit,
   ManageAccounts,
+  Share,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import styles from "./LeagueInfo.module.scss";
@@ -42,16 +43,20 @@ interface LeagueInfoProps {
   };
   isUserModerator: boolean;
   isUserCreator: boolean;
+  isSystemAdmin: boolean;
   onEditLeague?: () => void;
   onManageModerators?: () => void;
+  onShareLeague?: () => void;
 }
 
 const LeagueInfo: React.FC<LeagueInfoProps> = ({
   leagueData,
   isUserModerator,
   isUserCreator,
+  isSystemAdmin,
   onEditLeague,
   onManageModerators,
+  onShareLeague,
 }) => {
   const { t, i18n } = useTranslation();
 
@@ -184,6 +189,17 @@ const LeagueInfo: React.FC<LeagueInfoProps> = ({
                   >
                     {t("editLeague")}
                   </Button>
+                  {isSystemAdmin && (
+                    <Button
+                      variant="contained"
+                      color="info"
+                      startIcon={<Share />}
+                      onClick={onShareLeague}
+                      sx={{ width: { xs: "100%", md: "auto" } }}
+                    >
+                      {t("shareLeague")}
+                    </Button>
+                  )}
                   {isUserCreator && (
                     <Button
                       variant="contained"

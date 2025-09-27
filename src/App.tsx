@@ -29,6 +29,7 @@ import {
   EmailConfirmation,
   SurveyForm,
   Admin,
+  JoinLeague,
 } from "./Routes";
 import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
@@ -87,6 +88,10 @@ function App() {
                   element={<EmailConfirmation />}
                 />
                 <Route path="/reset-password" element={<ResetPassword />} />
+                <Route
+                  path="/join-league/:shareToken"
+                  element={<JoinLeague />}
+                />
 
                 {/* Authenticated Routes */}
                 {shouldShowAuthed ? (

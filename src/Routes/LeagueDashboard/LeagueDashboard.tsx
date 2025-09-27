@@ -13,6 +13,7 @@ import Stats from "../../Components/Stats/Stats";
 import LeagueInfo from "../../Components/LeagueInfo/LeagueInfo";
 import LeagueEditModal from "../../Components/LeagueEditModal/LeagueEditModal";
 import ModeratorManagementModal from "../../Components/ModeratorManagementModal/ModeratorManagementModal";
+import ShareLinkModal from "../../Components/ShareLinkModal/ShareLinkModal";
 import { Tabs, TabsProps } from "antd";
 import { useTranslation } from "react-i18next";
 import ActionRequests from "./ActionRequests";
@@ -86,6 +87,8 @@ const LeagueDashboard = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isSavingLeague, setIsSavingLeague] = useState<boolean>(false);
   const [isModeratorModalOpen, setIsModeratorModalOpen] =
+    useState<boolean>(false);
+  const [isShareLinkModalOpen, setIsShareLinkModalOpen] =
     useState<boolean>(false);
   const queryParams = new URLSearchParams(window.location.search);
   const leagueId = queryParams.get("id");
@@ -269,6 +272,14 @@ const LeagueDashboard = () => {
     setIsModeratorModalOpen(false);
   };
 
+  const handleOpenShareLeague = () => {
+    setIsShareLinkModalOpen(true);
+  };
+
+  const handleCloseShareLeague = () => {
+    setIsShareLinkModalOpen(false);
+  };
+
   const handleSaveModerators = async (moderatorIds: string[]) => {
     try {
       await apiPut(`/api/leagues/${leagueId}/moderators`, { moderatorIds });
@@ -356,8 +367,10 @@ const LeagueDashboard = () => {
           leagueData={leagueData}
           isUserModerator={isUserModeratorInThisLeague}
           isUserCreator={isUserCreator}
+          isSystemAdmin={isSystemAdmin(userData.role)}
           onEditLeague={handleOpenEditLeague}
           onManageModerators={handleOpenManageModerators}
+          onShareLeague={handleOpenShareLeague}
         />
       ),
     },
@@ -469,6 +482,12 @@ const LeagueDashboard = () => {
         creatorId={leagueData.created_by}
         onClose={handleCloseManageModerators}
         onSave={handleSaveModerators}
+      />
+      <ShareLinkModal
+        open={isShareLinkModalOpen}
+        leagueId={leagueId || ""}
+        userId={userData.userId}
+        onClose={handleCloseShareLeague}
       />
     </div>
   );
