@@ -43,7 +43,7 @@ interface LeagueInfoProps {
   };
   isUserModerator: boolean;
   isUserCreator: boolean;
-  isSystemAdmin: boolean;
+  isSystemModerator: boolean;
   onEditLeague?: () => void;
   onManageModerators?: () => void;
   onShareLeague?: () => void;
@@ -53,7 +53,7 @@ const LeagueInfo: React.FC<LeagueInfoProps> = ({
   leagueData,
   isUserModerator,
   isUserCreator,
-  isSystemAdmin,
+  isSystemModerator,
   onEditLeague,
   onManageModerators,
   onShareLeague,
@@ -189,7 +189,7 @@ const LeagueInfo: React.FC<LeagueInfoProps> = ({
                   >
                     {t("editLeague")}
                   </Button>
-                  {isSystemAdmin && (
+                  {isSystemModerator && (
                     <Button
                       variant="contained"
                       color="info"

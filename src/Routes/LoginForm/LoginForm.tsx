@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import MenuBar from "../../Components/MenuBar/MenuBar";
 import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
@@ -17,6 +17,7 @@ import { trackLogin } from "../../utils/analytics";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { t } = useTranslation();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -47,17 +48,20 @@ const LoginForm = () => {
       setError(t(error.code!) || error.message);
     } else {
       trackLogin("password");
-      navigate("/");
+      // Redirect to returnUrl if provided, otherwise go to home
+      const returnUrl = searchParams.get("returnUrl");
+      navigate(returnUrl || "/");
     }
   };
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
     setError(null);
+    const returnUrl = searchParams.get("returnUrl");
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: getRedirectUrl("/"),
+        redirectTo: getRedirectUrl(returnUrl || "/"),
       },
     });
     setLoading(false);

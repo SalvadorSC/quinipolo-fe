@@ -36,14 +36,18 @@ const JoinLeague: React.FC = () => {
   const [leagueInfo, setLeagueInfo] = useState<LeagueInfo | null>(null);
 
   const handleJoinLeague = useCallback(async () => {
-    if (!shareToken || !userData.userId) return;
+    // Get share token from URL or localStorage
+    const currentShareToken =
+      shareToken || localStorage.getItem("pendingShareToken");
+
+    if (!currentShareToken || !userData.userId) return;
 
     try {
       setLoading(true);
       setError(null);
 
       const response = (await apiPost(
-        `/api/leagues/join-by-link/${shareToken}`,
+        `/api/leagues/join-by-link/${currentShareToken}`,
         {
           userId: userData.userId,
           username: userData.username,
@@ -91,14 +95,29 @@ const JoinLeague: React.FC = () => {
     navigate,
   ]);
 
+  // Handle share token from URL or localStorage
   useEffect(() => {
     if (!userData.userId) {
-      // Redirect to login if user is not authenticated
-      navigate("/login");
+      // Store the share token for after login
+      if (shareToken) {
+        localStorage.setItem("pendingShareToken", shareToken);
+      }
+      // Redirect to login with return URL
+      navigate(
+        `/login?returnUrl=${encodeURIComponent(window.location.pathname)}`
+      );
       return;
     }
 
-    if (shareToken) {
+    // Check if we have a share token (from URL or localStorage)
+    const currentShareToken =
+      shareToken || localStorage.getItem("pendingShareToken");
+
+    if (currentShareToken) {
+      // Clear the stored token since we're using it
+      if (localStorage.getItem("pendingShareToken")) {
+        localStorage.removeItem("pendingShareToken");
+      }
       handleJoinLeague();
     }
   }, [shareToken, userData.userId, handleJoinLeague, navigate]);

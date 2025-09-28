@@ -17,7 +17,7 @@ import ShareLinkModal from "../../Components/ShareLinkModal/ShareLinkModal";
 import { Tabs, TabsProps } from "antd";
 import { useTranslation } from "react-i18next";
 import ActionRequests from "./ActionRequests";
-import { isSystemAdmin } from "../../utils/moderatorUtils";
+import { isSystemModerator } from "../../utils/moderatorUtils";
 
 export type LeaguesTypes = {
   quinipolosToAnswer: any[];
@@ -187,7 +187,7 @@ const LeagueDashboard = () => {
         p.username === userData.username &&
         p.role &&
         p.role.toLowerCase() === "moderator"
-    ) || isSystemAdmin(userData.role);
+    ) || isSystemModerator(userData.role);
 
   // Derived value for creator status
   const isUserCreator = leagueData.created_by === userData.userId;
@@ -367,7 +367,7 @@ const LeagueDashboard = () => {
           leagueData={leagueData}
           isUserModerator={isUserModeratorInThisLeague}
           isUserCreator={isUserCreator}
-          isSystemAdmin={isSystemAdmin(userData.role)}
+          isSystemModerator={isSystemModerator(userData.role)}
           onEditLeague={handleOpenEditLeague}
           onManageModerators={handleOpenManageModerators}
           onShareLeague={handleOpenShareLeague}
