@@ -1,10 +1,8 @@
 import {
-  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
 } from "@mui/material";
 import React from "react";
@@ -17,7 +15,7 @@ const Leaderboard = ({ sortedResults }: { sortedResults: Result[] }) => {
     <TableContainer
       sx={{
         borderRadius: "16px",
-        height: "100%",
+        // height: "100%",
         maxHeight: "100%",
         overflowY: "auto",
       }}

@@ -425,5 +425,9 @@
   "redirectingToLeague": "Redirecionando para o painel da liga...",
   "invalidShareLink": "Link de compartilhamento inválido ou expirado",
   "shareLinkExpired": "O link de compartilhamento expirou",
-  "alreadyInLeague": "Você já é membro desta liga"
+  "alreadyInLeague": "Você já é membro desta liga",
+  "editIcon": "Editar ícone",
+  "accentColor": "Cor de destaque",
+  "iconColor": "Cor do ícone",
+  "selectLeagueIcon": "Selecionar ícone da liga"
 }

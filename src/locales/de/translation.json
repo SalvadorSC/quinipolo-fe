@@ -425,5 +425,9 @@
   "redirectingToLeague": "Weiterleitung zum Liga-Dashboard...",
   "invalidShareLink": "Ungültiger oder abgelaufener Teil-Link",
   "shareLinkExpired": "Der Teil-Link ist abgelaufen",
-  "alreadyInLeague": "Du bist bereits Mitglied dieser Liga"
+  "alreadyInLeague": "Du bist bereits Mitglied dieser Liga",
+  "editIcon": "Symbol bearbeiten",
+  "accentColor": "Akzentfarbe",
+  "iconColor": "Symbolfarbe",
+  "selectLeagueIcon": "Liga‑Symbol auswählen"
 }

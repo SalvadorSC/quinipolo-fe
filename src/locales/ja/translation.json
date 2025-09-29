@@ -425,5 +425,9 @@
   "redirectingToLeague": "リーグダッシュボードにリダイレクト中...",
   "invalidShareLink": "無効または期限切れの共有リンク",
   "shareLinkExpired": "共有リンクの有効期限が切れています",
-  "alreadyInLeague": "すでにこのリーグのメンバーです"
+  "alreadyInLeague": "すでにこのリーグのメンバーです",
+  "editIcon": "アイコンを編集",
+  "accentColor": "アクセントカラー",
+  "iconColor": "アイコンの色",
+  "selectLeagueIcon": "リーグのアイコンを選択"
 }

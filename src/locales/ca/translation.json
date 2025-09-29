@@ -424,5 +424,9 @@
   "redirectingToLeague": "Redirigint al tauler de la lliga...",
   "invalidShareLink": "Enllaç de compartir invàlid o expirat",
   "shareLinkExpired": "L'enllaç de compartir ha expirat",
-  "alreadyInLeague": "Ja ets membre d'aquesta lliga"
+  "alreadyInLeague": "Ja ets membre d'aquesta lliga",
+  "editIcon": "Editar icona",
+  "accentColor": "Color d'accent",
+  "iconColor": "Color de la icona",
+  "selectLeagueIcon": "Selecciona la icona de la lliga"
 }

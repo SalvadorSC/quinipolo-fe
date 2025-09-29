@@ -12,12 +12,14 @@ import Leaderboard from "../../Components/Leaderboard/Leaderboard";
 import Stats from "../../Components/Stats/Stats";
 import LeagueInfo from "../../Components/LeagueInfo/LeagueInfo";
 import LeagueEditModal from "../../Components/LeagueEditModal/LeagueEditModal";
+import LeagueIconEditModal from "../../Components/LeagueIconEditModal/LeagueIconEditModal";
 import ModeratorManagementModal from "../../Components/ModeratorManagementModal/ModeratorManagementModal";
 import ShareLinkModal from "../../Components/ShareLinkModal/ShareLinkModal";
 import { Tabs, TabsProps } from "antd";
 import { useTranslation } from "react-i18next";
 import ActionRequests from "./ActionRequests";
 import { isSystemModerator } from "../../utils/moderatorUtils";
+import LeagueIconBadge from "../../Components/LeagueIconBadge/LeagueIconBadge";
 
 export type LeaguesTypes = {
   quinipolosToAnswer: any[];
@@ -33,6 +35,11 @@ export type LeaguesTypes = {
     full_name?: string;
   };
   description?: string;
+  icon_style?: {
+    icon?: string;
+    icon_color?: string;
+    accent_color?: string;
+  };
   moderatorPetitions: {
     userId: string;
     username: string;
@@ -90,6 +97,7 @@ const LeagueDashboard = () => {
     useState<boolean>(false);
   const [isShareLinkModalOpen, setIsShareLinkModalOpen] =
     useState<boolean>(false);
+  const [isIconModalOpen, setIsIconModalOpen] = useState<boolean>(false);
   const queryParams = new URLSearchParams(window.location.search);
   const leagueId = queryParams.get("id");
   const { setFeedback } = useFeedback();
@@ -110,6 +118,7 @@ const LeagueDashboard = () => {
           created_by: data.created_by,
           creator: data.creator,
           description: data.description,
+          icon_style: data.icon_style,
           moderatorPetitions: data.moderatorPetitions,
           participantPetitions: data.participantPetitions,
           participants: data.participants,
@@ -241,9 +250,22 @@ const LeagueDashboard = () => {
     setIsEditModalOpen(false);
   };
 
+  const handleOpenEditIcon = () => {
+    setIsIconModalOpen(true);
+  };
+
+  const handleCloseEditIcon = () => {
+    setIsIconModalOpen(false);
+  };
+
   const handleSaveLeagueEdits = async (data: {
     leagueName: string;
     description?: string;
+    icon_style?: {
+      icon?: string;
+      accent_color?: string;
+      icon_color?: string;
+    };
   }) => {
     try {
       setIsSavingLeague(true);
@@ -253,6 +275,8 @@ const LeagueDashboard = () => {
         league_name: data.leagueName || prev.league_name,
         description:
           data.description !== undefined ? data.description : prev.description,
+        icon_style:
+          data.icon_style !== undefined ? data.icon_style : prev.icon_style,
       }));
       setFeedback({ message: t("success"), severity: "success", open: true });
       setIsEditModalOpen(false);
@@ -353,7 +377,18 @@ const LeagueDashboard = () => {
       key: "1",
       label: t("points"),
       children: (
-        <div style={{ height: "50vh", width: "100%", minHeight: 0 }}>
+        <div
+          style={
+            sortedLeaderboardData.length > 7
+              ? {
+                  maxHeight: "50vh",
+                  width: "100%",
+                  minHeight: 0,
+                  overflowY: "auto",
+                }
+              : { width: "100%" }
+          }
+        >
           <Leaderboard sortedResults={sortedLeaderboardData} />
         </div>
       ), // use memoized data
@@ -375,6 +410,7 @@ const LeagueDashboard = () => {
           onEditLeague={handleOpenEditLeague}
           onManageModerators={handleOpenManageModerators}
           onShareLeague={handleOpenShareLeague}
+          onEditIcon={handleOpenEditIcon}
         />
       ),
     },
@@ -404,7 +440,15 @@ const LeagueDashboard = () => {
                 gap: 12,
               }}
             >
-              <h1 className={styles.leagueTitle}>{leagueData.league_name}</h1>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <LeagueIconBadge
+                  icon={leagueData.icon_style?.icon}
+                  accentColor={leagueData.icon_style?.accent_color}
+                  marginLeftPx={0}
+                  iconColor={leagueData.icon_style?.icon_color}
+                />
+                <h1 className={styles.leagueTitle}>{leagueData.league_name}</h1>
+              </div>
               {isUserModeratorInThisLeague && (
                 <Box sx={{ display: { xs: "none", md: "block" } }}>
                   <LoadingButton
@@ -479,6 +523,40 @@ const LeagueDashboard = () => {
         isSaving={isSavingLeague}
         onClose={handleCloseEditLeague}
         onSave={handleSaveLeagueEdits}
+      />
+      <LeagueIconEditModal
+        open={isIconModalOpen}
+        initialIcon={leagueData.icon_style?.icon}
+        initialAccentColor={leagueData.icon_style?.accent_color}
+        initialTextColor={leagueData.icon_style?.icon_color || "#ffffff"}
+        isSaving={isSavingLeague}
+        onClose={handleCloseEditIcon}
+        onSave={async ({ icon, accentColor, iconColor }) => {
+          try {
+            setIsSavingLeague(true);
+            const iconStyle = {
+              icon,
+              accent_color: accentColor,
+              icon_color: iconColor,
+            };
+            await apiPut(`/api/leagues/${leagueId}`, { iconStyle });
+            setLeagueData((prev) => ({
+              ...prev,
+              icon_style: iconStyle,
+            }));
+            setFeedback({
+              message: t("success"),
+              severity: "success",
+              open: true,
+            });
+            setIsIconModalOpen(false);
+          } catch (e) {
+            console.error(e);
+            setFeedback({ message: t("error"), severity: "error", open: true });
+          } finally {
+            setIsSavingLeague(false);
+          }
+        }}
       />
       <ModeratorManagementModal
         open={isModeratorModalOpen}

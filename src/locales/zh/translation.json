@@ -425,5 +425,9 @@
   "redirectingToLeague": "正在跳转到联赛面板...",
   "invalidShareLink": "无效或已过期的分享链接",
   "shareLinkExpired": "分享链接已过期",
-  "alreadyInLeague": "您已经是该联赛的成员"
+  "alreadyInLeague": "您已经是该联赛的成员",
+  "editIcon": "编辑图标",
+  "accentColor": "强调颜色",
+  "iconColor": "图标颜色",
+  "selectLeagueIcon": "选择联赛图标"
 }

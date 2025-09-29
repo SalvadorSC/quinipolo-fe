@@ -19,6 +19,12 @@ import { useTranslation } from "react-i18next";
 import { apiPost, apiGet } from "../../utils/apiUtils";
 import { config } from "../../utils/config";
 import { createLeagueInDev } from "../../utils/leagueCreation";
+import {
+  ICON_OPTIONS,
+  LeagueIconKey,
+  getLeagueIcon,
+} from "../../utils/leagueIcons";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 interface LeagueTier {
   id: string;
@@ -41,6 +47,19 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingTiers, setLoadingTiers] = useState<boolean>(true);
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const [selectedIcon, setSelectedIcon] =
+    useState<LeagueIconKey>("sports_volleyball");
+  const [accentColor, setAccentColor] = useState<string>("#1976d2");
+  const [iconColor, setIconColor] = useState<string>("#ffffff");
+  const presetAccentColors = [
+    { label: "Azul clarito", value: "#2273B9" },
+    { label: "Azul", value: "#1B3F7B" },
+    { label: "Azul oscuro", value: "#1F3057" },
+  ];
+  const presetTextColors = [
+    { label: "White", value: "#ffffff" },
+    { label: "Black", value: "#000000" },
+  ];
 
   const { userData } = useUser();
   const { setFeedback } = useFeedback();
@@ -99,13 +118,19 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
     try {
       // In development, bypass Stripe and create the league directly
       if (isDevelopment) {
-        const createdLeague = await createLeagueInDev({
+        const devParams: any = {
           leagueName,
           isPrivate,
           tier: selectedTier,
           userId: userData.userId,
           description: leagueDescription,
-        });
+          iconStyle: {
+            icon: selectedIcon,
+            accent_color: accentColor,
+            icon_color: iconColor,
+          },
+        };
+        const createdLeague = await createLeagueInDev(devParams);
         navigate(`/league-dashboard?id=${createdLeague.id}`);
         return;
       }
@@ -119,6 +144,11 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
           leagueDescription: leagueDescription.trim(),
           isPrivate,
           userId: userData.userId,
+          iconStyle: {
+            icon: selectedIcon,
+            accent_color: accentColor,
+            icon_color: iconColor,
+          },
         }
       );
 
@@ -300,6 +330,147 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
               <Typography variant="caption" color="text.secondary">
                 {t("featuresInDevelopment")}
               </Typography>
+            </Grid>
+
+            {/* Icon selection */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                {t("selectLeagueIcon")}
+              </Typography>
+              <ToggleButtonGroup
+                color="primary"
+                exclusive
+                value={selectedIcon}
+                onChange={(e, v) => v && setSelectedIcon(v)}
+                size="small"
+                sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}
+              >
+                {ICON_OPTIONS.map((opt) => (
+                  <ToggleButton key={opt.key} value={opt.key} sx={{ p: 1.5 }}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        background: accentColor,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {getLeagueIcon(opt.key, { color: iconColor })}
+                    </Box>
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
+            </Grid>
+
+            {/* Accent Color */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                {t("accentColor")}
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  flexWrap: "wrap",
+                }}
+              >
+                <TextField
+                  type="color"
+                  value={accentColor}
+                  onChange={(e) => setAccentColor(e.target.value)}
+                  sx={{ width: 120 }}
+                  inputProps={{ "aria-label": "accent color" }}
+                />
+                {presetAccentColors.map((c) => (
+                  <Button
+                    key={c.value}
+                    onClick={() => setAccentColor(c.value)}
+                    variant={
+                      accentColor.toLowerCase() === c.value.toLowerCase()
+                        ? "contained"
+                        : "outlined"
+                    }
+                    sx={{
+                      minWidth: 0,
+                      width: 36,
+                      height: 28,
+                      p: 0,
+                      borderRadius: 1,
+                      backgroundColor: c.value,
+                      border: "1px solid #e0e0e0",
+                      borderColor: c.value,
+                    }}
+                    title={c.label}
+                  />
+                ))}
+                <Box
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 1,
+                    border: "1px solid #e0e0e0",
+                    backgroundColor: accentColor,
+                  }}
+                />
+              </Box>
+            </Grid>
+
+            {/* Icon Color */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                {t("iconColor")}
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  flexWrap: "wrap",
+                }}
+              >
+                <TextField
+                  type="color"
+                  value={iconColor}
+                  onChange={(e) => setIconColor(e.target.value)}
+                  sx={{ width: 120 }}
+                  inputProps={{ "aria-label": "icon color" }}
+                />
+                {presetTextColors.map((c) => (
+                  <Button
+                    key={c.value}
+                    onClick={() => setIconColor(c.value)}
+                    variant={
+                      iconColor.toLowerCase() === c.value.toLowerCase()
+                        ? "contained"
+                        : "outlined"
+                    }
+                    sx={{
+                      minWidth: 0,
+                      width: 36,
+                      height: 28,
+                      p: 0,
+                      borderRadius: 1,
+                      backgroundColor: c.value,
+                      border: "1px solid #e0e0e0",
+                      borderColor: c.value,
+                    }}
+                    title={c.label}
+                  />
+                ))}
+                <Box
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 1,
+                    border: "1px solid #e0e0e0",
+                    backgroundColor: iconColor,
+                  }}
+                />
+              </Box>
             </Grid>
 
             {/* Submit Button */}

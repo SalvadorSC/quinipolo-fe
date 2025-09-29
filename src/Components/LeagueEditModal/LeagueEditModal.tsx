@@ -11,6 +11,12 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useTranslation } from "react-i18next";
+import {
+  ICON_OPTIONS,
+  LeagueIconKey,
+  getLeagueIcon,
+} from "../../utils/leagueIcons";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 interface LeagueEditModalProps {
   open: boolean;
@@ -25,6 +31,7 @@ const LeagueEditModal: React.FC<LeagueEditModalProps> = ({
   open,
   initialName,
   initialDescription,
+
   isSaving = false,
   onClose,
   onSave,
@@ -38,6 +45,7 @@ const LeagueEditModal: React.FC<LeagueEditModalProps> = ({
       setLeagueName(initialName || "");
       setDescription(initialDescription || "");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, initialName, initialDescription]);
 
   const handleSubmit = () => {
@@ -49,8 +57,16 @@ const LeagueEditModal: React.FC<LeagueEditModalProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>{t("editLeague")}</DialogTitle>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      style={{ borderRadius: 8 }}
+    >
+      <DialogTitle sx={{ textAlign: "left", fontWeight: 600 }}>
+        {t("editLeague")}
+      </DialogTitle>
       <DialogContent>
         <Stack spacing={2} mt={1}>
           <TextField
@@ -68,13 +84,14 @@ const LeagueEditModal: React.FC<LeagueEditModalProps> = ({
             multiline
             minRows={3}
           />
-          <Tooltip title={t("currentlyInDevelopment") as string}>
+          {/* <Tooltip title={t("currentlyInDevelopment") as string}>
             <span>
               <Button variant="outlined" disabled>
                 {t("uploadImage")}
               </Button>
             </span>
-          </Tooltip>
+          </Tooltip> */}
+          {/* Icon and color editing moved to LeagueIconEditModal */}
         </Stack>
       </DialogContent>
       <DialogActions>

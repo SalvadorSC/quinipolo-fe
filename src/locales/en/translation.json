@@ -424,5 +424,9 @@
   "redirectingToLeague": "Redirecting to league dashboard...",
   "invalidShareLink": "Invalid or expired share link",
   "shareLinkExpired": "Share link has expired",
-  "alreadyInLeague": "You are already a member of this league"
+  "alreadyInLeague": "You are already a member of this league",
+  "editIcon": "Edit icon",
+  "accentColor": "Accent color",
+  "iconColor": "Icon color",
+  "selectLeagueIcon": "Select league icon"
 }
