@@ -4,10 +4,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import logoNew from "../../assets/LOGOS_2025/logo_solo_letras_horizontal.svg";
 
-import {
-  UserDataType,
-  useUser as useUserData,
-} from "../../Context/UserContext/UserContext";
+import { useUser as useUserData } from "../../Context/UserContext/UserContext";
 import {
   Box,
   Button,
@@ -22,7 +19,7 @@ import {
 } from "@mui/material";
 import { Divider, Select } from "antd";
 import MenuIcon from "@mui/icons-material/Menu";
-import { apiGet } from "../../utils/apiUtils";
+
 import { useTheme } from "../../Context/ThemeContext/ThemeContext";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import { useTranslation } from "react-i18next";
@@ -67,50 +64,16 @@ const LANGUAGES = [
 
 export const MenuBar = () => {
   const navigate = useNavigate();
-  const { updateUser: updateUserData, userData, signOut } = useUserData();
+  const { userData, signOut } = useUserData();
   const { theme } = useTheme();
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const { t, i18n } = useTranslation();
   const isMobile = useMediaQuery("(max-width:600px)");
 
-  const getUserData = async (username: string) => {
-    try {
-      const data = await apiGet<UserDataType>(
-        `/api/users/user/data/${username}`
-      );
-      updateUserData({
-        role: data.role,
-        leagues: data.leagues,
-        quinipolosToAnswer: data.quinipolosToAnswer,
-        userLeagues: data.userLeagues,
-        username: data.username,
-        emailAddress: data.emailAddress,
-        userId: data.userId,
-        hasBeenChecked: true,
-      });
-    } catch (error: any) {
-      console.error("Error fetching user data:", error);
-      if (error.response?.status === 401) {
-        await signOut();
-        navigate("/sign-in");
-      }
-    }
-  };
-
   useEffect(() => {
-    const fetchData = async () => {
-      if (
-        userData?.emailAddress &&
-        userData?.username &&
-        userData.isAuthenticated
-      ) {
-        getUserData(userData.username);
-        console.log("userData", userData);
-      }
-    };
     if (!userData.hasBeenChecked || location.pathname === "/") {
-      fetchData();
+      console.log("userData", userData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, userData.isAuthenticated, userData.username]);

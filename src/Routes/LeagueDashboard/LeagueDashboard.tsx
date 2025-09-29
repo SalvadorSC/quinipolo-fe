@@ -352,7 +352,11 @@ const LeagueDashboard = () => {
     {
       key: "1",
       label: t("points"),
-      children: <Leaderboard sortedResults={sortedLeaderboardData} />, // use memoized data
+      children: (
+        <div style={{ height: "50vh", width: "100%", minHeight: 0 }}>
+          <Leaderboard sortedResults={sortedLeaderboardData} />
+        </div>
+      ), // use memoized data
     },
     {
       key: "2",

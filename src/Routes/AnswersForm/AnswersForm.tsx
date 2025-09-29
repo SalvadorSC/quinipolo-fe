@@ -36,6 +36,14 @@ type CorrectionResponseType = {
     userAnswers: string[];
     points: number;
   };
+  leagueId?: string;
+  participantsLeaderboard?: Array<{
+    username: string;
+    points: number;
+    totalPoints?: number;
+    nQuinipolosParticipated: number;
+    fullCorrectQuinipolos: number;
+  }>;
 };
 
 type AnswerResponseType = {
@@ -284,7 +292,12 @@ const AnswersForm = () => {
           answerToSubmit
         );
         navigate("/correction-success", {
-          state: { results: response.results },
+          state: {
+            results: response.results,
+            leagueId: response.leagueId || quinipolo.league_id,
+            participantsLeaderboard:
+              response.participantsLeaderboard || undefined,
+          },
         });
         setFeedback({
           message: response.message,
@@ -301,7 +314,12 @@ const AnswersForm = () => {
           answerToSubmit
         );
         navigate("/correction-success", {
-          state: { results: response.results },
+          state: {
+            results: response.results,
+            leagueId: response.leagueId || quinipolo.league_id,
+            participantsLeaderboard:
+              response.participantsLeaderboard || undefined,
+          },
         });
         setFeedback({
           message: response.message,
