@@ -428,5 +428,6 @@
   "editIcon": "Edit icon",
   "accentColor": "Accent color",
   "iconColor": "Icon color",
-  "selectLeagueIcon": "Select league icon"
+  "selectLeagueIcon": "Select league icon",
+  "searchByUsername": "Search username"
 }

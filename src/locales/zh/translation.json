@@ -429,5 +429,6 @@
   "editIcon": "编辑图标",
   "accentColor": "强调颜色",
   "iconColor": "图标颜色",
-  "selectLeagueIcon": "选择联赛图标"
+  "selectLeagueIcon": "选择联赛图标",
+  "searchByUsername": "按用户名搜索"
 }

@@ -14,6 +14,7 @@ import {
 import { useUser } from "../../Context/UserContext/UserContext";
 import { getRedirectUrl } from "../../utils/config";
 import { trackLogin } from "../../utils/analytics";
+import { apiPost } from "../../utils/apiUtils";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -48,6 +49,33 @@ const LoginForm = () => {
       setError(t(error.code!) || error.message);
     } else {
       trackLogin("password");
+      // If a pending share token exists (user came from a join link), attempt to join now
+      try {
+        const pendingShareToken = localStorage.getItem("pendingShareToken");
+        if (pendingShareToken && data?.user?.id) {
+          const joinResponse = (await apiPost<{ league?: { id: string } }>(
+            `/api/leagues/join-by-link/${pendingShareToken}`,
+            {
+              userId: data.user.id,
+              username: data.user.email ?? "",
+            }
+          )) as any;
+
+          // Clear the token once attempted
+          localStorage.removeItem("pendingShareToken");
+
+          // If join succeeded and a league was returned, go straight to the league
+          const leagueId = joinResponse?.league?.id;
+          if (leagueId) {
+            navigate(`/league-dashboard?id=${leagueId}`);
+            return;
+          }
+        }
+      } catch (e) {
+        // Ignore errors (expired/invalid/already in league), continue normal navigation
+        localStorage.removeItem("pendingShareToken");
+      }
+
       // Redirect to returnUrl if provided, otherwise go to home
       const returnUrl = searchParams.get("returnUrl");
       navigate(returnUrl || "/");

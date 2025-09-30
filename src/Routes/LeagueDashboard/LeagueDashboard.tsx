@@ -396,7 +396,22 @@ const LeagueDashboard = () => {
     {
       key: "2",
       label: t("stats"),
-      children: <Stats results={leaderboardData} />,
+      children: (
+        <div
+          style={
+            sortedLeaderboardData.length > 7
+              ? {
+                  maxHeight: "50vh",
+                  width: "100%",
+                  minHeight: 0,
+                  overflowY: "auto",
+                }
+              : { width: "100%" }
+          }
+        >
+          <Stats results={leaderboardData} />
+        </div>
+      ),
     },
     {
       key: "3",

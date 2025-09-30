@@ -429,5 +429,6 @@
   "editIcon": "Editar icono",
   "accentColor": "Color de acento",
   "iconColor": "Color del icono",
-  "selectLeagueIcon": "Selecciona el icono de la liga"
+  "selectLeagueIcon": "Selecciona el icono de la liga",
+  "searchByUsername": "Buscar usuario"
 }

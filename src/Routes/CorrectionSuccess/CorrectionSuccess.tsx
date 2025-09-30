@@ -258,7 +258,10 @@ const CorrectionSuccess = () => {
               minHeight: 0,
             }}
           >
-            <Leaderboard sortedResults={mergedLeaderboard || sortedResults} />
+            <Leaderboard
+              showSearch={false}
+              sortedResults={mergedLeaderboard || sortedResults}
+            />
           </div>
         ) : null}
 

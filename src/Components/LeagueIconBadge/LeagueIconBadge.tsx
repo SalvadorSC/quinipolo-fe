@@ -18,7 +18,6 @@ const LeagueIconBadge: React.FC<LeagueIconBadgeProps> = ({
   accentColor = "#ddd",
   iconColor = "#3f51b5",
 }) => {
-  console.log("iconColor", iconColor);
   return (
     <Box
       sx={{

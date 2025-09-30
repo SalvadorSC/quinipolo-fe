@@ -71,12 +71,12 @@ export const MenuBar = () => {
   const { t, i18n } = useTranslation();
   const isMobile = useMediaQuery("(max-width:600px)");
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (!userData.hasBeenChecked || location.pathname === "/") {
       console.log("userData", userData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname, userData.isAuthenticated, userData.username]);
+  }, [location.pathname, userData.isAuthenticated, userData.username]); */
 
   const logoStyle = {
     width: "140px",

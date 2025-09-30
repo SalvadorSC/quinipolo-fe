@@ -27,3 +27,13 @@
 .tableHeadCell:last-of-type {
   border-top-right-radius: 16px;
 }
+
+// Highlight for the current user's sticky row
+.stickyUserCell {
+  background: #e3f2fd !important; // light primary tint
+  font-weight: bold;
+}
+
+/* .stickyUserCell:first-of-type {
+  // border-left: 4px solid #1976d2; // accent stripe
+} */

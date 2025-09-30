@@ -429,5 +429,6 @@
   "editIcon": "アイコンを編集",
   "accentColor": "アクセントカラー",
   "iconColor": "アイコンの色",
-  "selectLeagueIcon": "リーグのアイコンを選択"
+  "selectLeagueIcon": "リーグのアイコンを選択",
+  "searchByUsername": "ユーザー名で検索"
 }

@@ -38,7 +38,6 @@ const Dashboard = () => {
     accentColor?: string,
     iconColor?: string
   ) => {
-    console.log(icon, accentColor);
     return (
       <LeagueIconBadge
         icon={icon}
