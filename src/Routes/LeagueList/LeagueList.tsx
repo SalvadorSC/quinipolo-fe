@@ -76,11 +76,14 @@ const LeagueList = () => {
   const { userData } = useUser();
 
   // Helper function to check if user is in a league
-  const isUserInLeague = useCallback((league: LeaguesTypes) => {
-    return league.participants.some(
-      (participant) => participant.username === userData.username
-    );
-  }, [userData.username]);
+  const isUserInLeague = useCallback(
+    (league: LeaguesTypes) => {
+      return league.participants.some(
+        (participant) => participant.username === userData.username
+      );
+    },
+    [userData.username]
+  );
 
   // Helper function to check if user has a pending petition
   const hasPendingPetition = (league: LeaguesTypes) => {
