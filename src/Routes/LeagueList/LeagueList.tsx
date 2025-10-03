@@ -216,6 +216,7 @@ const LeagueList = () => {
           pt: 4,
           pb: 4,
           borderRadius: "20px",
+          mb: 2,
         }}
       >
         <h1 style={{ marginBottom: 20 }}>{t("leagues")}</h1>

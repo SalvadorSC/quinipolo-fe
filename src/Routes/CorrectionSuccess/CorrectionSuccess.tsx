@@ -237,6 +237,7 @@ const CorrectionSuccess = () => {
           flex: "1 1 0",
           minHeight: 0,
           overflow: "hidden",
+          mb: 2,
         }}
       >
         <h2>{t("quinipoloCorrectedSuccess")}</h2>

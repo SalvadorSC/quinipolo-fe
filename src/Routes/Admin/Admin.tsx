@@ -17,6 +17,7 @@ const Admin: React.FC = () => {
           p: 4,
           borderRadius: "20px",
           marginBottom: "20px",
+          mb: 2,
         }}
       >
         {/* Header */}

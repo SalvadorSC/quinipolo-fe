@@ -51,6 +51,7 @@ const QuinipoloSuccess = () => {
           flexDirection: "column",
           justifyContent: "space-evenly",
           borderRadius: 4,
+          mb: 2,
         }}
       >
         <h2>{t("quinipoloCreatedSuccess")}</h2>
