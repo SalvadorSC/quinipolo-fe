@@ -405,6 +405,7 @@
   "howWorks.goalRanges.title": "得点範囲（チームごとの合計得点）",
   "howWorks.goalRanges.waterpolo": "水球：9未満、9または10、10より多い",
   "howWorks.goalRanges.football": "サッカー：0、1または2、2より多い",
+<<<<<<< HEAD
   "footer.terms": "利用規約",
   "footer.privacy": "プライバシーポリシー",
   "footer.contact": "お問い合わせ",
@@ -437,4 +438,32 @@
   "about.what.items.progress": "自分の進捗を追跡し、週ごとに上達",
   "about.philosophyTitle": "私たちの考え",
   "about.philosophyText": "Quinipolo を安全で包括的、そして楽しい体験にしたいと考えています。ここではお金は賭けられていません。友達に勝つ喜びと、水球に一番詳しいのは誰かを示す満足感がすべてです。"
+=======
+  "shareLeague": "リーグを共有",
+  "createShareLink": "共有リンクを作成",
+  "existingShareLinks": "既存の共有リンク",
+  "generateShareLink": "共有リンクを生成",
+  "expiresInDays": "有効期限（日数）",
+  "maxUses": "最大使用回数",
+  "unlimited": "無制限",
+  "shareLink": "共有リンク",
+  "expiresAt": "有効期限",
+  "uses": "使用回数",
+  "inactive": "非アクティブ",
+  "expired": "期限切れ",
+  "maxUsesReached": "最大使用回数に達しました",
+  "deactivate": "無効化",
+  "noShareLinks": "共有リンクがまだ作成されていません",
+  "joiningLeague": "リーグに参加中",
+  "successfullyJoinedLeague": "リーグに正常に参加しました",
+  "redirectingToLeague": "リーグダッシュボードにリダイレクト中...",
+  "invalidShareLink": "無効または期限切れの共有リンク",
+  "shareLinkExpired": "共有リンクの有効期限が切れています",
+  "alreadyInLeague": "すでにこのリーグのメンバーです",
+  "editIcon": "アイコンを編集",
+  "accentColor": "アクセントカラー",
+  "iconColor": "アイコンの色",
+  "selectLeagueIcon": "リーグのアイコンを選択",
+  "searchByUsername": "ユーザー名で検索"
+>>>>>>> 8a40a11b9495bf63fa7b2994fbf0ea1e33930d10
 }

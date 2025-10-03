@@ -405,6 +405,7 @@
   "howWorks.goalRanges.title": "Plage de buts (buts totaux par équipe)",
   "howWorks.goalRanges.waterpolo": "Water-polo : moins de 9, 9 ou 10, plus de 10",
   "howWorks.goalRanges.football": "Football : 0, 1 ou 2, plus de 2",
+<<<<<<< HEAD
   "footer.terms": "Conditions générales",
   "footer.privacy": "Politique de confidentialité",
   "footer.contact": "Contact",
@@ -437,4 +438,32 @@
   "about.what.items.progress": "Suivre vos progrès et vous améliorer semaine après semaine.",
   "about.philosophyTitle": "Notre philosophie",
   "about.philosophyText": "Nous voulons que Quinipolo soit une expérience sûre, inclusive et divertissante. Aucun enjeu d'argent ici — seulement la satisfaction de battre vos amis et de montrer qui connaît le mieux le water‑polo."
+=======
+  "shareLeague": "Partager la Ligue",
+  "createShareLink": "Créer un Lien de Partage",
+  "existingShareLinks": "Liens de Partage Existants",
+  "generateShareLink": "Générer un Lien de Partage",
+  "expiresInDays": "Expire dans (jours)",
+  "maxUses": "Utilisations max",
+  "unlimited": "Illimité",
+  "shareLink": "Lien de Partage",
+  "expiresAt": "Expire le",
+  "uses": "Utilisations",
+  "inactive": "Inactif",
+  "expired": "Expiré",
+  "maxUsesReached": "Utilisations Max Atteintes",
+  "deactivate": "Désactiver",
+  "noShareLinks": "Aucun lien de partage créé pour le moment",
+  "joiningLeague": "Rejoindre la Ligue",
+  "successfullyJoinedLeague": "Vous avez rejoint la ligue avec succès",
+  "redirectingToLeague": "Redirection vers le tableau de bord de la ligue...",
+  "invalidShareLink": "Lien de partage invalide ou expiré",
+  "shareLinkExpired": "Le lien de partage a expiré",
+  "alreadyInLeague": "Vous êtes déjà membre de cette ligue",
+  "editIcon": "Modifier l’icône",
+  "accentColor": "Couleur d’accent",
+  "iconColor": "Couleur de l’icône",
+  "selectLeagueIcon": "Sélectionnez l’icône de la ligue"
+  ,"searchByUsername": "Rechercher par nom d'utilisateur"
+>>>>>>> 8a40a11b9495bf63fa7b2994fbf0ea1e33930d10
 }

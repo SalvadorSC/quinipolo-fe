@@ -29,6 +29,7 @@ import {
   EmailConfirmation,
   SurveyForm,
   Admin,
+  JoinLeague,
 } from "./Routes";
 import { About } from "./Routes";
 import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
@@ -89,7 +90,10 @@ function App() {
                   element={<EmailConfirmation />}
                 />
                 <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/about" element={<About />} />
+                <Route
+                  path="/join-league/:shareToken"
+                  element={<JoinLeague />}
+                />
 
                 {/* Routes with layout (header+footer) accessible to all */}
                 <Route path="/" element={<Layout />}>

@@ -12,11 +12,14 @@ import Leaderboard from "../../Components/Leaderboard/Leaderboard";
 import Stats from "../../Components/Stats/Stats";
 import LeagueInfo from "../../Components/LeagueInfo/LeagueInfo";
 import LeagueEditModal from "../../Components/LeagueEditModal/LeagueEditModal";
+import LeagueIconEditModal from "../../Components/LeagueIconEditModal/LeagueIconEditModal";
 import ModeratorManagementModal from "../../Components/ModeratorManagementModal/ModeratorManagementModal";
+import ShareLinkModal from "../../Components/ShareLinkModal/ShareLinkModal";
 import { Tabs, TabsProps } from "antd";
 import { useTranslation } from "react-i18next";
 import ActionRequests from "./ActionRequests";
-import { isSystemAdmin } from "../../utils/moderatorUtils";
+import { isSystemModerator } from "../../utils/moderatorUtils";
+import LeagueIconBadge from "../../Components/LeagueIconBadge/LeagueIconBadge";
 
 export type LeaguesTypes = {
   quinipolosToAnswer: any[];
@@ -32,6 +35,11 @@ export type LeaguesTypes = {
     full_name?: string;
   };
   description?: string;
+  icon_style?: {
+    icon?: string;
+    icon_color?: string;
+    accent_color?: string;
+  };
   moderatorPetitions: {
     userId: string;
     username: string;
@@ -82,10 +90,14 @@ const LeagueDashboard = () => {
     isPrivate: false,
   });
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
+  const [participantPetitions, setParticipantPetitions] = useState<any[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isSavingLeague, setIsSavingLeague] = useState<boolean>(false);
   const [isModeratorModalOpen, setIsModeratorModalOpen] =
     useState<boolean>(false);
+  const [isShareLinkModalOpen, setIsShareLinkModalOpen] =
+    useState<boolean>(false);
+  const [isIconModalOpen, setIsIconModalOpen] = useState<boolean>(false);
   const queryParams = new URLSearchParams(window.location.search);
   const leagueId = queryParams.get("id");
   const { setFeedback } = useFeedback();
@@ -106,6 +118,7 @@ const LeagueDashboard = () => {
           created_by: data.created_by,
           creator: data.creator,
           description: data.description,
+          icon_style: data.icon_style,
           moderatorPetitions: data.moderatorPetitions,
           participantPetitions: data.participantPetitions,
           participants: data.participants,
@@ -116,6 +129,8 @@ const LeagueDashboard = () => {
               ? data.is_private
               : false,
         });
+        // Update separate petition states
+        setParticipantPetitions(data.participantPetitions || []);
         setLoading(false);
       })
       .catch((error) => {
@@ -181,7 +196,7 @@ const LeagueDashboard = () => {
         p.username === userData.username &&
         p.role &&
         p.role.toLowerCase() === "moderator"
-    ) || isSystemAdmin(userData.role);
+    ) || isSystemModerator(userData.role);
 
   // Derived value for creator status
   const isUserCreator = leagueData.created_by === userData.userId;
@@ -235,9 +250,22 @@ const LeagueDashboard = () => {
     setIsEditModalOpen(false);
   };
 
+  const handleOpenEditIcon = () => {
+    setIsIconModalOpen(true);
+  };
+
+  const handleCloseEditIcon = () => {
+    setIsIconModalOpen(false);
+  };
+
   const handleSaveLeagueEdits = async (data: {
     leagueName: string;
     description?: string;
+    icon_style?: {
+      icon?: string;
+      accent_color?: string;
+      icon_color?: string;
+    };
   }) => {
     try {
       setIsSavingLeague(true);
@@ -247,6 +275,8 @@ const LeagueDashboard = () => {
         league_name: data.leagueName || prev.league_name,
         description:
           data.description !== undefined ? data.description : prev.description,
+        icon_style:
+          data.icon_style !== undefined ? data.icon_style : prev.icon_style,
       }));
       setFeedback({ message: t("success"), severity: "success", open: true });
       setIsEditModalOpen(false);
@@ -266,6 +296,14 @@ const LeagueDashboard = () => {
     setIsModeratorModalOpen(false);
   };
 
+  const handleOpenShareLeague = () => {
+    setIsShareLinkModalOpen(true);
+  };
+
+  const handleCloseShareLeague = () => {
+    setIsShareLinkModalOpen(false);
+  };
+
   const handleSaveModerators = async (moderatorIds: string[]) => {
     try {
       await apiPut(`/api/leagues/${leagueId}/moderators`, { moderatorIds });
@@ -273,6 +311,52 @@ const LeagueDashboard = () => {
       await getLeagueData();
       setFeedback({ message: t("success"), severity: "success", open: true });
       setIsModeratorModalOpen(false);
+    } catch (e) {
+      console.error(e);
+      setFeedback({ message: t("error"), severity: "error", open: true });
+    }
+  };
+
+  // Handle petition acceptance - update both league data and petitions
+  const handlePetitionAccept = async (petitionId: string) => {
+    try {
+      const response = (await apiPut(
+        `/api/leagues/${leagueId}/participant-petitions/${petitionId}/accept`,
+        {}
+      )) as any;
+
+      // Update league data (participants, leaderboard, etc.)
+      setLeagueData((prev) => ({
+        ...prev,
+        participants: response.participants,
+        moderatorArray: response.moderatorArray,
+      }));
+
+      // Update petitions
+      setParticipantPetitions(response.participantPetitions || []);
+
+      // Refresh leaderboard to show new participant
+      getLeagueLeaderBoardData();
+
+      setFeedback({ message: t("success"), severity: "success", open: true });
+    } catch (e) {
+      console.error(e);
+      setFeedback({ message: t("error"), severity: "error", open: true });
+    }
+  };
+
+  // Handle petition rejection - update only petitions
+  const handlePetitionReject = async (petitionId: string) => {
+    try {
+      const response = (await apiPut(
+        `/api/leagues/${leagueId}/participant-petitions/${petitionId}/reject`,
+        {}
+      )) as any;
+
+      // Update only petitions, not league data
+      setParticipantPetitions(response.participantPetitions || []);
+
+      setFeedback({ message: t("success"), severity: "success", open: true });
     } catch (e) {
       console.error(e);
       setFeedback({ message: t("error"), severity: "error", open: true });
@@ -292,12 +376,42 @@ const LeagueDashboard = () => {
     {
       key: "1",
       label: t("points"),
-      children: <Leaderboard sortedResults={sortedLeaderboardData} />, // use memoized data
+      children: (
+        <div
+          style={
+            sortedLeaderboardData.length > 7
+              ? {
+                  maxHeight: "50vh",
+                  width: "100%",
+                  minHeight: 0,
+                  overflowY: "auto",
+                }
+              : { width: "100%" }
+          }
+        >
+          <Leaderboard sortedResults={sortedLeaderboardData} />
+        </div>
+      ), // use memoized data
     },
     {
       key: "2",
       label: t("stats"),
-      children: <Stats results={leaderboardData} />,
+      children: (
+        <div
+          style={
+            sortedLeaderboardData.length > 7
+              ? {
+                  maxHeight: "50vh",
+                  width: "100%",
+                  minHeight: 0,
+                  overflowY: "auto",
+                }
+              : { width: "100%" }
+          }
+        >
+          <Stats results={leaderboardData} />
+        </div>
+      ),
     },
     {
       key: "3",
@@ -307,8 +421,11 @@ const LeagueDashboard = () => {
           leagueData={leagueData}
           isUserModerator={isUserModeratorInThisLeague}
           isUserCreator={isUserCreator}
+          isSystemModerator={isSystemModerator(userData.role)}
           onEditLeague={handleOpenEditLeague}
           onManageModerators={handleOpenManageModerators}
+          onShareLeague={handleOpenShareLeague}
+          onEditIcon={handleOpenEditIcon}
         />
       ),
     },
@@ -337,7 +454,15 @@ const LeagueDashboard = () => {
                 gap: 12,
               }}
             >
-              <h1 className={styles.leagueTitle}>{leagueData.league_name}</h1>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <LeagueIconBadge
+                  icon={leagueData.icon_style?.icon}
+                  accentColor={leagueData.icon_style?.accent_color}
+                  marginLeftPx={0}
+                  iconColor={leagueData.icon_style?.icon_color}
+                />
+                <h1 className={styles.leagueTitle}>{leagueData.league_name}</h1>
+              </div>
               {isUserModeratorInThisLeague && (
                 <Box sx={{ display: { xs: "none", md: "block" } }}>
                   <LoadingButton
@@ -367,12 +492,9 @@ const LeagueDashboard = () => {
                 <ActionRequests
                   leagueId={leagueId!}
                   leagueData={leagueData}
-                  setLeagueData={setLeagueData}
-                  onAfterChange={() => {
-                    // Refresh league and leaderboard after petitions change
-                    getLeagueLeaderBoardData();
-                    getLeagueData();
-                  }}
+                  participantPetitions={participantPetitions}
+                  onPetitionAccept={handlePetitionAccept}
+                  onPetitionReject={handlePetitionReject}
                 />
 
                 <Box
@@ -416,12 +538,52 @@ const LeagueDashboard = () => {
         onClose={handleCloseEditLeague}
         onSave={handleSaveLeagueEdits}
       />
+      <LeagueIconEditModal
+        open={isIconModalOpen}
+        initialIcon={leagueData.icon_style?.icon}
+        initialAccentColor={leagueData.icon_style?.accent_color}
+        initialTextColor={leagueData.icon_style?.icon_color || "#ffffff"}
+        isSaving={isSavingLeague}
+        onClose={handleCloseEditIcon}
+        onSave={async ({ icon, accentColor, iconColor }) => {
+          try {
+            setIsSavingLeague(true);
+            const iconStyle = {
+              icon,
+              accent_color: accentColor,
+              icon_color: iconColor,
+            };
+            await apiPut(`/api/leagues/${leagueId}`, { iconStyle });
+            setLeagueData((prev) => ({
+              ...prev,
+              icon_style: iconStyle,
+            }));
+            setFeedback({
+              message: t("success"),
+              severity: "success",
+              open: true,
+            });
+            setIsIconModalOpen(false);
+          } catch (e) {
+            console.error(e);
+            setFeedback({ message: t("error"), severity: "error", open: true });
+          } finally {
+            setIsSavingLeague(false);
+          }
+        }}
+      />
       <ModeratorManagementModal
         open={isModeratorModalOpen}
         participants={leagueData.participants}
         creatorId={leagueData.created_by}
         onClose={handleCloseManageModerators}
         onSave={handleSaveModerators}
+      />
+      <ShareLinkModal
+        open={isShareLinkModalOpen}
+        leagueId={leagueId || ""}
+        userId={userData.userId}
+        onClose={handleCloseShareLeague}
       />
     </div>
   );

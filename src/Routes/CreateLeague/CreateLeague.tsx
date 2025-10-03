@@ -19,6 +19,12 @@ import { useTranslation } from "react-i18next";
 import { apiPost, apiGet } from "../../utils/apiUtils";
 import { config } from "../../utils/config";
 import { createLeagueInDev } from "../../utils/leagueCreation";
+import {
+  ICON_OPTIONS,
+  LeagueIconKey,
+  getLeagueIcon,
+} from "../../utils/leagueIcons";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 interface LeagueTier {
   id: string;
@@ -41,6 +47,19 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingTiers, setLoadingTiers] = useState<boolean>(true);
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const [accentColor, setAccentColor] = useState<string>("#1976d2");
+  const [iconColor, setIconColor] = useState<string>("#ffffff");
+  const [icon, setIcon] = useState<LeagueIconKey>("sports_volleyball");
+
+  const presetAccentColors = [
+    { label: "Azul clarito", value: "#2273B9" },
+    { label: "Azul", value: "#1B3F7B" },
+    { label: "Azul oscuro", value: "#1F3057" },
+  ];
+  const presetTextColors = [
+    { label: "White", value: "#ffffff" },
+    { label: "Black", value: "#000000" },
+  ];
 
   const { userData } = useUser();
   const { setFeedback } = useFeedback();
@@ -99,13 +118,19 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
     try {
       // In development, bypass Stripe and create the league directly
       if (isDevelopment) {
-        const createdLeague = await createLeagueInDev({
+        const devParams: any = {
           leagueName,
           isPrivate,
           tier: selectedTier,
           userId: userData.userId,
           description: leagueDescription,
-        });
+          iconStyle: {
+            icon: icon,
+            accent_color: accentColor,
+            icon_color: iconColor,
+          },
+        };
+        const createdLeague = await createLeagueInDev(devParams);
         navigate(`/league-dashboard?id=${createdLeague.id}`);
         return;
       }
@@ -119,6 +144,11 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
           leagueDescription: leagueDescription.trim(),
           isPrivate,
           userId: userData.userId,
+          iconStyle: {
+            icon: icon,
+            accent_color: accentColor,
+            icon_color: iconColor,
+          },
         }
       );
 
@@ -301,6 +331,180 @@ const CreateLeague: React.FC<CreateLeagueProps> = () => {
                 {t("featuresInDevelopment")}
               </Typography>
             </Grid>
+
+            {/* Icon selection */}
+            <Grid item xs={12}>
+              <Typography variant="h6" gutterBottom>
+                {t("selectLeagueIcon")}
+              </Typography>
+
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  py: 3,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 120,
+                    height: 120,
+                    borderRadius: "50%",
+                    backgroundColor: accentColor,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {getLeagueIcon(icon as any, {
+                    color: iconColor,
+                    fontSize: 60,
+                  })}
+                </Box>
+              </Box>
+
+              {ICON_OPTIONS.map((opt) => {
+                const isSelected = icon === (opt.key as LeagueIconKey);
+                return (
+                  <Button
+                    key={opt.key}
+                    onClick={() => setIcon(opt.key as LeagueIconKey)}
+                    variant={isSelected ? "contained" : "outlined"}
+                    size="small"
+                    sx={{
+                      p: 1.5,
+                      minWidth: 0,
+                      width: 44,
+                      height: 44,
+                      color: isSelected ? "#ffffff" : "primary.main",
+                    }}
+                    aria-pressed={isSelected}
+                  >
+                    {getLeagueIcon(opt.key, {
+                      color: isSelected ? "#ffffff" : undefined,
+                    })}
+                  </Button>
+                );
+              })}
+            </Grid>
+
+            {/* Accent Color */}
+
+            {/* Icon Color */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 2,
+                mt: 2,
+                flexWrap: "wrap",
+              }}
+            >
+              {/* Preset accent colors */}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  flexWrap: "wrap",
+                  flexDirection: "column",
+                }}
+              >
+                <TextField
+                  label={t("accentColor")}
+                  type="color"
+                  value={accentColor}
+                  onChange={(e) => setAccentColor(e.target.value)}
+                  sx={{ width: 140 }}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {presetAccentColors.map((c) => (
+                    <Button
+                      key={c.value}
+                      onClick={() => setAccentColor(c.value)}
+                      variant={
+                        accentColor.toLowerCase() === c.value.toLowerCase()
+                          ? "contained"
+                          : "outlined"
+                      }
+                      sx={{
+                        minWidth: 0,
+                        width: 36,
+                        height: 28,
+                        p: 0,
+                        borderRadius: 1,
+                        backgroundColor: c.value,
+                        border: "1px solid #e0e0e0",
+                        borderColor: c.value,
+                      }}
+                      title={c.label}
+                    />
+                  ))}
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  gap: 1,
+                  flexWrap: "wrap",
+                }}
+              >
+                <TextField
+                  label={t("iconColor")}
+                  type="color"
+                  value={iconColor}
+                  onChange={(e) => setIconColor(e.target.value)}
+                  sx={{ width: 140 }}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {/* Preset text colors */}
+                  {presetTextColors.map((c) => (
+                    <Button
+                      key={c.value}
+                      onClick={() => setIconColor(c.value)}
+                      variant={
+                        iconColor.toLowerCase() === c.value.toLowerCase()
+                          ? "contained"
+                          : "outlined"
+                      }
+                      sx={{
+                        minWidth: 0,
+                        width: 36,
+                        height: 28,
+                        p: 0,
+                        borderRadius: 1,
+                        backgroundColor: c.value,
+                        borderColor: c.value,
+                        border: "1px solid #e0e0e0",
+                      }}
+                      title={c.label}
+                    />
+                  ))}
+                </Box>
+              </Box>
+            </Box>
 
             {/* Submit Button */}
             <Grid item xs={12}>

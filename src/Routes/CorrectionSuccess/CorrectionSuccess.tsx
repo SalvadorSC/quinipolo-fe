@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Paper, Button } from "@mui/material";
 import style from "../QuinipoloSuccess/QuinipoloSuccess.module.scss";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import Leaderboard from "../../Components/Leaderboard/Leaderboard";
 import { useTranslation } from "react-i18next";
+import { apiGet } from "../../utils/apiUtils";
 
 export type Result = {
   username: string;
@@ -18,20 +19,95 @@ const CorrectionSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { setFeedback } = useFeedback();
-  const results: Result[] = location.state?.results || [];
-  const sortedResults = results.sort(
-    (a: Result, b: Result) => b.totalPoints - a.totalPoints
+  const leagueId: string | undefined = location.state?.leagueId;
+  const results: Result[] = React.useMemo(
+    () => (location.state?.results as Result[]) || [],
+    [location.state?.results]
+  );
+
+  const participantsFromState: Result[] = (
+    location.state?.participantsLeaderboard || []
+  ).map((p: any) => ({
+    username: p.username,
+    nQuinipolosParticipated: p.nQuinipolosParticipated,
+    totalPoints: p.totalPoints ?? p.points,
+    correct15thGame: false,
+    pointsEarned: undefined,
+  }));
+  const [mergedLeaderboard, setMergedLeaderboard] = useState<Result[] | null>(
+    null
   );
   const { t } = useTranslation();
+
+  // If server provided participants, merge immediately; otherwise fetch.
+  useEffect(() => {
+    if (participantsFromState && participantsFromState.length > 0) {
+      const byUserFromCorrection = new Map<string, Result>();
+      for (const r of results) byUserFromCorrection.set(r.username, r);
+      const merged = participantsFromState.map(
+        (p) => byUserFromCorrection.get(p.username) || p
+      );
+      for (const r of results) {
+        if (!merged.find((m) => m.username === r.username)) {
+          merged.push(r);
+        }
+      }
+      setMergedLeaderboard(
+        merged.sort((a, b) => b.totalPoints - a.totalPoints)
+      );
+      return;
+    }
+    if (!leagueId) return;
+    apiGet(`/api/leagues/${leagueId}/leaderboard`, { cache: { ttlMs: 30000 } })
+      .then((data: any) => {
+        const baseFromLeague: Result[] = (
+          data?.participantsLeaderboard || []
+        ).map((p: any) => ({
+          username: p.username,
+          nQuinipolosParticipated: p.nQuinipolosParticipated,
+          totalPoints: p.points,
+          correct15thGame: false,
+          pointsEarned: undefined,
+        }));
+
+        const byUserFromCorrection = new Map<string, Result>();
+        for (const r of results) byUserFromCorrection.set(r.username, r);
+
+        const merged: Result[] = baseFromLeague.map(
+          (p) => byUserFromCorrection.get(p.username) || p
+        );
+
+        // Also include any correction results for users not present in base list (safety)
+        for (const r of results) {
+          if (!merged.find((m) => m.username === r.username)) {
+            merged.push(r);
+          }
+        }
+
+        setMergedLeaderboard(
+          merged.sort((a, b) => b.totalPoints - a.totalPoints)
+        );
+      })
+      .catch(() => {
+        // If fetch fails, do nothing – fallback will be raw results
+        setMergedLeaderboard(null);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leagueId]);
+
+  const sortedResults = useMemo(() => {
+    return results.slice().sort((a, b) => b.totalPoints - a.totalPoints);
+  }, [results]);
 
   // Group and sort points earned
   const groupAndSortPointsEarned = (results: Result[]) => {
     const pointsEarnedGrouping: { [key: number]: string[] } = {};
     results.forEach(({ username, pointsEarned }) => {
-      if (!pointsEarnedGrouping[pointsEarned!]) {
-        pointsEarnedGrouping[pointsEarned!] = [];
+      const earned = pointsEarned ?? 0;
+      if (!pointsEarnedGrouping[earned]) {
+        pointsEarnedGrouping[earned] = [];
       }
-      pointsEarnedGrouping[pointsEarned!].push(username);
+      pointsEarnedGrouping[earned].push(username);
     });
     return Object.entries(pointsEarnedGrouping).sort(
       ([a], [b]) => Number(b) - Number(a)
@@ -57,6 +133,10 @@ const CorrectionSuccess = () => {
   const sorted_total_points = groupAndSortTotalPoints(results);
 
   const generateMessageToShare = () => {
+    const source: Result[] =
+      mergedLeaderboard && mergedLeaderboard.length > 0
+        ? mergedLeaderboard
+        : results;
     const date = new Date();
     const locale = "es-ES";
 
@@ -66,20 +146,22 @@ const CorrectionSuccess = () => {
       day: "numeric",
     });
     let message = `*${t("resultsTitle", {
-      n: results[0]?.nQuinipolosParticipated,
+      n: source[0]?.nQuinipolosParticipated,
       date: formattedDate,
     })}*\n\n`;
 
     // Points Earned Distribution
     message += `*${t("pointsEarnedThisQuinipolo")}*\n`;
-    for (const [points, usernames] of sorted_points_earned) {
+    const local_sorted_points_earned = groupAndSortPointsEarned(source);
+    for (const [points, usernames] of local_sorted_points_earned) {
       message += `- ${usernames.join(", ")}: *${points}p*\n`;
     }
 
     // Total Points Distribution (Leaderboard)
     message += `\n*${t("leaderboardTitle")}*\n`;
     let position = 1; // To keep track of the current position
-    for (const [points, usernames] of sorted_total_points) {
+    const local_sorted_total_points = groupAndSortTotalPoints(source);
+    for (const [points, usernames] of local_sorted_total_points) {
       let prefix = `${position}.-`;
       if (position === 1) prefix = "🥇";
       else if (position === 2) prefix = "🥈";
@@ -91,12 +173,12 @@ const CorrectionSuccess = () => {
 
     // Determinar ganadores de la Quinipolo
     if (
-      results.find(
+      source.find(
         (result) => result.correct15thGame && result.pointsEarned === 15
       )
     ) {
       message += `\n *${t("quinipoloWinners")}:* \n`;
-      results.forEach((result) => {
+      source.forEach((result) => {
         console.log(result.pointsEarned);
         if (result.correct15thGame && result.pointsEarned === 15) {
           message += `- ${result.username}: ${result.totalPoints}p *${
@@ -133,37 +215,15 @@ const CorrectionSuccess = () => {
   };
 
   return (
-    <div className={style.correctionSuccessContainer}>
-      <div>
-        <Paper
-          elevation={3}
-          sx={{
-            width: "100%",
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-evenly",
-            borderRadius: results.length > 0 ? "10px 10px 0 0" : null,
-          }}
-        >
-          <h2>{t("quinipoloCorrectedSuccess")}</h2>
-
-          <p
-            className={style.copyCorrection}
-            style={results.length > 0 ? {} : { marginTop: 40 }}
-          >
-            {results.length > 0 ? t("resultsTableInfo") : t("noOneAnswered")}
-          </p>
-          {results.length > 0 ? null : (
-            <p className={style.copyCorrection}>{t("communicateWell")}</p>
-          )}
-          {results.length > 0 ? (
-            <Leaderboard sortedResults={sortedResults} />
-          ) : null}
-        </Paper>
-      </div>
-
+    <div
+      className={style.correctionSuccessContainer}
+      style={{
+        height: "calc(100vh - 132px)",
+        maxHeight: "calc(100vh - 132px)",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Paper
         elevation={3}
         sx={{
@@ -173,9 +233,38 @@ const CorrectionSuccess = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "space-evenly",
-          marginTop: "20px",
+          borderRadius: "10px",
+          flex: "1 1 0",
+          minHeight: 0,
+          overflow: "hidden",
         }}
       >
+        <h2>{t("quinipoloCorrectedSuccess")}</h2>
+
+        <p
+          className={style.copyCorrection}
+          style={results.length > 0 ? {} : { marginTop: 40 }}
+        >
+          {results.length > 0 ? t("resultsTableInfo") : t("noOneAnswered")}
+        </p>
+        {results.length > 0 ? null : (
+          <p className={style.copyCorrection}>{t("communicateWell")}</p>
+        )}
+        {results.length > 0 ? (
+          <div
+            style={{
+              width: "100%",
+              flex: 1,
+              minHeight: 0,
+            }}
+          >
+            <Leaderboard
+              showSearch={false}
+              sortedResults={mergedLeaderboard || sortedResults}
+            />
+          </div>
+        ) : null}
+
         <p className={style.reminder}>{t("dontForgetToShare")}</p>
         <Button
           style={{ marginTop: 16 }}
@@ -188,6 +277,7 @@ const CorrectionSuccess = () => {
           variant="contained"
           onClick={copyMessageToClipboard}
           style={{ marginTop: 16 }}
+          className="gradient-success"
         >
           <a
             href={`https://wa.me/?text=${encodeURIComponent(messageToShare)}`}

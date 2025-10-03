@@ -21,6 +21,15 @@ const lightTheme = createTheme({
       main: "#799bd2", // accent color
     },
   },
+  components: {
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius: 20,
+        },
+      },
+    },
+  },
 });
 
 const darkTheme = createTheme({
@@ -42,6 +51,15 @@ const darkTheme = createTheme({
     },
     accent: {
       main: "#2d4f86", // accent color
+    },
+  },
+  components: {
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius: 20,
+        },
+      },
     },
   },
 });

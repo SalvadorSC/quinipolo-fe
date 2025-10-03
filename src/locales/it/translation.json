@@ -405,6 +405,7 @@
   "howWorks.goalRanges.title": "Intervallo di gol (gol totali per squadra)",
   "howWorks.goalRanges.waterpolo": "Pallanuoto: meno di 9, 9 o 10, più di 10",
   "howWorks.goalRanges.football": "Calcio: 0, 1 o 2, più di 2",
+<<<<<<< HEAD
   "footer.terms": "Termini e Condizioni",
   "footer.privacy": "Informativa sulla Privacy",
   "footer.contact": "Contatti",
@@ -423,4 +424,32 @@
   "contact.openInstagram": "Apri Instagram",
   "contact.copyEmail": "Copia email",
   "contact.copied": "Email copiata negli appunti!"
+=======
+  "shareLeague": "Condividi Lega",
+  "createShareLink": "Crea Link di Condivisione",
+  "existingShareLinks": "Link di Condivisione Esistenti",
+  "generateShareLink": "Genera Link di Condivisione",
+  "expiresInDays": "Scade tra (giorni)",
+  "maxUses": "Usi massimi",
+  "unlimited": "Illimitato",
+  "shareLink": "Link di Condivisione",
+  "expiresAt": "Scade il",
+  "uses": "Usi",
+  "inactive": "Inattivo",
+  "expired": "Scaduto",
+  "maxUsesReached": "Usi Massimi Raggiunti",
+  "deactivate": "Disattiva",
+  "noShareLinks": "Nessun link di condivisione creato ancora",
+  "joiningLeague": "Entrando nella Lega",
+  "successfullyJoinedLeague": "Sei entrato con successo nella lega",
+  "redirectingToLeague": "Reindirizzamento alla dashboard della lega...",
+  "invalidShareLink": "Link di condivisione non valido o scaduto",
+  "shareLinkExpired": "Il link di condivisione è scaduto",
+  "alreadyInLeague": "Sei già membro di questa lega",
+  "editIcon": "Modifica icona",
+  "accentColor": "Colore di accento",
+  "iconColor": "Colore dell'icona",
+  "selectLeagueIcon": "Seleziona l'icona della lega",
+  "searchByUsername": "Cerca usuari"
+>>>>>>> 8a40a11b9495bf63fa7b2994fbf0ea1e33930d10
 }

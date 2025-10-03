@@ -404,6 +404,7 @@
   "game15": "Game 15",
   "game15help": "Answer the winner correctly and guess the number of goals for each team to earn the point.",
   "no-answer-available": "You have no answers for this Quinipolo",
+<<<<<<< HEAD
   "footer.terms": "Terms & Conditions",
   "footer.privacy": "Privacy Policy",
   "footer.contact": "Contact",
@@ -436,4 +437,32 @@
   "about.what.items.progress": "Track your progress and improve week by week.",
   "about.philosophyTitle": "Our philosophy",
   "about.philosophyText": "We want Quinipolo to be a safe, inclusive, and entertaining experience. There is no money at stake here—only the satisfaction of beating your friends and showing who knows the most about water polo."
+=======
+  "shareLeague": "Share League",
+  "createShareLink": "Create Share Link",
+  "existingShareLinks": "Existing Share Links",
+  "generateShareLink": "Generate Share Link",
+  "expiresInDays": "Expires in (days)",
+  "maxUses": "Max uses",
+  "unlimited": "Unlimited",
+  "shareLink": "Share Link",
+  "expiresAt": "Expires At",
+  "uses": "Uses",
+  "inactive": "Inactive",
+  "expired": "Expired",
+  "maxUsesReached": "Max Uses Reached",
+  "deactivate": "Deactivate",
+  "noShareLinks": "No share links created yet",
+  "joiningLeague": "Joining League",
+  "successfullyJoinedLeague": "Successfully Joined League",
+  "redirectingToLeague": "Redirecting to league dashboard...",
+  "invalidShareLink": "Invalid or expired share link",
+  "shareLinkExpired": "Share link has expired",
+  "alreadyInLeague": "You are already a member of this league",
+  "editIcon": "Edit icon",
+  "accentColor": "Accent color",
+  "iconColor": "Icon color",
+  "selectLeagueIcon": "Select league icon",
+  "searchByUsername": "Search username"
+>>>>>>> 8a40a11b9495bf63fa7b2994fbf0ea1e33930d10
 }

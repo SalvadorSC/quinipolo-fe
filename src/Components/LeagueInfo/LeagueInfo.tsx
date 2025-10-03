@@ -20,6 +20,7 @@ import {
   PersonRemove,
   Edit,
   ManageAccounts,
+  Share,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import styles from "./LeagueInfo.module.scss";
@@ -42,16 +43,22 @@ interface LeagueInfoProps {
   };
   isUserModerator: boolean;
   isUserCreator: boolean;
+  isSystemModerator: boolean;
   onEditLeague?: () => void;
   onManageModerators?: () => void;
+  onShareLeague?: () => void;
+  onEditIcon?: () => void;
 }
 
 const LeagueInfo: React.FC<LeagueInfoProps> = ({
   leagueData,
   isUserModerator,
   isUserCreator,
+  isSystemModerator,
   onEditLeague,
   onManageModerators,
+  onShareLeague,
+  onEditIcon,
 }) => {
   const { t, i18n } = useTranslation();
 
@@ -180,17 +187,53 @@ const LeagueInfo: React.FC<LeagueInfoProps> = ({
                     color="primary"
                     startIcon={<Edit />}
                     onClick={onEditLeague}
-                    sx={{ width: { xs: "100%", md: "auto" } }}
+                    sx={{
+                      width: { xs: "100%", md: "auto" },
+                      borderRadius: "20px",
+                      marginTop: 0,
+                    }}
                   >
                     {t("editLeague")}
                   </Button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<Edit />}
+                    onClick={onEditIcon}
+                    sx={{
+                      width: { xs: "100%", md: "auto" },
+                      borderRadius: "20px",
+                      marginTop: 0,
+                    }}
+                  >
+                    {t("editIcon")}
+                  </Button>
+                  {isSystemModerator && (
+                    <Button
+                      variant="contained"
+                      color="info"
+                      startIcon={<Share />}
+                      onClick={onShareLeague}
+                      sx={{
+                        width: { xs: "100%", md: "auto" },
+                        borderRadius: "20px",
+                        marginTop: 0,
+                      }}
+                    >
+                      {t("shareLeague")}
+                    </Button>
+                  )}
                   {isUserCreator && (
                     <Button
                       variant="contained"
                       color="secondary"
                       startIcon={<ManageAccounts />}
                       onClick={onManageModerators}
-                      sx={{ width: { xs: "100%", md: "auto" } }}
+                      sx={{
+                        width: { xs: "100%", md: "auto" },
+                        borderRadius: "20px",
+                        marginTop: 0,
+                      }}
                     >
                       {t("manageModerators")}
                     </Button>
@@ -202,7 +245,11 @@ const LeagueInfo: React.FC<LeagueInfoProps> = ({
                         color="warning"
                         startIcon={<Archive />}
                         disabled
-                        sx={{ width: { xs: "100%", md: "auto" } }}
+                        sx={{
+                          width: { xs: "100%", md: "auto" },
+                          borderRadius: "20px",
+                          marginTop: 0,
+                        }}
                       >
                         {t("archiveLeague")}
                       </Button>
@@ -215,7 +262,11 @@ const LeagueInfo: React.FC<LeagueInfoProps> = ({
                         color="error"
                         startIcon={<PersonRemove />}
                         disabled
-                        sx={{ width: { xs: "100%", md: "auto" } }}
+                        sx={{
+                          width: { xs: "100%", md: "auto" },
+                          borderRadius: "20px",
+                          marginTop: 0,
+                        }}
                       >
                         {t("kickParticipant")}
                       </Button>

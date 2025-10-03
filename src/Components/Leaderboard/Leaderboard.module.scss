@@ -24,4 +24,26 @@
 .tableHeadCell {
   color: white !important;
   font-weight: bold !important;
+  background: #1976d2; // linear-gradient(90deg, #1976d2 0%, #42a5f5 100%) !important;
+  position: sticky; // ensure header cells remain above scrolled content
+  top: 0;
+  z-index: 2; // above body rows
 }
+
+.tableHeadCell:first-of-type {
+  border-top-left-radius: 16px;
+}
+
+.tableHeadCell:last-of-type {
+  border-top-right-radius: 16px;
+}
+
+// Highlight for the current user's sticky row
+.stickyUserCell {
+  background: #e3f2fd !important; // light primary tint
+  font-weight: bold;
+}
+
+/* .stickyUserCell:first-of-type {
+  // border-left: 4px solid #1976d2; // accent stripe
+} */

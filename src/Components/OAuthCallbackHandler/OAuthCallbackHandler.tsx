@@ -45,6 +45,29 @@ const OAuthCallbackHandler = ({ children }: Props) => {
           console.error("Error setting auth state after OAuth callback:", e);
         }
         trackLogin(user.app_metadata?.provider || "oauth");
+        // If a pending share token exists (user came from a join link), attempt to join now
+        try {
+          const pendingShareToken = localStorage.getItem("pendingShareToken");
+          if (pendingShareToken && user.id) {
+            const joinResponse = (await apiPost<{ league?: { id: string } }>(
+              `/api/leagues/join-by-link/${pendingShareToken}`,
+              {
+                userId: user.id,
+                username: user.email ?? "",
+              }
+            )) as any;
+            localStorage.removeItem("pendingShareToken");
+            const leagueId = joinResponse?.league?.id;
+            if (leagueId) {
+              // Navigate directly to league dashboard
+              navigate(`/league-dashboard?id=${leagueId}`);
+              return;
+            }
+          }
+        } catch (e) {
+          // Ignore invalid/expired/already-in-league
+          localStorage.removeItem("pendingShareToken");
+        }
         // check if the user has a profile via the BE
         try {
           const profile = await apiGet<UserDataType>("/api/users/me/profile");
@@ -65,7 +88,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
     };
 
     checkUserProfile();
-  }, [updateUser]);
+  }, [updateUser, navigate]);
 
   const handleProfileSubmit = async (values: {
     username: string;

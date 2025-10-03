@@ -405,6 +405,7 @@
   "howWorks.goalRanges.title": "进球范围（每队的总进球）",
   "howWorks.goalRanges.waterpolo": "水球：少于9个，9或10个，多于10个",
   "howWorks.goalRanges.football": "足球：0个，1或2个，多于2个",
+<<<<<<< HEAD
   "footer.terms": "条款与条件",
   "footer.privacy": "隐私政策",
   "footer.contact": "联系我们",
@@ -437,4 +438,32 @@
   "about.what.items.progress": "跟踪你的进步，并每周不断提升。",
   "about.philosophyTitle": "我们的理念",
   "about.philosophyText": "我们希望 Quinipolo 成为一个安全、包容且有趣的体验。这里没有金钱博弈，只有战胜朋友的满足，以及向大家证明谁更懂水球的成就感。"
+=======
+  "shareLeague": "分享联赛",
+  "createShareLink": "创建分享链接",
+  "existingShareLinks": "现有分享链接",
+  "generateShareLink": "生成分享链接",
+  "expiresInDays": "有效期（天数）",
+  "maxUses": "最大使用次数",
+  "unlimited": "无限制",
+  "shareLink": "分享链接",
+  "expiresAt": "过期时间",
+  "uses": "使用次数",
+  "inactive": "非活跃",
+  "expired": "已过期",
+  "maxUsesReached": "已达到最大使用次数",
+  "deactivate": "停用",
+  "noShareLinks": "尚未创建分享链接",
+  "joiningLeague": "正在加入联赛",
+  "successfullyJoinedLeague": "成功加入联赛",
+  "redirectingToLeague": "正在跳转到联赛面板...",
+  "invalidShareLink": "无效或已过期的分享链接",
+  "shareLinkExpired": "分享链接已过期",
+  "alreadyInLeague": "您已经是该联赛的成员",
+  "editIcon": "编辑图标",
+  "accentColor": "强调颜色",
+  "iconColor": "图标颜色",
+  "selectLeagueIcon": "选择联赛图标",
+  "searchByUsername": "按用户名搜索"
+>>>>>>> 8a40a11b9495bf63fa7b2994fbf0ea1e33930d10
 }

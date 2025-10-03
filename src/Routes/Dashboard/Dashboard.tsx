@@ -9,10 +9,8 @@ import {
   UserDataType,
   useUser as useUserData,
 } from "../../Context/UserContext/UserContext";
-import SportsVolleyballIcon from "@mui/icons-material/SportsVolleyball";
-import WavesIcon from "@mui/icons-material/Waves";
-import SportsBarIcon from "@mui/icons-material/SportsBar";
-import PoolIcon from "@mui/icons-material/Pool";
+import { getLeagueIcon } from "../../utils/leagueIcons";
+import LeagueIconBadge from "../../Components/LeagueIconBadge/LeagueIconBadge";
 import { useTranslation } from "react-i18next";
 import { apiGet } from "../../utils/apiUtils";
 import { isSystemAdmin } from "../../utils/moderatorUtils";
@@ -21,36 +19,31 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { userData, updateUser } = useUserData();
   const [leagues, setLeagues] = useState<
-    { leagueId: string; leagueName: string; participants: string[] }[]
+    {
+      leagueId: string;
+      leagueName: string;
+      participants: string[];
+      icon_style?: {
+        icon?: string;
+        accent_color?: string;
+        icon_color?: string;
+      };
+    }[]
   >([]);
   const { t } = useTranslation();
   const [hasFetchedProfile, setHasFetchedProfile] = useState(false);
 
-  const returnRandomIcon = () => {
-    const iconStyle = {
-      color: "#3f51b5",
-    };
-    const icons = [
-      <SportsVolleyballIcon key="SportsVolleyball" style={iconStyle} />,
-      <WavesIcon key={"Waves"} style={iconStyle} />,
-      <SportsBarIcon key="SportsBar" style={iconStyle} />,
-      <PoolIcon key="Pool" style={iconStyle} />,
-    ];
+  const renderLeagueIcon = (
+    icon?: string,
+    accentColor?: string,
+    iconColor?: string
+  ) => {
     return (
-      <Box
-        sx={{
-          marginLeft: "10px",
-          width: "40px",
-          background: "#ddd",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "40px",
-          borderRadius: "50%",
-        }}
-      >
-        {icons[Math.floor(Math.random() * icons.length)]}
-      </Box>
+      <LeagueIconBadge
+        icon={icon}
+        accentColor={accentColor}
+        iconColor={iconColor}
+      />
     );
   };
 
@@ -102,6 +95,7 @@ const Dashboard = () => {
         leagueId: league.id,
         leagueName: league.league_name,
         participants: league.participants,
+        icon_style: league.icon_style,
       };
     });
     setLeagues(leaguesWithData);
@@ -164,7 +158,11 @@ const Dashboard = () => {
                     variant={"contained"}
                   >
                     <>
-                      {returnRandomIcon()}
+                      {renderLeagueIcon(
+                        league.icon_style?.icon,
+                        league.icon_style?.accent_color,
+                        league.icon_style?.icon_color
+                      )}
                       <p
                         style={{
                           marginLeft: "20px",

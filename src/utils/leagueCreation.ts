@@ -6,6 +6,13 @@ export interface CreateLeagueParams {
   tier: string;
   userId: string;
   description?: string;
+  icon?: string;
+  accentColor?: string;
+  iconStyle?: {
+    icon?: string;
+    accent_color?: string;
+    icon_color?: string;
+  };
 }
 
 export interface CreatedLeagueResponse {
@@ -21,6 +28,9 @@ export const createLeagueInDev = async (
     tier: params.tier,
     userId: params.userId,
     description: (params.description || "").trim(),
+    icon: params.icon,
+    accentColor: params.accentColor,
+    iconStyle: params.iconStyle,
   };
 
   return await apiPost<CreatedLeagueResponse>("/api/leagues", payload);
