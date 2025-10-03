@@ -404,6 +404,38 @@
   "game15": "Game 15",
   "game15help": "Answer the winner correctly and guess the number of goals for each team to earn the point.",
   "no-answer-available": "You have no answers for this Quinipolo",
+  "footer.terms": "Terms & Conditions",
+  "footer.privacy": "Privacy Policy",
+  "footer.contact": "Contact",
+  "footer.about": "About",
+  "footer.copyright": "© {{year}} Quinipolo. All rights reserved.",
+  "cookies.message": "We use cookies to enhance your experience, analyze usage, and improve our services. See our",
+  "cookies.policy": "Cookie Policy",
+  "cookies.accept": "Accept",
+  "cookies.decline": "Decline",
+  "contact.title": "Contact us",
+  "contact.description": "You can reach us on Instagram or by email.",
+  "contact.instagram": "Instagram",
+  "contact.instagramHandle": "@quinipolo",
+  "contact.email": "Email",
+  "contact.emailAddress": "info@quinipolo.com",
+  "contact.openInstagram": "Open Instagram",
+  "contact.copyEmail": "Copy email",
+  "contact.copied": "Email copied to clipboard!",
+  "about.title": "About Quinipolo",
+  "about.intro": "Quinipolo is an app for water polo fans who want to test their knowledge and share the excitement of matches with friends and teammates.",
+  "about.howItWorks": "Each week you can make your predictions about match results, compete on leaderboards, and join private leagues with your group to see who gets the most right.",
+  "about.disclaimerTitle": "Important",
+  "about.disclaimerText": "Quinipolo is a recreational game of skill. It is not a betting house or a game of chance. What matters here is knowledge, intuition, and, why not, a bit of luck.",
+  "about.whyTitle": "Why did we create Quinipolo?",
+  "about.whyText": "Because we believe water polo deserves a digital, fun, simple, and accessible community. We want to bring more life to every match and offer a space where fans can share their passion, compare results, and challenge each other in a healthy way.",
+  "about.whatTitle": "What can you do in Quinipolo?",
+  "about.what.items.predict": "Make your predictions for each matchday.",
+  "about.what.items.rankings": "Compete in rankings and leaderboards.",
+  "about.what.items.leagues": "Create and manage private leagues to compete with your friends.",
+  "about.what.items.progress": "Track your progress and improve week by week.",
+  "about.philosophyTitle": "Our philosophy",
+  "about.philosophyText": "We want Quinipolo to be a safe, inclusive, and entertaining experience. There is no money at stake here—only the satisfaction of beating your friends and showing who knows the most about water polo.",
   "shareLeague": "Share League",
   "createShareLink": "Create Share Link",
   "existingShareLinks": "Existing Share Links",
@@ -429,5 +461,320 @@
   "accentColor": "Accent color",
   "iconColor": "Icon color",
   "selectLeagueIcon": "Select league icon",
-  "searchByUsername": "Search username"
+  "searchByUsername": "Search username",
+  "common": {
+    "back": "Back"
+  },
+  "terms": {
+    "title": "Terms and Conditions of Use of the Quinipolo application",
+    "sections": [
+      {
+        "title": "1. Purpose of the application",
+        "paragraphs": [
+          "The Quinipolo application offers users a recreational service consisting of making predictions about water polo matches or other sports, participating in private leagues with friends, and consulting leaderboards and rankings. Quinipolo is not a betting house nor a regulated game of chance, but a skill-based contest relying on users' sports knowledge and predictive ability.",
+          "The Quinipolo application, accessible at www.quinipolo.com, is available to any user with an Internet connection and compatible device. However, the service is legally directed to users residing in Spain and, in general, in the European Union/EEA, with Spanish and EU legislation applying. Quinipolo may introduce new features, improve, or remove other characteristics without this constituting an essential modification of the service."
+        ]
+      },
+      {
+        "title": "2. Conditions of access and use",
+        "paragraphs": [
+          "Use of the application is limited to users aged 18 or older.",
+          "Users agree to use the application lawfully, ethically, and in good faith.",
+          "Fraudulent use, creation of multiple accounts for manipulation, automated access, data scraping, or reverse engineering are prohibited.",
+          "Quinipolo reserves the right to suspend or cancel accounts that violate these conditions.",
+          "Any attempt to manipulate results, create multiple accounts for advantage, use bots, perform unauthorized scraping, or deliberately exploit technical errors will result in immediate and permanent account suspension."
+        ]
+      },
+      {
+        "title": "3. User registration",
+        "paragraphs": [
+          "To register, basic data is collected such as name, email, and access credentials (or via OAuth providers like Google/Apple).",
+          "The user is responsible for the accuracy and updating of their data.",
+          "The user must safeguard their credentials and notify any unauthorized access.",
+          "The user may request deletion of their account from the App (future) or, alternatively, by emailing info@quinipolo.com. Deletion will be processed within a maximum of 30 days, except where there are legal obligations to retain data."
+        ]
+      },
+      {
+        "title": "4. Game/contest operation",
+        "paragraphs": [
+          "Predictions must be made within the established time before the start of the match that begins earlier than those included in the Quinipolo.",
+          "The scoring system awards 1 point for each correct prediction. In case of a tie in the rankings, measures will be applied to choose a first winner, for example (but not exclusively), running another Quinipolo.",
+          "Results come from official external sources. In case of error, Quinipolo may correct them.",
+          "Basic use of Quinipolo is free."
+        ]
+      },
+      {
+        "title": "5. Leagues and community",
+        "paragraphs": [
+          "Users can create and join private leagues.",
+          "League moderators have the authority to accept/expel participants and ensure compliance with coexistence rules.",
+          "Users are responsible for the content they generate (league names, avatars, messages), granting Quinipolo a non-exclusive license to display such content in the app.",
+          "The user grants Quinipolo a non-exclusive, worldwide, royalty-free, sublicensable license to reproduce, communicate, and use user-generated content (league names, aliases, avatars) for the purposes of operating, promoting, and disseminating Quinipolo during the life of the account and for 12 months after its closure, without prejudice to image and data protection rights."
+        ]
+      },
+      {
+        "title": "6. Subscriptions and payments",
+        "paragraphs": [
+          "Quinipolo offers usage plans managed through the secure Stripe gateway.",
+          "Prices, modalities, and cancellation conditions are indicated in the application itself.",
+          "Payment is processed by a third party (Stripe); Quinipolo does not store banking data.",
+          "The refund policy complies with consumer regulations.",
+          "All prices include applicable taxes."
+        ]
+      },
+      {
+        "title": "7. Prizes",
+        "paragraphs": [
+          "If prizes or incentives exist, they will be governed by their specific Legal Bases, which will prevail in case of discrepancy. Quinipolo may modify them for justified reasons."
+        ]
+      },
+      {
+        "title": "8. Intellectual and industrial property",
+        "paragraphs": [
+          "The name, logo, design, code, and other Quinipolo elements are the exclusive property of the owner.",
+          "Users are granted a limited, non-exclusive, revocable, and non-transferable license to use the application.",
+          "Reproduction, distribution, or mass data extraction without authorization is prohibited.",
+          "Any suggestions or feedback submitted may be used by Quinipolo without obligation to compensate, without implying assignment of the user's pre-existing rights."
+        ]
+      },
+      {
+        "title": "9. Availability and maintenance",
+        "paragraphs": [
+          "Quinipolo does not guarantee continuous availability of the application nor the absence of technical errors.",
+          "Maintenance or updates may be carried out without prior notice.",
+          "Without constituting a guarantee, Quinipolo pursues a monthly availability target of 99.5%. Relevant incidents will be communicated through the status channel indicated in the App."
+        ]
+      },
+      {
+        "title": "10. Exclusion and limitation of liability",
+        "paragraphs": [
+          "Quinipolo is not responsible for misuse of the application by users.",
+          "The accuracy of sports results provided by third parties is not guaranteed.",
+          "Quinipolo is not responsible for technical interruptions, data loss, or external failures.",
+          "It is expressly declared that Quinipolo is not a betting service nor a regulated gambling provider."
+        ]
+      },
+      {
+        "title": "11. Identification of the owner",
+        "paragraphs": [
+          "In compliance with Law 34/2002 of July 11, on Information Society Services and Electronic Commerce (LSSI-CE), the owner's details are provided:",
+          "Owner: Salvador Sánchez i Campos",
+          "Tax ID: 49284364X",
+          "Address: Calle General Castaños 40, 1.ª 4.ª Es B, Molins de Rei, Barcelona, Spain",
+          "Contact email: info@quinipolo.com"
+        ]
+      },
+      {
+        "title": "12. Data protection and cookies",
+        "paragraphs": [
+          "The processing of personal data is governed by the Privacy Policy and the Cookie Policy, accessible from the application. Purposes: user registration, prediction management, communication of results, and sending notifications. Users may exercise their rights of access, rectification, erasure, restriction, objection, and portability by writing to info@quinipolo.com. The use of cookies and analytics tools is governed by the Cookie Policy. The Privacy Policy and the Cookie Policy form an integral part of these Terms and are available in the App. Users may manage their cookie preferences in the consent panel."
+        ]
+      },
+      {
+        "title": "13. Communications",
+        "paragraphs": [
+          "Quinipolo may send transactional emails (registration, password recovery, result notifications).",
+          "For commercial communications, prior consent will be requested, and users may unsubscribe at any time."
+        ]
+      },
+      {
+        "title": "14. Modification of conditions",
+        "paragraphs": [
+          "The owner reserves the right to modify these Terms and Conditions, informing users of changes with reasonable notice."
+        ]
+      },
+      {
+        "title": "15. Applicable law and jurisdiction",
+        "paragraphs": [
+          "These Terms and Conditions are governed by Spanish law. In case of conflict, the parties will submit to the Courts and Tribunals of Barcelona."
+        ]
+      },
+      {
+        "title": "16. Contact and support",
+        "paragraphs": [
+          "For any inquiries, issues, or claims, users can contact: 📧 info@quinipolo.com"
+        ]
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Quinipolo Privacy Policy",
+    "lastUpdatedLabel": "Last updated",
+    "lastUpdated": "2025-09-30",
+    "intro": "In compliance with Regulation (EU) 2016/679 (GDPR), Organic Law 3/2018 (LOPDGDD), and other applicable data protection regulations, users of the Quinipolo application are informed about the processing of their personal data.",
+    "sections": [
+      {
+        "title": "1. Scope and definitions",
+        "paragraphs": [
+          "This policy applies to all users of the Quinipolo application, in its web and PWA versions, both visitors and registered users.",
+          "Key definitions:",
+          "Personal data: information that identifies or can identify a natural person.",
+          "Processing: any operation on personal data (collection, storage, use, transmission, deletion).",
+          "Controller: the entity that decides on data processing (Quinipolo).",
+          "Processor: third parties that process data on behalf of Quinipolo (e.g., technical providers).",
+          "Cookies: information files stored on the user's device."
+        ]
+      },
+      {
+        "title": "2. Data collected",
+        "paragraphs": [
+          "Account and registration: name or alias, email, password (hash), or OAuth identifiers (Google, Apple, etc.).",
+          "OAuth: name, email, avatar according to granted permissions.",
+          "Usage and analytics: pages visited, clicks, performance, referrer (see utils/analytics.ts).",
+          "Preferences/consent: cookies and analytics (see utils/consent.ts).",
+          "Game and community: predictions, scores, rankings, leagues, moderator roles.",
+          "Technical data: IP, browser, operating system, device, push identifiers.",
+          "Payments and subscriptions: plan, status, method (last 4 digits of card, brand) via Stripe.",
+          "Support communications: emails, forms, feedback.",
+          "Logs and security: access, blocks, suspicious attempts."
+        ]
+      },
+      {
+        "title": "3. Data sources",
+        "paragraphs": [
+          "Directly from the user (registration, forms, predictions).",
+          "External providers: OAuth (Google/Apple), payments (Stripe), analytics.",
+          "Derived data: aggregated statistics, rankings, usage metrics."
+        ]
+      },
+      {
+        "title": "4. Purposes of processing",
+        "paragraphs": [
+          "Create and manage user accounts.",
+          "Enable game operation: predictions, leagues, rankings, profiles.",
+          "Manage subscriptions and payments.",
+          "Moderate the community and prevent fraud or cheating.",
+          "Improve the product through analytics (with consent where required).",
+          "Send transactional communications (confirmation, recovery, results).",
+          "Send commercial communications with consent and an option to opt out.",
+          "Legal compliance and defense of possible claims."
+        ]
+      },
+      {
+        "title": "5. Legal bases (GDPR)",
+        "paragraphs": [
+          "Contract: user registration, participation in the game, subscriptions.",
+          "Legitimate interest: security, abuse prevention, minimal technical metrics.",
+          "Consent: analytics/marketing cookies, push notifications, marketing emails.",
+          "Legal obligation: invoicing and accounting records."
+        ]
+      },
+      {
+        "title": "6. Cookies and similar technologies",
+        "paragraphs": [
+          "The app uses cookies and equivalent technologies on mobile/PWA.",
+          "Types:",
+          "Essential (basic operation).",
+          "Preferences.",
+          "Analytics (measurement, performance).",
+          "Marketing (if used in the future).",
+          "Users can manage preferences in the consent panel or their browser."
+        ]
+      },
+      {
+        "title": "7. Payments and subscriptions",
+        "paragraphs": [
+          "Payments are processed through Stripe, acting as processor/independent depending on the case. Quinipolo does not store full card details.",
+          "Tokens provided by Stripe are used for billing and renewals."
+        ]
+      },
+      {
+        "title": "8. Analytics and third parties",
+        "paragraphs": [
+          "The app may use analytics and crash reporting tools. Usage and performance metrics are collected.",
+          "Users may withdraw consent at any time."
+        ]
+      },
+      {
+        "title": "9. User-generated content",
+        "paragraphs": [
+          "Aliases, scores, and rankings may be visible in public leaderboards or private leagues.",
+          "Users can modify their alias and privacy options.",
+          "Data is reused only within the Quinipolo context."
+        ]
+      },
+      {
+        "title": "10. Identification of the Data Controller",
+        "paragraphs": [
+          "Controller: Salvador Sánchez i Campos",
+          "Tax ID: 49284364X",
+          "Address: Carrer General Castaños 40, Molins de Rei, Barcelona, Spain",
+          "Contact email: info@quinipolo.com"
+        ]
+      },
+      {
+        "title": "11. Data recipients",
+        "paragraphs": [
+          "Hosting and database provider (Supabase, EU/EEA).",
+          "Payment processor (Stripe).",
+          "Analytics and push notification providers (if enabled).",
+          "Public authorities, when there is a legal obligation."
+        ]
+      },
+      {
+        "title": "12. International transfers",
+        "paragraphs": [
+          "In case of transfers outside the EEA/UK, appropriate safeguards such as Standard Contractual Clauses (SCCs) or adequacy decisions will apply."
+        ]
+      },
+      {
+        "title": "13. Retention periods",
+        "paragraphs": [
+          "Accounts: while active + 2 years after deletion for logs.",
+          "Game records: anonymized or retained for statistics.",
+          "Payments and invoicing: handled by Stripe, according to tax regulations.",
+          "Analytics: according to provider configuration."
+        ]
+      },
+      {
+        "title": "14. Security",
+        "paragraphs": [
+          "Encryption in transit and at rest, access controls, least privilege.",
+          "Users must protect their credentials and devices.",
+          "Commitment to notify security incidents as provided by GDPR."
+        ]
+      },
+      {
+        "title": "15. Automated decisions",
+        "paragraphs": [
+          "Rankings and scores are calculated automatically.",
+          "There are no automated decisions with legal or similarly significant effects on the user."
+        ]
+      },
+      {
+        "title": "16. Minors",
+        "paragraphs": [
+          "The app is not directed at minors under 18. If a minor's registration is detected, the account will be deleted."
+        ]
+      },
+      {
+        "title": "17. Users' rights",
+        "paragraphs": [
+          "Users may exercise their rights of access, rectification, erasure, objection, restriction, portability.",
+          "Withdraw consent at any time.",
+          "Complain to the Spanish Data Protection Agency (AEPD): www.aepd.es.",
+          "Request: by writing to info@quinipolo.com, with sufficient identification."
+        ]
+      },
+      {
+        "title": "18. Account deletion",
+        "paragraphs": [
+          "Users can request deletion of their account by emailing info@quinipolo.com.",
+          "Some information (e.g., league participation) may remain anonymized."
+        ]
+      },
+      {
+        "title": "19. Changes to the Policy",
+        "paragraphs": [
+          "We reserve the right to modify this Privacy Policy. Changes will be communicated to users and will take effect on the indicated date."
+        ]
+      },
+      {
+        "title": "20. Contact",
+        "paragraphs": [
+          "For questions or exercising rights: 📧 info@quinipolo.com"
+        ]
+      }
+    ]
+  }
 }

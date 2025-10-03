@@ -31,9 +31,13 @@ import {
   Admin,
   JoinLeague,
 } from "./Routes";
+import { About } from "./Routes";
+import { Terms } from "./Routes";
+import { Privacy } from "./Routes";
 import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import { trackPageView } from "./utils/analytics";
+import Layout from "./Components/Layout/Layout";
 
 // Custom hook to handle URL cleanup
 function useUrlCleanup() {
@@ -93,48 +97,58 @@ function App() {
                   element={<JoinLeague />}
                 />
 
-                {/* Authenticated Routes */}
-                {shouldShowAuthed ? (
-                  <Route path="/" element={<MenuBar />}>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="crear-quinipolo" element={<SurveyForm />} />
-                    <Route
-                      path="quinipolo-success"
-                      element={<QuinipoloSuccess />}
-                    />
-                    <Route
-                      path="correction-success"
-                      element={<CorrectionSuccess />}
-                    />
-                    <Route path="quinipolo" element={<AnswersForm />}>
-                      <Route path="correct" element={<AnswersForm />} />
-                    </Route>
-                    <Route
-                      path="league-dashboard"
-                      element={<LeagueDashboard />}
-                    />
-                    <Route path="profile" element={<Profile />} />
-                    <Route path="join-league" element={<LeagueList />} />
-                    <Route path="crear-liga" element={<NewLeague />} />
-                    <Route path="create-league" element={<CreateLeague />} />
-                    <Route path="league-success" element={<LeagueSuccess />} />
-                    <Route
-                      path="admin"
-                      element={
-                        <ProtectedRoute requireAdmin={true} fallbackPath="/">
-                          <Admin />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route path="*" element={<Navigate to="/" />} />
-                  </Route>
-                ) : (
-                  /* Unauthenticated Routes */
-                  <Route path="/" element={<Landing />} />
-                )}
+                {/* Routes with layout (header+footer) accessible to all */}
+                <Route path="/" element={<Layout />}>
+                  {/* Public pages */}
+                  <Route path="/about" element={<About />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy" element={<Privacy />} />
 
-                {/* 404 Page - Catch all unmatched routes */}
-                <Route path="*" element={<Landing />} />
+                  {/* Authenticated pages */}
+                  {shouldShowAuthed ? (
+                    <>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="crear-quinipolo" element={<SurveyForm />} />
+                      <Route
+                        path="quinipolo-success"
+                        element={<QuinipoloSuccess />}
+                      />
+                      <Route
+                        path="correction-success"
+                        element={<CorrectionSuccess />}
+                      />
+                      <Route path="quinipolo" element={<AnswersForm />}>
+                        <Route path="correct" element={<AnswersForm />} />
+                      </Route>
+                      <Route
+                        path="league-dashboard"
+                        element={<LeagueDashboard />}
+                      />
+                      <Route path="profile" element={<Profile />} />
+                      <Route path="join-league" element={<LeagueList />} />
+                      <Route path="crear-liga" element={<NewLeague />} />
+                      <Route path="create-league" element={<CreateLeague />} />
+                      <Route
+                        path="league-success"
+                        element={<LeagueSuccess />}
+                      />
+                      <Route
+                        path="admin"
+                        element={
+                          <ProtectedRoute requireAdmin={true} fallbackPath="/">
+                            <Admin />
+                          </ProtectedRoute>
+                        }
+                      />
+                    </>
+                  ) : (
+                    <Route path="/" element={<Landing />} />
+                  )}
+
+                  <Route path="*" element={<Navigate to="/" />} />
+                </Route>
+
+                {/* Keep a final catch-all to land on home within layout */}
               </Routes>
             </OAuthCallbackHandler>
           </ThemeProvider>

@@ -1,5 +1,4 @@
 import { Button, Flex, Typography } from "antd";
-import { Footer } from "antd/es/layout/layout";
 import React from "react";
 import MenuBar from "../../Components/MenuBar/MenuBar";
 import styles from "./Landing.module.scss";
@@ -8,6 +7,7 @@ import { Paper } from "@mui/material";
 import mockupPNG from "../../assets/mockup.png";
 import mockupPNG2 from "../../assets/mockup2.png";
 import { useTranslation } from "react-i18next";
+import Footer from "../../Components/Footer/Footer";
 
 const { Title } = Typography;
 
@@ -55,7 +55,7 @@ const Landing: React.FC = () => {
           </div>
           <img src={mockupPNG} alt={t("mockupAlt")} />
         </div>
-        <Paper className={styles.secondSection}>
+        <Paper className={styles.secondSection} sx={{ mb: 4 }}>
           <Flex align="center" vertical justify="center">
             <Title>{t("landingSecondTitle")}</Title>
             <Typography style={{ marginTop: 10 }}>
@@ -86,12 +86,12 @@ const Landing: React.FC = () => {
           </Flex>
           <img src={mockupPNG2} alt={t("mockup2Alt")} />
         </Paper>
-        <Footer className={styles.footer}>
+        {/* <Footer className={styles.footer}>
           {t("footerText", {
             year: new Date().getFullYear(),
             author: "Salvador Sánchez",
           })}
-        </Footer>
+        </Footer> */}
       </div>
     </>
   );

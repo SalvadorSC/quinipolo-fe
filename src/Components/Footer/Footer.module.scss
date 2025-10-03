@@ -1,0 +1,44 @@
+.container {
+  padding: 0 !important;
+  text-align: center;
+}
+
+.footerBox {
+  color: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 16px;
+  overflow: hidden;
+
+  @media (min-width: 900px) {
+    padding: 16px 24px;
+  }
+}
+
+.title {
+  color: #fff;
+  font-weight: 700;
+}
+
+.links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.copyright {
+  color: #fff;
+}

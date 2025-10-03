@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import logoNew from "../../assets/LOGOS_2025/logo_solo_letras_horizontal.svg";
 
 import { useUser as useUserData } from "../../Context/UserContext/UserContext";
@@ -16,10 +16,10 @@ import {
   List,
   ListItem,
   ListItemText,
+  Divider,
 } from "@mui/material";
-import { Divider, Select } from "antd";
+import { Select } from "antd";
 import MenuIcon from "@mui/icons-material/Menu";
-
 import { useTheme } from "../../Context/ThemeContext/ThemeContext";
 import ThemeToggle from "../ThemeToggle/ThemeToggle";
 import { useTranslation } from "react-i18next";
@@ -62,21 +62,13 @@ const LANGUAGES = [
   { value: "zh", label: "ZH" },
 ];
 
-export const MenuBar = () => {
+export const MenuBar = ({ isSignedIn }: { isSignedIn?: boolean }) => {
   const navigate = useNavigate();
-  const { userData, signOut } = useUserData();
+  const { signOut } = useUserData();
   const { theme } = useTheme();
-  const location = useLocation();
   const [open, setOpen] = useState(false);
   const { t, i18n } = useTranslation();
   const isMobile = useMediaQuery("(max-width:600px)");
-
-  /*   useEffect(() => {
-    if (!userData.hasBeenChecked || location.pathname === "/") {
-      console.log("userData", userData);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname, userData.isAuthenticated, userData.username]); */
 
   const logoStyle = {
     width: "140px",
@@ -84,12 +76,6 @@ export const MenuBar = () => {
     marginLeft: "15px",
     cursor: "pointer",
   };
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
-
-  // Replace isSignedIn with your own logic
-  const isSignedIn = userData.isAuthenticated;
 
   const handleSignOut = async () => {
     try {
@@ -121,199 +107,185 @@ export const MenuBar = () => {
   );
 
   return (
-    <>
-      <AppBar
-        position="fixed"
-        sx={{
-          boxShadow: 0,
-          bgcolor: "transparent",
-          backgroundImage: "none",
-          mt: 2,
-        }}
-      >
-        <Container maxWidth="lg">
-          <Toolbar
-            variant="regular"
-            sx={() => ({
+    <AppBar
+      position="fixed"
+      sx={{
+        boxShadow: 0,
+        bgcolor: "transparent",
+        backgroundImage: "none",
+        mt: 2,
+      }}
+    >
+      <Container maxWidth="lg">
+        <Toolbar
+          variant="regular"
+          sx={() => ({
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexShrink: 0,
+            borderRadius: "999px",
+            bgcolor: theme === "light" ? "#f4f6fb" : "#121212",
+            backgroundImage:
+              theme === "light"
+                ? "none"
+                : "linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))",
+            backdropFilter: "blur(24px)",
+            maxHeight: 40,
+            border: "1px solid",
+            borderColor: "divider",
+            boxShadow: `0 0 1px rgba(85, 166, 246, 0.1), 1px 1.5px 2px -1px rgba(85, 166, 246, 0.15), 4px 4px 12px -2.5px rgba(85, 166, 246, 0.15)`,
+          })}
+        >
+          <Box
+            sx={{
+              flexGrow: 1,
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              flexShrink: 0,
-              borderRadius: "999px",
-              bgcolor: theme === "light" ? "#f4f6fb" : "#121212",
-              backgroundImage:
-                theme === "light"
-                  ? "none"
-                  : "linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))",
-              backdropFilter: "blur(24px)",
-              maxHeight: 40,
-              border: "1px solid",
-              borderColor: "divider",
-              boxShadow: `0 0 1px rgba(85, 166, 246, 0.1), 1px 1.5px 2px -1px rgba(85, 166, 246, 0.15), 4px 4px 12px -2.5px rgba(85, 166, 246, 0.15)`,
-            })}
+              mt: "6px",
+              ml: "-8px",
+              px: 0,
+            }}
           >
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                mt: "6px",
-                ml: "-8px",
-                px: 0,
-              }}
-            >
-              <img
-                src={logoNew}
-                style={logoStyle}
-                alt="logo of quinipolo"
-                onClick={() => navigate("/")}
-              />
-              <Box sx={{ display: { xs: "none", lg: "flex" } }}>
-                <ThemeToggle mode="icon" />
-                {!isMobile && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      flex: 1,
-                    }}
-                  >
-                    <LanguagePicker />
-                  </Box>
-                )}
-                {isSignedIn ? (
-                  <>
-                    <Button
-                      variant="text"
-                      onClick={() => navigate("/profile")}
-                      sx={{ ml: 2 }}
-                    >
-                      {t("profile") || "Profile"}
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      onClick={handleSignOut}
-                      sx={{ ml: 2 }}
-                    >
-                      {t("signOut")}
-                    </Button>
-                  </>
-                ) : (
-                  <Button
-                    variant="contained"
-                    onClick={() => navigate("/sign-in")}
-                    sx={{ ml: 2 }}
-                  >
-                    {t("signIn")}
-                  </Button>
-                )}
-              </Box>
-            </Box>
-
-            <Box sx={{ display: { sm: "", md: "none" } }}>
-              {isSignedIn && (
-                <IconButton
-                  edge="end"
-                  color="inherit"
-                  aria-label="menu"
-                  onClick={() => setOpen(true)}
-                  sx={{ ml: 1 }}
-                >
-                  <MenuIcon
-                    sx={{ color: theme === "light" ? "black" : "white" }}
-                  />
-                </IconButton>
-              )}
-              <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
+            <img
+              src={logoNew}
+              style={logoStyle}
+              alt="logo of quinipolo"
+              onClick={() => navigate("/")}
+            />
+            <Box sx={{ display: { xs: "none", lg: "flex" } }}>
+              <ThemeToggle mode="icon" />
+              {!isMobile && (
                 <Box
                   sx={{
-                    minWidth: "70dvw",
-                    p: 2,
-                    backgroundColor: "background.paper",
-                    flexGrow: 1,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flex: 1,
                   }}
                 >
-                  {isSignedIn ? (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        flexDirection: "column",
-                        maxWidth: "240px",
-                        gap: 10,
-                        margin: "0 auto",
-                      }}
-                    >
-                      <List sx={{ width: "100%" }}>
-                        <ListItem
-                          sx={{
-                            display: "flex",
-                            gap: 1,
-                            justifyContent: "space-between",
-                            marginBottom: 2,
-                          }}
-                        >
-                          <LanguagePicker inDrawer />
-                          <ThemeToggle mode="icon" />
-                        </ListItem>
-                        <Divider />
-                        <ListItem
-                          button
-                          onClick={() => {
-                            navigate("/");
-                            setOpen(false);
-                          }}
-                          sx={{ borderRadius: 2 }}
-                        >
-                          <DashboardOutlinedIcon sx={{ mr: 1 }} />
-                          <ListItemText
-                            primary={t("dashboard") || "Dashboard"}
-                          />
-                        </ListItem>
-                        <ListItem
-                          button
-                          onClick={() => {
-                            navigate("/join-league");
-                            setOpen(false);
-                          }}
-                          sx={{ borderRadius: 2 }}
-                        >
-                          <GroupsOutlinedIcon sx={{ mr: 1 }} />
-                          <ListItemText primary={t("leagues") || "Leagues"} />
-                        </ListItem>
-                        <ListItem
-                          button
-                          onClick={() => {
-                            navigate("/profile");
-                            setOpen(false);
-                          }}
-                          sx={{ borderRadius: 2 }}
-                        >
-                          <AccountCircleOutlinedIcon sx={{ mr: 1 }} />
-                          <ListItemText primary={t("profile") || "Profile"} />
-                        </ListItem>
-                      </List>
-                    </div>
-                  ) : null}
+                  <LanguagePicker />
                 </Box>
-              </Drawer>
+              )}
+              {isSignedIn ? (
+                <>
+                  <Button
+                    variant="text"
+                    onClick={() => navigate("/profile")}
+                    sx={{ ml: 2 }}
+                  >
+                    {t("profile") || "Profile"}
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={handleSignOut}
+                    sx={{ ml: 2 }}
+                  >
+                    {t("signOut")}
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  variant="contained"
+                  onClick={() => navigate("/sign-in")}
+                  sx={{ ml: 2 }}
+                >
+                  {t("signIn")}
+                </Button>
+              )}
             </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
-      {isSignedIn ? (
-        <Container
-          maxWidth="lg"
-          className="content"
-          sx={{ mt: window.innerWidth > 400 ? "100px" : "88px" }}
-        >
-          <Outlet />
-        </Container>
-      ) : null}
-    </>
+          </Box>
+
+          <Box sx={{ display: { sm: "", md: "none" } }}>
+            {isSignedIn && (
+              <IconButton
+                edge="end"
+                color="inherit"
+                aria-label="menu"
+                onClick={() => setOpen(true)}
+                sx={{ ml: 1 }}
+              >
+                <MenuIcon
+                  sx={{ color: theme === "light" ? "black" : "white" }}
+                />
+              </IconButton>
+            )}
+            <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
+              <Box
+                sx={{
+                  p: 2,
+                  backgroundColor: "background.paper",
+                  flexGrow: 1,
+                }}
+              >
+                {isSignedIn ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      flexDirection: "column",
+                      maxWidth: "240px",
+                      gap: 10,
+                      margin: "0 auto",
+                    }}
+                  >
+                    <List sx={{ width: "100%" }}>
+                      <ListItem
+                        sx={{
+                          display: "flex",
+                          gap: 1,
+                          justifyContent: "space-between",
+                          marginBottom: 2,
+                        }}
+                      >
+                        <LanguagePicker inDrawer />
+                        <ThemeToggle mode="icon" />
+                      </ListItem>
+                      <Divider />
+                      <ListItem
+                        button
+                        onClick={() => {
+                          navigate("/");
+                          setOpen(false);
+                        }}
+                        sx={{ borderRadius: 2 }}
+                      >
+                        <DashboardOutlinedIcon sx={{ mr: 1 }} />
+                        <ListItemText primary={t("dashboard") || "Dashboard"} />
+                      </ListItem>
+                      <ListItem
+                        button
+                        onClick={() => {
+                          navigate("/join-league");
+                          setOpen(false);
+                        }}
+                        sx={{ borderRadius: 2 }}
+                      >
+                        <GroupsOutlinedIcon sx={{ mr: 1 }} />
+                        <ListItemText primary={t("leagues") || "Leagues"} />
+                      </ListItem>
+                      <ListItem
+                        button
+                        onClick={() => {
+                          navigate("/profile");
+                          setOpen(false);
+                        }}
+                        sx={{ borderRadius: 2 }}
+                      >
+                        <AccountCircleOutlinedIcon sx={{ mr: 1 }} />
+                        <ListItemText primary={t("profile") || "Profile"} />
+                      </ListItem>
+                    </List>
+                  </div>
+                ) : null}
+              </Box>
+            </Drawer>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 };
 
