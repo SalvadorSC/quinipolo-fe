@@ -461,5 +461,320 @@
   "accentColor": "Color d'accent",
   "iconColor": "Color de la icona",
   "selectLeagueIcon": "Selecciona la icona de la lliga",
-  "searchByUsername": "Cerca per nom d'usuari"
+  "searchByUsername": "Cerca per nom d'usuari",
+  "common": {
+    "back": "Tornar"
+  },
+  "terms": {
+    "title": "Termes i Condicions d'Ús de l'aplicació Quinipolo",
+    "sections": [
+      {
+        "title": "1. Objecte de l'aplicació",
+        "paragraphs": [
+          "L'aplicació Quinipolo ofereix als usuaris un servei recreatiu consistent en la realització de pronòstics sobre partits de waterpolo o altres esports, la participació en lligues privades amb amics i la consulta de classificacions i rànquings. Quinipolo no és una casa d'apostes ni un joc d'atzar regulat, sinó un concurs d'habilitat basat en el coneixement esportiu i la capacitat de predicció dels usuaris.",
+          "L'aplicació Quinipolo, accessible a www.quinipolo.com, està disponible per a qualsevol usuari amb connexió a Internet i dispositiu compatible. No obstant això, el servei es considera jurídicament dirigit a usuaris residents a Espanya i, en general, a la Unió Europea/EEE, aplicant-se la legislació espanyola i de la UE. Quinipolo podrà introduir noves funcions, millorar o retirar altres característiques sense que això constitueixi modificació essencial del servei."
+        ]
+      },
+      {
+        "title": "2. Condicions d'accés i ús",
+        "paragraphs": [
+          "L'ús de l'aplicació està limitat a majors de 18 anys.",
+          "L'usuari es compromet a utilitzar l'aplicació de manera legal, ètica i de bona fe.",
+          "Queda prohibit l'ús fraudulent, la creació de múltiples comptes amb finalitats de manipulació, l'automatització d'accessos, l'scraping de dades o la enginyeria inversa.",
+          "Quinipolo es reserva el dret de suspendre o cancel·lar comptes que incompleixin aquestes condicions.",
+          "Qualsevol intent de manipulació de resultats, creació de comptes múltiples amb finalitats d'avantatge, ús de bots, scraping no autoritzat o aprofitament deliberat d'errors tècnics comportarà la suspensió immediata i definitiva del compte."
+        ]
+      },
+      {
+        "title": "3. Registre d'usuari",
+        "paragraphs": [
+          "Per registrar-se, es recullen dades bàsiques com nom, correu electrònic i credencials d'accés (o a través de proveïdors d'OAuth com Google/Apple).",
+          "L'usuari és responsable de la veracitat i actualització de les seves dades.",
+          "L'usuari ha de custodiar les seves credencials i notificar qualsevol accés no autoritzat.",
+          "L'usuari podrà sol·licitar l'eliminació del seu compte des de la pròpia App (en un futur) o de manera alternativa, informant a info@quinipolo.com. L'eliminació es tramitarà en un màxim de 30 dies, llevat d'obligacions legals de conservació."
+        ]
+      },
+      {
+        "title": "4. Funcionament del concurs/joc",
+        "paragraphs": [
+          "Els pronòstics s'han de fer dins del termini establert abans de l'inici del partit que comenci abans dels inclosos a la Quinipolo.",
+          "El sistema de puntuació atorga 1 punt per cada encert. En cas d'empat als rànquings, s'aplicaran mesures per escollir un primer guanyador, com per exemple, encara que no de manera exclusiva, fer una altra Quinipolo.",
+          "Els resultats provenen de fonts externes oficials. En cas d'error, Quinipolo podrà corregir-los.",
+          "L'ús bàsic de Quinipolo és gratuït."
+        ]
+      },
+      {
+        "title": "5. Lligues i comunitat",
+        "paragraphs": [
+          "Els usuaris poden crear i unir-se a lligues privades.",
+          "Els moderadors de lligues tenen facultat per acceptar/expulsar participants i garantir el compliment de les normes de convivència.",
+          "Els usuaris són responsables del contingut que generin (noms de lligues, avatars, missatges), atorgant a Quinipolo una llicència no exclusiva per mostrar aquest contingut a l'app.",
+          "L'usuari atorga a Quinipolo una llicència no exclusiva, mundial, gratuïta i sublicenciable per reproduir, comunicar i utilitzar els continguts generats (noms de lligues, àlies, avatars) amb finalitats de funcionament, promoció i difusió de Quinipolo, durant la vigència del compte i durant 12 mesos després del seu tancament, sense perjudici dels drets d'imatge i de protecció de dades."
+        ]
+      },
+      {
+        "title": "6. Subscripcions i pagaments",
+        "paragraphs": [
+          "Quinipolo ofereix plans d'ús gestionats a través de la passarel·la segura Stripe.",
+          "Els preus, modalitats i condicions de cancel·lació s'indiquen a la pròpia aplicació.",
+          "El pagament és processat per un tercer (Stripe), no emmagatzemant Quinipolo dades bancàries.",
+          "La política de reemborsaments s'ajusta al que disposa la normativa de consumidors.",
+          "Tots els preus inclouen els impostos aplicables."
+        ]
+      },
+      {
+        "title": "7. Premis",
+        "paragraphs": [
+          "En cas que existeixin premis o incentius, es regiran per les seves Bases Legals específiques, que prevaldran en cas de discrepància. Quinipolo podrà modificar-los per causes justificades."
+        ]
+      },
+      {
+        "title": "8. Propietat intel·lectual i industrial",
+        "paragraphs": [
+          "El nom, logotip, disseny, codi i altres elements de Quinipolo són propietat exclusiva del titular.",
+          "Es concedeix a l'usuari una llicència limitada, no exclusiva, revocable i intransferible per utilitzar l'aplicació.",
+          "Queda prohibida la reproducció, distribució o extracció massiva de dades sense autorització.",
+          "Qualsevol suggeriment o feedback remès podrà ser utilitzat per Quinipolo sense obligació de compensació, sense que això impliqui cessió de drets preexistents de l'usuari."
+        ]
+      },
+      {
+        "title": "9. Disponibilitat i manteniment",
+        "paragraphs": [
+          "Quinipolo no garanteix la disponibilitat contínua de l'aplicació ni l'absència d'errors tècnics.",
+          "Es podran fer manteniments o actualitzacions sense avís previ.",
+          "Sense constituir garantia, Quinipolo persegueix un objectiu de disponibilitat del 99,5% mensual. Les incidències rellevants es comunicaran a través del canal d'estat indicat a l'App."
+        ]
+      },
+      {
+        "title": "10. Exclusió i limitació de responsabilitat",
+        "paragraphs": [
+          "Quinipolo no es responsabilitza del mal ús de l'aplicació per part dels usuaris.",
+          "No es garanteix l'exactitud dels resultats esportius proporcionats per tercers.",
+          "Quinipolo no és responsable d'interrupcions tècniques, pèrdues de dades o fallades externes.",
+          "Es declara expressament que Quinipolo no és un servei d'apostes ni un proveïdor de joc regulat."
+        ]
+      },
+      {
+        "title": "11. Identificació del titular",
+        "paragraphs": [
+          "En compliment amb la Llei 34/2002, d'11 de juliol, de Serveis de la Societat de la Informació i Comerç Electrònic (LSSI-CE), s'informa de les dades del titular:",
+          "Titular: Salvador Sánchez i Campos",
+          "NIF/CIF: 49284364X",
+          "Adreça: Carrer General Castaños 40, 1a 4a Es B, Molins de Rei, Barcelona, Espanya",
+          "Correu electrònic de contacte: info@quinipolo.com"
+        ]
+      },
+      {
+        "title": "12. Protecció de dades i cookies",
+        "paragraphs": [
+          "El tractament de les dades personals es regula a la Política de Privacitat i a la Política de Cookies, accessibles des de l'aplicació. Finalitats: registre d'usuari, gestió de pronòstics, comunicació de resultats i enviament de notificacions. Els usuaris poden exercir els seus drets d'accés, rectificació, supressió, limitació, oposició i portabilitat escrivint a info@quinipolo.com. L'ús de cookies i eines d'analítica es regeix per la Política de Cookies. La Política de Privacitat i la Política de Cookies formen part integrant d'aquests Termes i estan disponibles a l'App. L'usuari podrà gestionar les seves preferències de cookies al panell de consentiment."
+        ]
+      },
+      {
+        "title": "13. Comunicacions",
+        "paragraphs": [
+          "Quinipolo podrà enviar correus electrònics transaccionals (registre, recuperació de contrasenya, notificacions de resultats).",
+          "En cas de comunicacions comercials, es sol·licitarà consentiment previ, podent l'usuari donar-se de baixa en qualsevol moment."
+        ]
+      },
+      {
+        "title": "14. Modificació de condicions",
+        "paragraphs": [
+          "El titular es reserva el dret de modificar els presents Termes i Condicions, informant als usuaris dels canvis amb antelació raonable."
+        ]
+      },
+      {
+        "title": "15. Llei aplicable i jurisdicció",
+        "paragraphs": [
+          "Els presents Termes i Condicions es regeixen per la legislació espanyola. En cas de conflicte, les parts se sotmetran als Jutjats i Tribunals de Barcelona."
+        ]
+      },
+      {
+        "title": "16. Contacte i suport",
+        "paragraphs": [
+          "Per a qualsevol consulta, incidència o reclamació, els usuaris poden contactar a: 📧 info@quinipolo.com"
+        ]
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Política de Privacitat de Quinipolo",
+    "lastUpdatedLabel": "Última actualització",
+    "lastUpdated": "30/09/2025",
+    "intro": "En compliment del Reglament (UE) 2016/679 (RGPD), la Llei Orgànica 3/2018 (LOPDGDD) i altra normativa aplicable en matèria de protecció de dades, s'informa als usuaris de l'aplicació Quinipolo sobre el tractament de les seves dades personals.",
+    "sections": [
+      {
+        "title": "1. Àmbit d'aplicació i definicions",
+        "paragraphs": [
+          "Aquesta política s'aplica a tots els usuaris de l'aplicació Quinipolo, en les seves versions web i PWA, tant visitants com usuaris registrats.",
+          "Definicions principals:",
+          "Dades personals: informació que identifica o pot identificar una persona física.",
+          "Tractament: qualsevol operació sobre dades personals (recollida, conservació, ús, transmissió, supressió).",
+          "Responsable: l'entitat que decideix sobre el tractament de dades (Quinipolo).",
+          "Encarregat: tercers que tracten dades per compte de Quinipolo (p. ex. proveïdors tècnics).",
+          "Cookies: fitxers d'informació que s'emmagatzemen al dispositiu de l'usuari."
+        ]
+      },
+      {
+        "title": "2. Dades recollides",
+        "paragraphs": [
+          "Compte i registre: nom o àlies, email, contrasenya (hash), o identificadors OAuth (Google, Apple, etc.).",
+          "OAuth: nom, email, avatar segons permisos atorgats.",
+          "Ús i analítica: pàgines visitades, clics, rendiment, procedència/referència (segons utils/analytics.ts).",
+          "Preferències/consentiment: cookies i analítica (segons utils/consent.ts).",
+          "Joc i comunitat: pronòstics, puntuacions, classificacions, lligues, rols de moderador.",
+          "Dades tècniques: IP, navegador, sistema operatiu, dispositiu, identificadors de push.",
+          "Pagaments i subscripcions: pla, estat, mètode (últims 4 dígits de la targeta, marca) via Stripe.",
+          "Comunicacions de suport: emails, formularis, feedback.",
+          "Registres i seguretat: accessos, bloquejos, intents sospitosos."
+        ]
+      },
+      {
+        "title": "3. Fonts de dades",
+        "paragraphs": [
+          "Directament de l'usuari (registre, formularis, pronòstics).",
+          "Proveïdors externs: OAuth (Google/Apple), pagaments (Stripe), analítica.",
+          "Dades derivades: estadístiques agregades, rànquings, mètriques d'ús."
+        ]
+      },
+      {
+        "title": "4. Finalitats del tractament",
+        "paragraphs": [
+          "Crear i gestionar comptes d'usuari.",
+          "Permetre el funcionament del joc: pronòstics, lligues, rànquings, perfils.",
+          "Gestionar subscripcions i pagaments.",
+          "Moderar la comunitat i prevenir fraus o trampes.",
+          "Millorar el producte mitjançant analítica (amb consentiment quan calgui).",
+          "Enviar comunicacions transaccionals (confirmació, recuperació, resultats).",
+          "Enviar comunicacions comercials amb consentiment i opció de baixa.",
+          "Compliment legal i defensa de possibles reclamacions."
+        ]
+      },
+      {
+        "title": "5. Bases jurídiques (RGPD)",
+        "paragraphs": [
+          "Contracte: registre d'usuari, participació en el joc, subscripcions.",
+          "Interès legítim: seguretat, prevenció d'abusos, mètriques tècniques mínimes.",
+          "Consentiment: cookies analítiques/màrqueting, notificacions push, emails comercials.",
+          "Obligació legal: facturació i registres comptables."
+        ]
+      },
+      {
+        "title": "6. Cookies i tecnologies similars",
+        "paragraphs": [
+          "L'app utilitza cookies i tecnologies equivalents en mòbil/PWA.",
+          "Tipus:",
+          "Essencials (funcionament bàsic).",
+          "Preferències.",
+          "Analítiques (mesura, rendiment).",
+          "Màrqueting (si s'utilitzen en el futur).",
+          "L'usuari pot gestionar preferències al panell de consentiment o al navegador."
+        ]
+      },
+      {
+        "title": "7. Pagaments i subscripcions",
+        "paragraphs": [
+          "Els pagaments es processen a través de Stripe, que actua com a encarregat/independent segons el cas. Quinipolo no emmagatzema dades completes de targetes.",
+          "S'utilitzen tokens proporcionats per Stripe per a facturació i renovacions."
+        ]
+      },
+      {
+        "title": "8. Analítica i tercers",
+        "paragraphs": [
+          "L'app pot utilitzar eines d'analítica i de registre d'errors (crash reporting). Es recullen mètriques d'ús i rendiment.",
+          "L'usuari pot retirar el seu consentiment en qualsevol moment."
+        ]
+      },
+      {
+        "title": "9. Contingut generat per usuaris",
+        "paragraphs": [
+          "Àlies, puntuacions i classificacions poden ser visibles en rànquings públics o lligues privades.",
+          "Els usuaris poden modificar el seu àlies i opcions de privacitat.",
+          "Les dades es reutilitzen únicament dins del context de Quinipolo."
+        ]
+      },
+      {
+        "title": "10. Identificació del Responsable del tractament",
+        "paragraphs": [
+          "Responsable: Salvador Sánchez i Campos",
+          "NIF/CIF: 49284364X",
+          "Domicili: Carrer General Castaños 40, Molins de Rei, Barcelona, Espanya",
+          "Correu electrònic de contacte: info@quinipolo.com"
+        ]
+      },
+      {
+        "title": "11. Destinataris de les dades",
+        "paragraphs": [
+          "Proveïdor d'allotjament i base de dades (Supabase, UE/EEE).",
+          "Processador de pagaments (Stripe).",
+          "Proveïdors d'analítica i notificacions push (si s'habiliten).",
+          "Autoritats públiques, quan existeixi obligació legal."
+        ]
+      },
+      {
+        "title": "12. Transferències internacionals",
+        "paragraphs": [
+          "En cas de transferències fora de l'EEE/UK, s'aplicaran garanties adequades com clàusules contractuals tipus (SCCs) o decisions d'adequació."
+        ]
+      },
+      {
+        "title": "13. Terminis de conservació",
+        "paragraphs": [
+          "Comptes: mentre estiguin actives + 2 anys després de la supressió per a registres (logs).",
+          "Registres de joc: anonimitzats o conservats per a estadístiques.",
+          "Pagaments i facturació: gestionat per Stripe, segons normativa fiscal.",
+          "Analítica: segons configuració del proveïdor."
+        ]
+      },
+      {
+        "title": "14. Seguretat",
+        "paragraphs": [
+          "Xifrat en trànsit i en repòs, controls d'accés, privilegis mínims.",
+          "L'usuari ha de protegir les seves credencials i dispositius.",
+          "Compromís de notificar incidents de seguretat segons el previst pel RGPD."
+        ]
+      },
+      {
+        "title": "15. Decisions automatitzades",
+        "paragraphs": [
+          "Rànquings i puntuacions es calculen automàticament.",
+          "No existeixen decisions automatitzades amb efectes legals o similars sobre l'usuari."
+        ]
+      },
+      {
+        "title": "16. Menors",
+        "paragraphs": [
+          "L'app no està dirigida a menors de 18 anys. Si es detecta el registre d'un menor, es procedirà a l'eliminació del compte."
+        ]
+      },
+      {
+        "title": "17. Drets dels usuaris",
+        "paragraphs": [
+          "Els usuaris poden exercir els seus drets d'accés, rectificació, supressió, oposició, limitació i portabilitat.",
+          "Retirar el consentiment en qualsevol moment.",
+          "Reclamar davant l'Agència Espanyola de Protecció de Dades (AEPD): www.aepd.es.",
+          "Sol·licitud: escrivint a info@quinipolo.com, amb identificació suficient."
+        ]
+      },
+      {
+        "title": "18. Eliminació del compte",
+        "paragraphs": [
+          "L'usuari pot sol·licitar la supressió del seu compte enviant un correu a info@quinipolo.com.",
+          "Part de la informació (p. ex. participació en lligues) podrà romandre anonimitzada."
+        ]
+      },
+      {
+        "title": "19. Canvis en la Política",
+        "paragraphs": [
+          "Ens reservem el dret de modificar aquesta Política de Privacitat. Les modificacions seran comunicades als usuaris i entraran en vigor en la data indicada."
+        ]
+      },
+      {
+        "title": "20. Contacte",
+        "paragraphs": [
+          "Per a dubtes o exercici de drets: 📧 info@quinipolo.com"
+        ]
+      }
+    ]
+  }
 }

@@ -405,7 +405,6 @@
   "howWorks.goalRanges.title": "得点範囲（チームごとの合計得点）",
   "howWorks.goalRanges.waterpolo": "水球：9未満、9または10、10より多い",
   "howWorks.goalRanges.football": "サッカー：0、1または2、2より多い",
-<<<<<<< HEAD
   "footer.terms": "利用規約",
   "footer.privacy": "プライバシーポリシー",
   "footer.contact": "お問い合わせ",
@@ -437,8 +436,7 @@
   "about.what.items.leagues": "友達と競うためのプライベートリーグを作成・管理",
   "about.what.items.progress": "自分の進捗を追跡し、週ごとに上達",
   "about.philosophyTitle": "私たちの考え",
-  "about.philosophyText": "Quinipolo を安全で包括的、そして楽しい体験にしたいと考えています。ここではお金は賭けられていません。友達に勝つ喜びと、水球に一番詳しいのは誰かを示す満足感がすべてです。"
-=======
+  "about.philosophyText": "Quinipolo を安全で包括的、そして楽しい体験にしたいと考えています。ここではお金は賭けられていません。友達に勝つ喜びと、水球に一番詳しいのは誰かを示す満足感がすべてです。",
   "shareLeague": "リーグを共有",
   "createShareLink": "共有リンクを作成",
   "existingShareLinks": "既存の共有リンク",
@@ -465,5 +463,4 @@
   "iconColor": "アイコンの色",
   "selectLeagueIcon": "リーグのアイコンを選択",
   "searchByUsername": "ユーザー名で検索"
->>>>>>> 8a40a11b9495bf63fa7b2994fbf0ea1e33930d10
 }

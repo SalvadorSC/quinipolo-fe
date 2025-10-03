@@ -32,6 +32,8 @@ import {
   JoinLeague,
 } from "./Routes";
 import { About } from "./Routes";
+import { Terms } from "./Routes";
+import { Privacy } from "./Routes";
 import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import { trackPageView } from "./utils/analytics";
@@ -99,6 +101,8 @@ function App() {
                 <Route path="/" element={<Layout />}>
                   {/* Public pages */}
                   <Route path="/about" element={<About />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy" element={<Privacy />} />
 
                   {/* Authenticated pages */}
                   {shouldShowAuthed ? (

@@ -405,7 +405,6 @@
   "howWorks.goalRanges.title": "Intervallo di gol (gol totali per squadra)",
   "howWorks.goalRanges.waterpolo": "Pallanuoto: meno di 9, 9 o 10, più di 10",
   "howWorks.goalRanges.football": "Calcio: 0, 1 o 2, più di 2",
-<<<<<<< HEAD
   "footer.terms": "Termini e Condizioni",
   "footer.privacy": "Informativa sulla Privacy",
   "footer.contact": "Contatti",
@@ -423,8 +422,7 @@
   "contact.emailAddress": "info@quinipolo.com",
   "contact.openInstagram": "Apri Instagram",
   "contact.copyEmail": "Copia email",
-  "contact.copied": "Email copiata negli appunti!"
-=======
+  "contact.copied": "Email copiata negli appunti!",
   "shareLeague": "Condividi Lega",
   "createShareLink": "Crea Link di Condivisione",
   "existingShareLinks": "Link di Condivisione Esistenti",
@@ -451,5 +449,4 @@
   "iconColor": "Colore dell'icona",
   "selectLeagueIcon": "Seleziona l'icona della lega",
   "searchByUsername": "Cerca usuari"
->>>>>>> 8a40a11b9495bf63fa7b2994fbf0ea1e33930d10
 }

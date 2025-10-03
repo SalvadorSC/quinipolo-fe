@@ -405,7 +405,6 @@
   "howWorks.goalRanges.title": "进球范围（每队的总进球）",
   "howWorks.goalRanges.waterpolo": "水球：少于9个，9或10个，多于10个",
   "howWorks.goalRanges.football": "足球：0个，1或2个，多于2个",
-<<<<<<< HEAD
   "footer.terms": "条款与条件",
   "footer.privacy": "隐私政策",
   "footer.contact": "联系我们",
@@ -437,8 +436,7 @@
   "about.what.items.leagues": "创建并管理私有联赛，与朋友一起比拼。",
   "about.what.items.progress": "跟踪你的进步，并每周不断提升。",
   "about.philosophyTitle": "我们的理念",
-  "about.philosophyText": "我们希望 Quinipolo 成为一个安全、包容且有趣的体验。这里没有金钱博弈，只有战胜朋友的满足，以及向大家证明谁更懂水球的成就感。"
-=======
+  "about.philosophyText": "我们希望 Quinipolo 成为一个安全、包容且有趣的体验。这里没有金钱博弈，只有战胜朋友的满足，以及向大家证明谁更懂水球的成就感。",
   "shareLeague": "分享联赛",
   "createShareLink": "创建分享链接",
   "existingShareLinks": "现有分享链接",
@@ -465,5 +463,4 @@
   "iconColor": "图标颜色",
   "selectLeagueIcon": "选择联赛图标",
   "searchByUsername": "按用户名搜索"
->>>>>>> 8a40a11b9495bf63fa7b2994fbf0ea1e33930d10
 }

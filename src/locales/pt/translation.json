@@ -405,7 +405,6 @@
   "howWorks.goalRanges.title": "Faixa de gols (gols totais por equipe)",
   "howWorks.goalRanges.waterpolo": "Polo Aquático: menos de 9, 9 ou 10, mais de 10",
   "howWorks.goalRanges.football": "Futebol: 0, 1 ou 2, mais de 2",
-<<<<<<< HEAD
   "footer.terms": "Termos e Condições",
   "footer.privacy": "Política de Privacidade",
   "footer.contact": "Contato",
@@ -437,8 +436,7 @@
   "about.what.items.leagues": "Criar e gerenciar ligas privadas para competir com amigos.",
   "about.what.items.progress": "Acompanhar seu progresso e melhorar semana a semana.",
   "about.philosophyTitle": "Nossa filosofia",
-  "about.philosophyText": "Queremos que o Quinipolo seja uma experiência segura, inclusiva e divertida. Não há dinheiro em jogo — apenas a satisfação de vencer os amigos e mostrar quem mais entende de polo aquático."
-=======
+  "about.philosophyText": "Queremos que o Quinipolo seja uma experiência segura, inclusiva e divertida. Não há dinheiro em jogo — apenas a satisfação de vencer os amigos e mostrar quem mais entende de polo aquático.",
   "shareLeague": "Compartilhar Liga",
   "createShareLink": "Criar Link de Compartilhamento",
   "existingShareLinks": "Links de Compartilhamento Existentes",
@@ -463,7 +461,6 @@
   "editIcon": "Editar ícone",
   "accentColor": "Cor de destaque",
   "iconColor": "Cor do ícone",
-  "selectLeagueIcon": "Selecionar ícone da liga"
-  ,"searchByUsername": "Pesquisar por usuário"
->>>>>>> 8a40a11b9495bf63fa7b2994fbf0ea1e33930d10
+  "selectLeagueIcon": "Selecionar ícone da liga",
+  "searchByUsername": "Pesquisar por usuário"
 }

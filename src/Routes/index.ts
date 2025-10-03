@@ -20,3 +20,5 @@ export { default as NoMatch } from "./NoMatch/NoMatch";
 export { default as Admin } from "./Admin/Admin";
 export { default as JoinLeague } from "./JoinLeague/JoinLeague";
 export { default as About } from "./About/About";
+export { default as Terms } from "./Terms/Terms";
+export { default as Privacy } from "./Privacy/Privacy";
