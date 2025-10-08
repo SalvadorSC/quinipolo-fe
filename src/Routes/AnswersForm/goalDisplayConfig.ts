@@ -15,7 +15,7 @@ export const GOAL_DISPLAY_CONFIG: Record<
   SportGoalDisplayConfig
 > = {
   waterpolo: {
-    leftLabel: "<10",
+    leftLabel: "<11",
     centerLabel: "11-12",
     rightLabel: ">12",
     centerPayload: "11/12",
