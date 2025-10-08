@@ -4,7 +4,7 @@ export interface SportGoalDisplayConfig {
   leftLabel: string; // display label for '<' option
   centerLabel: string; // display label for mid-range option
   rightLabel: string; // display label for '>' option
-  centerPayload: string; // payload value for the mid-range option (e.g., '9/10')
+  centerPayload: string; // payload value for the mid-range option (e.g., '11/12')
 }
 
 // Central registry for sport-specific goal display rules.
@@ -15,10 +15,10 @@ export const GOAL_DISPLAY_CONFIG: Record<
   SportGoalDisplayConfig
 > = {
   waterpolo: {
-    leftLabel: "<9",
-    centerLabel: "9–10",
-    rightLabel: ">10",
-    centerPayload: "9/10",
+    leftLabel: "<10",
+    centerLabel: "11-12",
+    rightLabel: ">12",
+    centerPayload: "11/12",
   },
   football: {
     leftLabel: "0",
