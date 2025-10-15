@@ -37,7 +37,7 @@ export function formatStatsSummary(
       mf.matchNumber
     } — ${mf.failedPercentage.toFixed(1)}% ${t("failed")}`;
     if (mf.correctWinner) {
-      out += ` (${t("correct")}: ${mapWinner(mf.correctWinner)}`;
+      out += ` (${t("correct-2")}: ${mapWinner(mf.correctWinner)}`;
       if (mf.mostWrongWinner) {
         out += `, ${t("mostAnsweredWrong")} ${mapWinner(mf.mostWrongWinner)}`;
       }

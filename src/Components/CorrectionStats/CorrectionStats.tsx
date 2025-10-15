@@ -44,7 +44,7 @@ export default function CorrectionStats({
           {mostFailed.failedPercentage.toFixed(1)}% {t("failed")}{" "}
           {mostFailed.correctWinner ? (
             <>
-              ({t("correct")}{" "}
+              ({t("correct-2")}{" "}
               {(() => {
                 const w = mostFailed.correctWinner;
                 if (w === "home") return mostFailed.homeTeam || t("home");
