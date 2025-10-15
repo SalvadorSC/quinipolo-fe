@@ -6,6 +6,13 @@ import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import Leaderboard from "../../Components/Leaderboard/Leaderboard";
 import { useTranslation } from "react-i18next";
 import { apiGet } from "../../utils/apiUtils";
+import {
+  formatStatsSummary,
+  formatPointsEarnedDistribution,
+  formatLeaderboardSection,
+  formatWinnersSection,
+} from "../../utils/shareMessage";
+import CorrectionStats from "../../Components/CorrectionStats/CorrectionStats";
 
 export type Result = {
   username: string;
@@ -20,6 +27,19 @@ const CorrectionSuccess = () => {
   const navigate = useNavigate();
   const { setFeedback } = useFeedback();
   const leagueId: string | undefined = location.state?.leagueId;
+  const averagePointsThisQuinipolo: number | undefined =
+    location.state?.averagePointsThisQuinipolo;
+  const mostFailed:
+    | {
+        matchNumber: number;
+        failedPercentage: number;
+        homeTeam?: string;
+        awayTeam?: string;
+        correctWinner?: string;
+        mostWrongWinner?: string;
+      }
+    | null
+    | undefined = location.state?.mostFailed;
   const results: Result[] = React.useMemo(
     () => (location.state?.results as Result[]) || [],
     [location.state?.results]
@@ -129,9 +149,6 @@ const CorrectionSuccess = () => {
     );
   };
 
-  const sorted_points_earned = groupAndSortPointsEarned(results);
-  const sorted_total_points = groupAndSortTotalPoints(results);
-
   const generateMessageToShare = () => {
     const source: Result[] =
       mergedLeaderboard && mergedLeaderboard.length > 0
@@ -150,45 +167,19 @@ const CorrectionSuccess = () => {
       date: formattedDate,
     })}*\n\n`;
 
+    // Stats summary
+    message += formatStatsSummary(t, averagePointsThisQuinipolo, mostFailed);
+
     // Points Earned Distribution
-    message += `*${t("pointsEarnedThisQuinipolo")}*\n`;
     const local_sorted_points_earned = groupAndSortPointsEarned(source);
-    for (const [points, usernames] of local_sorted_points_earned) {
-      message += `- ${usernames.join(", ")}: *${points}p*\n`;
-    }
+    message += formatPointsEarnedDistribution(t, local_sorted_points_earned);
 
     // Total Points Distribution (Leaderboard)
-    message += `\n*${t("leaderboardTitle")}*\n`;
-    let position = 1; // To keep track of the current position
     const local_sorted_total_points = groupAndSortTotalPoints(source);
-    for (const [points, usernames] of local_sorted_total_points) {
-      let prefix = `${position}.-`;
-      if (position === 1) prefix = "🥇";
-      else if (position === 2) prefix = "🥈";
-      else if (position === 3) prefix = "🥉";
+    message += formatLeaderboardSection(t, local_sorted_total_points);
 
-      message += `${prefix} ${usernames.join(", ")}: *${points}p*\n`;
-      position += usernames.length; // Increment position by the number of tied users
-    }
-
-    // Determinar ganadores de la Quinipolo
-    if (
-      source.find(
-        (result) => result.correct15thGame && result.pointsEarned === 15
-      )
-    ) {
-      message += `\n *${t("quinipoloWinners")}:* \n`;
-      source.forEach((result) => {
-        console.log(result.pointsEarned);
-        if (result.correct15thGame && result.pointsEarned === 15) {
-          message += `- ${result.username}: ${result.totalPoints}p *${
-            result.pointsEarned > 0 ? "+" : ""
-          }${result.pointsEarned}* 🌟\n`;
-        }
-      });
-    } else {
-      message += `\n ${t("noWinner")} 😢\n`;
-    }
+    // Winners section
+    message += formatWinnersSection(t, source);
 
     message += `\n${t("thanksForParticipating")}\n`;
     return message;
@@ -241,6 +232,14 @@ const CorrectionSuccess = () => {
         }}
       >
         <h2>{t("quinipoloCorrectedSuccess")}</h2>
+
+        {results.length > 0 ? (
+          <CorrectionStats
+            averagePoints={averagePointsThisQuinipolo}
+            mostFailed={mostFailed}
+            copyClassName={style.copyCorrection}
+          />
+        ) : null}
 
         <p
           className={style.copyCorrection}

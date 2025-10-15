@@ -31,11 +31,13 @@ type AnswersType = CorrectAnswer;
 
 type CorrectionResponseType = {
   message: string;
-  results: {
-    correctAnswers: { chosenWinner: string; matchNumber: number }[];
-    userAnswers: string[];
-    points: number;
-  };
+  results:
+    | {
+        correctAnswers: { chosenWinner: string; matchNumber: number }[];
+        userAnswers: string[];
+        points: number;
+      }[]
+    | any; // backend returns an array of per-user results already used in CorrectionSuccess
   leagueId?: string;
   participantsLeaderboard?: Array<{
     username: string;
@@ -44,6 +46,15 @@ type CorrectionResponseType = {
     nQuinipolosParticipated: number;
     fullCorrectQuinipolos: number;
   }>;
+  averagePointsThisQuinipolo?: number;
+  mostFailed?: {
+    matchNumber: number;
+    failedPercentage: number;
+    homeTeam?: string;
+    awayTeam?: string;
+    correctWinner?: string; // "home" | "away" | "draw"
+    mostWrongWinner?: string; // same domain
+  } | null;
 };
 
 type AnswerResponseType = {
@@ -297,6 +308,8 @@ const AnswersForm = () => {
             leagueId: response.leagueId || quinipolo.league_id,
             participantsLeaderboard:
               response.participantsLeaderboard || undefined,
+            averagePointsThisQuinipolo: response.averagePointsThisQuinipolo,
+            mostFailed: response.mostFailed,
           },
         });
         setFeedback({
@@ -319,6 +332,8 @@ const AnswersForm = () => {
             leagueId: response.leagueId || quinipolo.league_id,
             participantsLeaderboard:
               response.participantsLeaderboard || undefined,
+            averagePointsThisQuinipolo: response.averagePointsThisQuinipolo,
+            mostFailed: response.mostFailed,
           },
         });
         setFeedback({
