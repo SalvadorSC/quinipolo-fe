@@ -75,6 +75,15 @@ const getParamsKey = (params: any): string => {
 const cacheStore = new Map<string, { timestamp: number; data: any }>();
 const inflightStore = new Map<string, Promise<any>>();
 
+// Toggleable cache flag (disabled by default)
+let API_CACHE_ENABLED: boolean = false;
+
+export const setApiCacheEnabled = (enabled: boolean) => {
+  API_CACHE_ENABLED = enabled;
+};
+
+export const isApiCacheEnabled = () => API_CACHE_ENABLED;
+
 /**
  * Makes an API call using Axios, always including the Supabase access token if available.
  * Adds lightweight GET caching + in-flight deduplication.
@@ -97,8 +106,8 @@ const apiCall = async <T>(
     };
     const fullUrl = `${API_BASE_URL}${url}`;
 
-    // GET caching and dedupe
-    if (method === "get") {
+    // GET caching and dedupe (only if enabled)
+    if (method === "get" && API_CACHE_ENABLED) {
       const ttlMs = config.cache?.ttlMs ?? 15000;
       const paramsKey = getParamsKey(config.params);
       const cacheKey = config.cache?.key || `${fullUrl}?${paramsKey}`;
@@ -162,6 +171,22 @@ const apiCall = async <T>(
     return response.data;
   } catch (error: any) {
     console.error(`Error in ${method.toUpperCase()} ${url}:`, error);
+
+    // Explicitly surface timeouts to the console for debugging
+    const effectiveTimeout =
+      typeof config.timeout === "number"
+        ? config.timeout
+        : DEFAULT_REQUEST_TIMEOUT_MS;
+    const isTimeout =
+      error?.code === "ECONNABORTED" ||
+      (typeof error?.message === "string" &&
+        error.message.toLowerCase().includes("timeout"));
+    if (isTimeout) {
+      console.warn(
+        `[api-timeout] ${method.toUpperCase()} ${API_BASE_URL}${url} timed out after ${effectiveTimeout}ms`,
+        { params: config.params }
+      );
+    }
 
     // Handle authentication errors
     if (error.response?.status === 401 || error.response?.status === 403) {
