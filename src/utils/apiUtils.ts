@@ -5,6 +5,7 @@ import { GoogleUser } from "../types/auth";
 
 // Base URL for the API
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const DEFAULT_REQUEST_TIMEOUT_MS = 10000; // fail fast to avoid UI freezes
 
 /**
  * Helper to get the current Supabase access token (async).
@@ -87,6 +88,10 @@ const apiCall = async <T>(
   try {
     const token = await getAccessToken();
     const headers = {
+      // Hint the browser and intermediaries to bypass caches for API calls
+      "Cache-Control": "no-cache, no-store",
+      Pragma: "no-cache",
+      Accept: "application/json",
       ...(config.headers || {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
@@ -117,6 +122,11 @@ const apiCall = async <T>(
             method,
             url: fullUrl,
             data,
+            // Ensure we don't hang forever on network hiccups
+            timeout:
+              typeof config.timeout === "number"
+                ? config.timeout
+                : DEFAULT_REQUEST_TIMEOUT_MS,
             ...config,
             headers,
           });
@@ -141,6 +151,11 @@ const apiCall = async <T>(
       method,
       url: fullUrl,
       data,
+      // Ensure we don't hang forever on network hiccups
+      timeout:
+        typeof config.timeout === "number"
+          ? config.timeout
+          : DEFAULT_REQUEST_TIMEOUT_MS,
       ...config,
       headers,
     });
