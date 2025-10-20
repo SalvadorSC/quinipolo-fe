@@ -5,6 +5,8 @@ export type MostFailedInfo =
   | {
       matchNumber: number;
       failedPercentage: number;
+      wrongCount?: number;
+      totalCount?: number;
       homeTeam?: string;
       awayTeam?: string;
       correctWinner?: string;
@@ -31,6 +33,17 @@ export default function CorrectionStats({
     return null;
   }
 
+  const renderWinner = (w?: string, homeTeam?: string, awayTeam?: string) => {
+    if (w === "home") return homeTeam || t("home");
+    if (w === "away") return awayTeam || t("away");
+    return t("draw");
+  };
+
+  const counts =
+    mostFailed && mostFailed.wrongCount != null && mostFailed.totalCount != null
+      ? ` ${mostFailed.wrongCount}/${mostFailed.totalCount}`
+      : "";
+
   return (
     <div style={{ width: "100%", marginBottom: 8 }}>
       {typeof averagePoints === "number" ? (
@@ -39,32 +52,26 @@ export default function CorrectionStats({
         </p>
       ) : null}
       {mostFailed && mostFailed.matchNumber ? (
-        <p className={copyClassName}>
+        <p className={copyClassName} title={t("mostFailedMatch") || undefined}>
           {t("mostFailedMatch")} {t("match")} {mostFailed.matchNumber} ·{" "}
-          {mostFailed.failedPercentage.toFixed(1)}% {t("failed")}{" "}
+          {mostFailed.failedPercentage.toFixed(1)}% {t("failed")}
+          {counts ? ` (${counts})` : ""} ({t("mostAnsweredWrong")}{" "}
+          {renderWinner(
+            mostFailed.mostWrongWinner,
+            mostFailed.homeTeam,
+            mostFailed.awayTeam
+          )}
           {mostFailed.correctWinner ? (
             <>
-              ({t("correct-2")}{" "}
-              {(() => {
-                const w = mostFailed.correctWinner;
-                if (w === "home") return mostFailed.homeTeam || t("home");
-                if (w === "away") return mostFailed.awayTeam || t("away");
-                return t("draw");
-              })()}
-              {mostFailed.mostWrongWinner ? (
-                <>
-                  , {t("mostAnsweredWrong")}{" "}
-                  {(() => {
-                    const w = mostFailed.mostWrongWinner;
-                    if (w === "home") return mostFailed.homeTeam || t("home");
-                    if (w === "away") return mostFailed.awayTeam || t("away");
-                    return t("draw");
-                  })()}
-                </>
-              ) : null}
-              )
+              , {t("correct-2")}{" "}
+              {renderWinner(
+                mostFailed.correctWinner,
+                mostFailed.homeTeam,
+                mostFailed.awayTeam
+              )}
             </>
           ) : null}
+          )
         </p>
       ) : null}
     </div>

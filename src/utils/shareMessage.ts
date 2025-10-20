@@ -6,6 +6,8 @@ export type MostFailedInfo =
   | {
       matchNumber: number;
       failedPercentage: number;
+      wrongCount?: number;
+      totalCount?: number;
       homeTeam?: string;
       awayTeam?: string;
       correctWinner?: string;
@@ -26,24 +28,25 @@ export function formatStatsSummary(
     )}:* ${averagePointsThisQuinipolo.toFixed(2)}\n`;
   }
   if (mostFailed && mostFailed.matchNumber) {
-    const mf = mostFailed;
     const mapWinner = (w?: string) =>
       w === "home"
-        ? mf.homeTeam || t("home")
+        ? mostFailed.homeTeam || t("home")
         : w === "away"
-        ? mf.awayTeam || t("away")
+        ? mostFailed.awayTeam || t("away")
         : t("draw");
+    const counts =
+      mostFailed.wrongCount != null && mostFailed.totalCount != null
+        ? ` (${mostFailed.wrongCount}/${mostFailed.totalCount})`
+        : "";
     out += `*${t("mostFailedMatch")}:* ${t("match")} ${
-      mf.matchNumber
-    } — ${mf.failedPercentage.toFixed(1)}% ${t("failed")}`;
-    if (mf.correctWinner) {
-      out += ` (${t("correct-2")}: ${mapWinner(mf.correctWinner)}`;
-      if (mf.mostWrongWinner) {
-        out += `, ${t("mostAnsweredWrong")} ${mapWinner(mf.mostWrongWinner)}`;
-      }
-      out += ")";
-    }
-    out += "\n\n";
+      mostFailed.matchNumber
+    } — ${mostFailed.failedPercentage.toFixed(1)}% ${t("failed")}${counts} (${t(
+      "mostAnsweredWrong"
+    )} ${mapWinner(mostFailed.mostWrongWinner)}${
+      mostFailed.correctWinner
+        ? `, ${t("correct-2")} ${mapWinner(mostFailed.correctWinner)}`
+        : ""
+    })\n\n`;
   }
   return out;
 }
