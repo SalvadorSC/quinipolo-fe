@@ -117,7 +117,7 @@ const QuinipoloCard = ({
                 theme === "dark" ? styles.endDateDark : ""
               }`}
             >
-              {dayjs(quinipolo.end_date).utc().format("DD/MM/YY HH:mm")}
+              {dayjs(quinipolo.end_date).format("DD/MM/YY HH:mm")}
             </h3>
           </div>
           <div className={styles.quinipoloInfoRight}>
@@ -134,7 +134,7 @@ const QuinipoloCard = ({
                       theme !== "light" && styles.countdownDark
                     }`}
                   >
-                    {new Date(quinipolo.end_date) > new Date() && (
+                    {dayjs(quinipolo.end_date).isAfter(dayjs()) && (
                       <Countdown
                         date={quinipolo.end_date}
                         onComplete={handleTimerComplete}
