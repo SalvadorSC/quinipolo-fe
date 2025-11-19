@@ -272,6 +272,8 @@
   "errorLoadingLeagueData": "Error carregant les dades de la lliga",
   "averagePoints": "Punts mitjans",
   "selectDateTimeForQuinipolo": "Si us plau, selecciona una data i hora per la quinipolo",
+  "genderMismatchError": "Ambdós equips han de pertànyer a la mateixa lliga.",
+  "genderMismatchSubmitError": "Resol els enfrontaments on els equips no són de la mateixa lliga abans de continuar.",
   "quinipoloCreatedSuccess": "Quinipolo creada correctament!",
   "errorCreatingQuinipolo": "Error creant la Quinipolo! Comprova tots els camps i torna-ho a provar.",
   "surveyFormHelpTooltip": "Si no saps com fer-ho, contacta amb el desenvolupador. Aviat s'escriurà una guia.",

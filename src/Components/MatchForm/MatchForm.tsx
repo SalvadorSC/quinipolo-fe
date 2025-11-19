@@ -4,31 +4,32 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Skeleton,
   TextField,
   Typography,
   Box,
 } from "@mui/material";
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
-import { SurveyData } from "../../types/quinipolo";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { SurveyData, TeamOption } from "../../types/quinipolo";
 import styles from "./MatchForm.module.scss";
 import { useTranslation } from "react-i18next";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
 
 interface MatchFormProps {
-  teamOptions: { waterpolo: string[]; football: string[] };
+  teamOptions: { waterpolo: TeamOption[]; football: TeamOption[] };
   selectedTeams: string[];
   index: number;
   setQuinipolo: Dispatch<SetStateAction<SurveyData[]>>;
   loading: boolean;
   allowRepeatedTeams?: boolean;
+  onValidationChange?: (matchIndex: number, error: string | null) => void;
+}
+
+interface TeamAutocompleteOption {
+  key: string;
+  label: string;
+  team: TeamOption;
+  isAlias: boolean;
 }
 
 const MatchForm = ({
@@ -38,6 +39,7 @@ const MatchForm = ({
   setQuinipolo,
   loading,
   allowRepeatedTeams = false,
+  onValidationChange,
 }: MatchFormProps) => {
   const { t } = useTranslation();
   const muiTheme = useMuiTheme();
@@ -49,36 +51,65 @@ const MatchForm = ({
     date: new Date(),
   };
   const [matchData, setMatchData] = useState<SurveyData>(initialSurveyData);
+  const [genderError, setGenderError] = useState<string | null>(null);
+
+  const normalizeTeamArray = () =>
+    (teamOptions &&
+      teamOptions[matchData.gameType as "waterpolo" | "football"]) ||
+    [];
 
   const getTeams = (type: string) => {
-    const teamsForSport =
-      (teamOptions &&
-        teamOptions[matchData.gameType as "waterpolo" | "football"]) ||
-      [];
+    const teamsForSport = normalizeTeamArray();
     return teamsForSport
-      .filter((team: string) => {
-        const isTeamUsedInOtherMatches = selectedTeams.includes(team);
+      .filter((team: TeamOption) => {
+        const isTeamUsedInOtherMatches = selectedTeams.includes(team.name);
         const isTeamSelectedInThisMatch =
-          team === (type === "away" ? matchData.homeTeam : matchData.awayTeam);
+          team.name ===
+          (type === "away" ? matchData.homeTeam : matchData.awayTeam);
 
-        // Always prevent selecting the same team for both home and away within the same match
         if (isTeamSelectedInThisMatch) return false;
-
-        // If repeating teams across matches is allowed, do not filter out already used teams
         if (allowRepeatedTeams) return true;
-
-        // Otherwise, exclude teams already used in other matches
         return !isTeamUsedInOtherMatches;
       })
-      .sort((a: string, b: string) => -b.charAt(0).localeCompare(a.charAt(0)));
+      .sort(
+        (a: TeamOption, b: TeamOption) =>
+          -b.name.charAt(0).localeCompare(a.name.charAt(0))
+      );
   };
 
-  const handleChange = ({
-    target: { name, value },
-  }:
-    | SelectChangeEvent<string>
-    | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setMatchData((prevData: SurveyData) => ({ ...prevData, [name]: value }));
+  const findTeamByName = (teamName: string) =>
+    normalizeTeamArray().find((team) => team.name === teamName) || null;
+
+  const buildAutocompleteOptions = (type: "home" | "away") => {
+    const teams = getTeams(type);
+    const canonicalOptions: TeamAutocompleteOption[] = teams.map((team) => ({
+      key: `${team.name}::canonical`,
+      label: team.name,
+      team,
+      isAlias: false,
+    }));
+
+    const aliasOptions: TeamAutocompleteOption[] = teams.flatMap((team) =>
+      (team.aliases ?? []).map((alias) => ({
+        key: `${team.name}::alias::${alias}`,
+        label: alias,
+        team,
+        isAlias: true,
+      }))
+    );
+
+    return [...canonicalOptions, ...aliasOptions];
+  };
+
+  const getSelectedOption = (teamName: string): TeamAutocompleteOption | null => {
+    const team = findTeamByName(teamName);
+    if (!team) return null;
+    return {
+      key: `${team.name}::canonical`,
+      label: team.name,
+      team,
+      isAlias: false,
+    };
   };
 
   useEffect(() => {
@@ -92,11 +123,13 @@ const MatchForm = ({
 
   const handleTeamChange = (
     name: "homeTeam" | "awayTeam",
-    value: string | null
+    value: TeamAutocompleteOption | string | null
   ) => {
+    const normalizedValue =
+      typeof value === "string" ? value : value?.team.name ?? "";
     setMatchData((prevData: SurveyData) => ({
       ...prevData,
-      [name]: value ?? "",
+      [name]: normalizedValue,
     }));
   };
 
@@ -109,6 +142,26 @@ const MatchForm = ({
       goalsText = t("footballGoalsText");
     }
   }
+
+  useEffect(() => {
+    const homeTeam = findTeamByName(matchData.homeTeam);
+    const awayTeam = findTeamByName(matchData.awayTeam);
+
+    if (
+      homeTeam?.gender &&
+      awayTeam?.gender &&
+      homeTeam.gender !== awayTeam.gender
+    ) {
+      const errorMessage = t("genderMismatchError");
+      setGenderError(errorMessage);
+      onValidationChange?.(index, errorMessage);
+      return;
+    }
+
+    setGenderError(null);
+    onValidationChange?.(index, null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [matchData.homeTeam, matchData.awayTeam, matchData.gameType, teamOptions]);
 
   return (
     <>
@@ -162,8 +215,28 @@ const MatchForm = ({
                 freeSolo
                 disabled={!matchData.gameType}
                 key={`homeTeam-${index}`}
-                options={getTeams("home")}
-                groupBy={(option: string) => option.charAt(0)}
+                options={buildAutocompleteOptions("home")}
+                groupBy={(option: TeamAutocompleteOption) =>
+                  option.label.charAt(0)
+                }
+                value={getSelectedOption(matchData.homeTeam)}
+                inputValue={matchData.homeTeam}
+                getOptionLabel={(option) =>
+                  typeof option === "string" ? option : option?.label ?? ""
+                }
+                isOptionEqualToValue={(option, value) =>
+                  option.key === value?.key
+                }
+                renderOption={(props, option) => (
+                  <li {...props}>
+                    {option.label}
+                    {option.isAlias && (
+                      <Typography component="span" sx={{ ml: 1 }} variant="caption">
+                        ({option.team.name})
+                      </Typography>
+                    )}
+                  </li>
+                )}
                 renderInput={(params) => (
                   <TextField
                     required
@@ -171,21 +244,46 @@ const MatchForm = ({
                     label={t("homeTeam")}
                     variant="outlined"
                     name="homeTeam"
-                    value={matchData.homeTeam}
-                    onChange={(e) => handleChange(e)}
+                    error={Boolean(genderError)}
                     fullWidth
                     margin="normal"
                   />
                 )}
+                onInputChange={(_, newInputValue) =>
+                  setMatchData((prevData: SurveyData) => ({
+                    ...prevData,
+                    homeTeam: newInputValue ?? "",
+                  }))
+                }
                 onChange={(_, value) => handleTeamChange("homeTeam", value)}
               />
 
               <Autocomplete
                 disabled={!matchData.gameType}
                 key={`awayTeam-${index}`}
-                options={getTeams("away")}
+                options={buildAutocompleteOptions("away")}
                 freeSolo
-                groupBy={(option: string) => option.charAt(0)}
+                groupBy={(option: TeamAutocompleteOption) =>
+                  option.label.charAt(0)
+                }
+                value={getSelectedOption(matchData.awayTeam)}
+                inputValue={matchData.awayTeam}
+                getOptionLabel={(option) =>
+                  typeof option === "string" ? option : option?.label ?? ""
+                }
+                isOptionEqualToValue={(option, value) =>
+                  option.key === value?.key
+                }
+                renderOption={(props, option) => (
+                  <li {...props}>
+                    {option.label}
+                    {option.isAlias && (
+                      <Typography component="span" sx={{ ml: 1 }} variant="caption">
+                        ({option.team.name})
+                      </Typography>
+                    )}
+                  </li>
+                )}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -193,14 +291,25 @@ const MatchForm = ({
                     label={t("awayTeam")}
                     variant="outlined"
                     name="awayTeam"
-                    value={matchData.awayTeam}
-                    onChange={(e) => handleChange(e)}
+                    error={Boolean(genderError)}
                     fullWidth
                     margin="normal"
                   />
                 )}
+                onInputChange={(_, newInputValue) =>
+                  setMatchData((prevData: SurveyData) => ({
+                    ...prevData,
+                    awayTeam: newInputValue ?? "",
+                  }))
+                }
                 onChange={(_, value) => handleTeamChange("awayTeam", value)}
               />
+
+              {genderError && (
+                <Typography color="error" className={styles.validationMessage}>
+                  {genderError}
+                </Typography>
+              )}
             </>
           )}
 

@@ -277,6 +277,8 @@
   "errorLoadingLeagueData": "リーグデータの読み込みエラー",
   "averagePoints": "平均ポイント",
   "selectDateTimeForQuinipolo": "Quinipoloの日時を選択してください",
+  "genderMismatchError": "両チームは同じリーグに所属している必要があります。",
+  "genderMismatchSubmitError": "同じリーグに所属していない試合を修正してから続行してください。",
   "quinipoloCreatedSuccess": "Quinipoloが正常に作成されました！",
   "errorCreatingQuinipolo": "Quinipolo作成エラー！すべてのフィールドを確認して再試行してください。",
   "surveyFormHelpTooltip": "操作方法が分からない場合は、開発者に連絡してください。近日中にガイドが作成されます。",

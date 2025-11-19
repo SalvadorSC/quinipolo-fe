@@ -241,6 +241,8 @@
   "errorLoadingLeagueData": "Error al cargar los datos de la liga",
   "averagePoints": "Puntos promedio",
   "selectDateTimeForQuinipolo": "Por favor, selecciona una fecha y hora para la quinipolo",
+  "genderMismatchError": "Ambos equipos deben pertenecer a la misma liga para enfrentarse.",
+  "genderMismatchSubmitError": "Corrige los enfrentamientos donde los equipos no pertenecen a la misma liga antes de continuar.",
   "quinipoloCreatedSuccess": "¡Quinipolo creada exitosamente!",
   "errorCreatingQuinipolo": "¡Error al crear la Quinipolo! Verifica todos los campos e intenta de nuevo.",
   "surveyFormHelpTooltip": "Si no sabes cómo hacerlo, contacta al desarrollador. Pronto se escribirá una guía.",

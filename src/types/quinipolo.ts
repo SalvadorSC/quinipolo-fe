@@ -7,6 +7,18 @@ export interface SurveyData {
   isGame15: boolean;
 }
 
+export interface TeamOption {
+  name: string;
+  sport: "waterpolo" | "football";
+  gender: "m" | "f" | null;
+  aliases?: string[];
+}
+
+export type TeamOptionsBySport = {
+  waterpolo: TeamOption[];
+  football: TeamOption[];
+};
+
 export interface CorrectAnswer {
   matchNumber: number;
   chosenWinner: string;

@@ -277,6 +277,8 @@
   "errorLoadingLeagueData": "加载联盟数据出错",
   "averagePoints": "平均积分",
   "selectDateTimeForQuinipolo": "请为 quinipolo 选择日期和时间",
+  "genderMismatchError": "两支队伍必须属于同一个联赛才能比赛。",
+  "genderMismatchSubmitError": "请先修正不属于同一联赛的比赛，然后再继续。",
   "quinipoloCreatedSuccess": "Quinipolo 创建成功！",
   "errorCreatingQuinipolo": "创建 Quinipolo 出错！请检查所有字段并重试。",
   "surveyFormHelpTooltip": "如果你不知道如何操作，请联系开发者。指南将很快编写完成。",

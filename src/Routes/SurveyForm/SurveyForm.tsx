@@ -7,7 +7,7 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
-import { SurveyData } from "../../types/quinipolo";
+import { SurveyData, TeamOptionsBySport } from "../../types/quinipolo";
 import MatchForm from "../../Components/MatchForm/MatchForm";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import locale from "antd/es/date-picker/locale/es_ES";
@@ -27,12 +27,15 @@ const SurveyForm = () => {
   const [quinipolo, setQuinipolo] = useState<SurveyData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [teamOptions, setTeamOptions] = useState<{
-    waterpolo: string[];
-    football: string[];
-  }>({ waterpolo: [], football: [] });
+  const [teamOptions, setTeamOptions] = useState<TeamOptionsBySport>({
+    waterpolo: [],
+    football: [],
+  });
   const [helpModalOpen, setHelpModalOpen] = useState<boolean>(false);
   const [allowRepeatedTeams, setAllowRepeatedTeams] = useState<boolean>(false);
+  const [matchErrors, setMatchErrors] = useState<Record<number, string | null>>(
+    {}
+  );
 
   // Check if this is for all leagues
   const isForAllLeagues =
@@ -75,6 +78,16 @@ const SurveyForm = () => {
     const leagueId = queryParams.get("leagueId");
 
     try {
+      if (hasBlockingErrors) {
+        setFeedback({
+          message: t("genderMismatchSubmitError"),
+          severity: "error",
+          open: true,
+        });
+        window.scrollTo(0, 0);
+        return;
+      }
+
       if (selectedDate === null || selectedDate < new Date()) {
         setFeedback({
           message: t("selectDateTimeForQuinipolo"),
@@ -161,7 +174,33 @@ const SurveyForm = () => {
           throw new Error(`Backend API failed: ${response.status}`);
         }
         const backendTeams = await response.json();
-        setTeamOptions(backendTeams);
+        const normalizedTeams: TeamOptionsBySport = {
+          waterpolo: Array.isArray(backendTeams?.waterpolo)
+            ? backendTeams.waterpolo.map((team: any) => ({
+                name: typeof team === "string" ? team : team.name,
+                sport: "waterpolo" as const,
+                gender: team?.gender ?? null,
+                aliases: Array.isArray(team?.alias)
+                  ? team.alias
+                  : Array.isArray(team?.aliases)
+                  ? team.aliases
+                  : [],
+              }))
+            : [],
+          football: Array.isArray(backendTeams?.football)
+            ? backendTeams.football.map((team: any) => ({
+                name: typeof team === "string" ? team : team.name,
+                sport: "football" as const,
+                gender: team?.gender ?? null,
+                aliases: Array.isArray(team?.alias)
+                  ? team.alias
+                  : Array.isArray(team?.aliases)
+                  ? team.aliases
+                  : [],
+              }))
+            : [],
+        };
+        setTeamOptions(normalizedTeams);
       } catch (error) {
         console.error("Error fetching teams:", error);
         setFeedback({
@@ -178,6 +217,20 @@ const SurveyForm = () => {
   }, [setFeedback]);
 
   const matchArray = new Array(15).fill(null);
+
+  const handleMatchValidationChange = (
+    matchIndex: number,
+    error: string | null
+  ) => {
+    setMatchErrors((prev) => {
+      if (prev[matchIndex] === error) {
+        return prev;
+      }
+      return { ...prev, [matchIndex]: error };
+    });
+  };
+
+  const hasBlockingErrors = Object.values(matchErrors).some(Boolean);
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
@@ -232,13 +285,14 @@ const SurveyForm = () => {
           setQuinipolo={setQuinipolo}
           loading={loading}
           allowRepeatedTeams={allowRepeatedTeams}
+          onValidationChange={handleMatchValidationChange}
         />
       ))}
 
       <div className={styles.submitButton}>
         <Button
           type="submit"
-          disabled={loading}
+          disabled={loading || hasBlockingErrors}
           variant="contained"
           color="primary"
         >
