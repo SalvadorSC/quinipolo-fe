@@ -101,7 +101,9 @@ const MatchForm = ({
     return [...canonicalOptions, ...aliasOptions];
   };
 
-  const getSelectedOption = (teamName: string): TeamAutocompleteOption | null => {
+  const getSelectedOption = (
+    teamName: string
+  ): TeamAutocompleteOption | null => {
     const team = findTeamByName(teamName);
     if (!team) return null;
     return {
@@ -231,7 +233,11 @@ const MatchForm = ({
                   <li {...props}>
                     {option.label}
                     {option.isAlias && (
-                      <Typography component="span" sx={{ ml: 1 }} variant="caption">
+                      <Typography
+                        component="span"
+                        sx={{ ml: 1 }}
+                        variant="caption"
+                      >
                         ({option.team.name})
                       </Typography>
                     )}
@@ -278,7 +284,11 @@ const MatchForm = ({
                   <li {...props}>
                     {option.label}
                     {option.isAlias && (
-                      <Typography component="span" sx={{ ml: 1 }} variant="caption">
+                      <Typography
+                        component="span"
+                        sx={{ ml: 1 }}
+                        variant="caption"
+                      >
                         ({option.team.name})
                       </Typography>
                     )}
