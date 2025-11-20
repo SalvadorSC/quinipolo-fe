@@ -23,6 +23,7 @@ interface MatchFormProps {
   loading: boolean;
   allowRepeatedTeams?: boolean;
   onValidationChange?: (matchIndex: number, error: string | null) => void;
+  value?: SurveyData; // Optional controlled value from parent
 }
 
 interface TeamAutocompleteOption {
@@ -40,6 +41,7 @@ const MatchForm = ({
   loading,
   allowRepeatedTeams = false,
   onValidationChange,
+  value,
 }: MatchFormProps) => {
   const { t } = useTranslation();
   const muiTheme = useMuiTheme();
@@ -50,8 +52,17 @@ const MatchForm = ({
     isGame15: index === 14,
     date: new Date(),
   };
-  const [matchData, setMatchData] = useState<SurveyData>(initialSurveyData);
+  const [matchData, setMatchData] = useState<SurveyData>(
+    value || initialSurveyData
+  );
   const [genderError, setGenderError] = useState<string | null>(null);
+
+  // Sync internal state when value prop changes (for controlled mode)
+  useEffect(() => {
+    if (value) {
+      setMatchData(value);
+    }
+  }, [value]);
 
   const normalizeTeamArray = () =>
     (teamOptions &&

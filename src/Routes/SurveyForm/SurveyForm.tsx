@@ -20,12 +20,18 @@ import { useNavigate } from "react-router-dom";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { useTranslation } from "react-i18next";
 import { apiPost } from "../../utils/apiUtils";
+import { MatchAutoFillModal } from "./MatchAutoFillModal";
+import { ScraperMatchV2 } from "../../services/scraper/types";
+import { useUser } from "../../Context/UserContext/UserContext";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 const SurveyForm = () => {
   const navigate = useNavigate();
   const { setFeedback } = useFeedback();
+  const { userData } = useUser();
   const [quinipolo, setQuinipolo] = useState<SurveyData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [autoFillModalOpen, setAutoFillModalOpen] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [teamOptions, setTeamOptions] = useState<TeamOptionsBySport>({
     waterpolo: [],
@@ -230,7 +236,37 @@ const SurveyForm = () => {
     });
   };
 
+  const handleAutoFillConfirm = ({
+    matches,
+    plenoMatchId,
+  }: {
+    matches: ScraperMatchV2[];
+    plenoMatchId: string | null;
+  }) => {
+    const converted = buildSurveyDataFromSelection(matches, plenoMatchId);
+    setQuinipolo(converted);
+    setMatchErrors({});
+
+    if (matches.length === 15) {
+      const earliest = matches
+        .map((match) => new Date(match.startTime))
+        .sort((a, b) => a.getTime() - b.getTime())[0];
+      setSelectedDate(earliest ?? null);
+    } else {
+      setSelectedDate(null);
+    }
+
+    setFeedback({
+      message: t("autoFillSuccess") || "Survey form filled successfully!",
+      severity: "success",
+      open: true,
+    });
+  };
+
   const hasBlockingErrors = Object.values(matchErrors).some(Boolean);
+
+  // Check if user is info@quinipolo.com
+  const isAdminUser = userData.emailAddress === "info@quinipolo.com";
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
@@ -263,8 +299,30 @@ const SurveyForm = () => {
           showNow={false}
           popupClassName={styles.datePickerPopup}
           showTime={{ format: "HH:mm" }}
+          value={selectedDate ? dayjs(selectedDate) : null}
         />
       </div>
+      {isAdminUser && (
+        <div style={{ marginTop: 16, marginBottom: 16 }}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            startIcon={<AutoAwesomeIcon />}
+            onClick={() => setAutoFillModalOpen(true)}
+            disabled={loading}
+            sx={{
+              color: "white",
+              borderColor: "white",
+              "&:hover": {
+                borderColor: "white",
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+              },
+            }}
+          >
+            {t("autoFillSurvey") || "Auto-fill Survey"}
+          </Button>
+        </div>
+      )}
       <FormControlLabel
         control={
           <Switch
@@ -286,6 +344,7 @@ const SurveyForm = () => {
           loading={loading}
           allowRepeatedTeams={allowRepeatedTeams}
           onValidationChange={handleMatchValidationChange}
+          value={quinipolo[index]}
         />
       ))}
 
@@ -305,8 +364,81 @@ const SurveyForm = () => {
         open={helpModalOpen}
         onClose={handleCloseHelpModal}
       />
+      <MatchAutoFillModal
+        open={autoFillModalOpen}
+        onClose={() => setAutoFillModalOpen(false)}
+        onConfirm={({ matches, plenoMatchId }) => {
+          handleAutoFillConfirm({ matches, plenoMatchId });
+          setAutoFillModalOpen(false);
+        }}
+      />
     </form>
   );
 };
 
 export default SurveyForm;
+
+function buildSurveyDataFromSelection(
+  matches: ScraperMatchV2[],
+  plenoMatchId: string | null
+): SurveyData[] {
+  if (!matches.length) {
+    return new Array(15).fill(null).map((_, index) => ({
+      gameType: "waterpolo",
+      homeTeam: "",
+      awayTeam: "",
+      date: new Date(),
+      isGame15: index === 14,
+    }));
+  }
+
+  const sorted = [...matches].sort(
+    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+  );
+
+  if (plenoMatchId) {
+    const plenoIndex = sorted.findIndex(
+      (match) => match.matchId === plenoMatchId
+    );
+    if (plenoIndex > -1) {
+      const [plenoMatch] = sorted.splice(plenoIndex, 1);
+      sorted.push(plenoMatch);
+    }
+  }
+
+  const surveyMatches: SurveyData[] = sorted.slice(0, 15).map(() => ({
+    gameType: "waterpolo",
+    homeTeam: "",
+    awayTeam: "",
+    date: new Date(),
+    isGame15: false,
+  }));
+
+  sorted.slice(0, 15).forEach((match, index) => {
+    surveyMatches[index] = {
+      gameType: "waterpolo",
+      homeTeam: match.homeTeam,
+      awayTeam: match.awayTeam,
+      date: new Date(match.startTime),
+      isGame15: false,
+    };
+  });
+
+  while (surveyMatches.length < 15) {
+    surveyMatches.push({
+      gameType: "waterpolo",
+      homeTeam: "",
+      awayTeam: "",
+      date: new Date(),
+      isGame15: false,
+    });
+  }
+
+  if (surveyMatches.length > 0) {
+    surveyMatches.forEach((match, index) => {
+      match.isGame15 = index === surveyMatches.length - 1;
+    });
+  }
+
+  return surveyMatches;
+}
