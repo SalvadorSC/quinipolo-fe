@@ -34,7 +34,6 @@
     "noMatchesSelected": "Selecione pelo menos uma partida para continuar.",
     "plenoInstructions": "Escolha qual das partidas selecionadas será o Pleno al 15 (ela ficará por último).",
     "noPlenoSelected": "Selecione um Pleno al 15 antes de aplicar a seleção.",
-    "skipPleno": "Pular a escolha do Pleno al 15",
     "table": {
       "select": "Selecionar",
       "pleno": "Pleno 15",

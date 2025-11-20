@@ -317,6 +317,11 @@ export function MatchAutoFillModal({
       return;
     }
     setSelectionWarning(null);
+    if (selectedIds.length < MAX_SELECTION) {
+      setPlenoMatchId(null);
+      handleConfirm();
+      return;
+    }
     setCurrentStep("pleno");
     setPlenoMatchId(
       selectedIds[selectedIds.length - 1] ?? plenoMatchId ?? null
@@ -642,24 +647,10 @@ export function MatchAutoFillModal({
 
   const renderPlenoStep = () => (
     <Stack spacing={2}>
-      <Stack
-        direction={{ xs: "column", md: "row" }}
-        spacing={2}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Typography>
-          {t("autoFillModal.plenoInstructions") ||
-            "Choose which of the selected matches will be the Pleno al 15 (it will be placed last)."}
-        </Typography>
-        <Button
-          size="small"
-          sx={secondaryActionStyles}
-          onClick={() => setPlenoMatchId(null)}
-        >
-          {t("autoFillModal.skipPleno") || "Skip Pleno selection"}
-        </Button>
-      </Stack>
+      <Typography>
+        {t("autoFillModal.plenoInstructions") ||
+          "Choose which of the selected matches will be the Pleno al 15 (it will be placed last)."}
+      </Typography>
       {selectionWarning && <Alert severity="warning">{selectionWarning}</Alert>}
       <Box sx={{ overflowX: "auto" }}>
         <Table size="small">

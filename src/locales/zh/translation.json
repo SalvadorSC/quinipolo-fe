@@ -34,7 +34,6 @@
     "noMatchesSelected": "请至少选择一场比赛后再继续。",
     "plenoInstructions": "从已选比赛中选择作为 Pleno al 15 的一场（它会放在最后）。",
     "noPlenoSelected": "应用前请先选择一场 Pleno al 15。",
-    "skipPleno": "跳过选择 Pleno al 15",
     "table": {
       "select": "选择",
       "pleno": "Pleno 15",
@@ -379,7 +378,6 @@
   "joinedLeague": "你已加入联盟",
   "errorJoiningLeague": "加入联盟出错",
   "createNewLeague": "创建新联盟",
-  "leagueName": "联盟名称",
   "privateLeague": "私密联盟",
   "alreadyHaveAccountLogin": "已有账户？在此登录。",
   "noAccountSignUpHere": "没有账户？在此注册。",

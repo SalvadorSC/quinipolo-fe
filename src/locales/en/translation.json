@@ -34,7 +34,6 @@
     "noMatchesSelected": "Please select at least one match to continue.",
     "plenoInstructions": "Choose which of the selected matches will be the Pleno al 15 (it will be placed last).",
     "noPlenoSelected": "Select a Pleno al 15 before applying the selection.",
-    "skipPleno": "Skip Pleno al 15 selection",
     "table": {
       "select": "Select",
       "pleno": "Pleno 15",
