@@ -127,19 +127,20 @@ const defaultLeagueChipStyle = {
 };
 
 const primaryActionStyles = {
-  background: "linear-gradient(120deg, #0d47a1, #5e35b1)",
-  color: "#fff",
+  background: "linear-gradient(135deg, #b8860b, #ffd54f)",
+  color: "#3e2723",
   borderRadius: 999,
   fontWeight: 700,
   px: 3,
-  boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+  // boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
   "&:hover": {
-    background: "linear-gradient(120deg, #0a3184, #4527a0)",
+    background: "linear-gradient(135deg, #a07007, #ffca28)",
+    color: "#3e2723",
   },
   "&.Mui-disabled": {
-    color: "rgba(255,255,255,0.7)",
+    color: "rgba(62,39,35,0.6)",
     background:
-      "linear-gradient(120deg, rgba(13,71,161,0.4), rgba(94,53,177,0.4))",
+      "linear-gradient(135deg, rgba(184,134,11,0.3), rgba(255,213,79,0.3))",
   },
 };
 
@@ -325,19 +326,20 @@ export function MatchAutoFillModal({
   const handleConfirm = () => {
     if (!data) return;
     const selection = selectedMatches;
-    if (
-      !plenoMatchId ||
-      !selection.some((match) => match.matchId === plenoMatchId)
-    ) {
+    if (selection.length === 0) {
       setSelectionWarning(
-        t("autoFillModal.noPlenoSelected") ||
-          "Select a Pleno al 15 before applying the selection."
+        t("autoFillModal.noMatchesSelected") ||
+          "Please select at least one match to continue."
       );
       return;
     }
+    const validPleno =
+      plenoMatchId && selection.some((match) => match.matchId === plenoMatchId)
+        ? plenoMatchId
+        : null;
     onConfirm({
       matches: selection,
-      plenoMatchId,
+      plenoMatchId: validPleno,
       preset: activePreset,
     });
     onClose();
@@ -640,10 +642,24 @@ export function MatchAutoFillModal({
 
   const renderPlenoStep = () => (
     <Stack spacing={2}>
-      <Typography>
-        {t("autoFillModal.plenoInstructions") ||
-          "Choose which of the selected matches will be the Pleno al 15 (it will be placed last)."}
-      </Typography>
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        spacing={2}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography>
+          {t("autoFillModal.plenoInstructions") ||
+            "Choose which of the selected matches will be the Pleno al 15 (it will be placed last)."}
+        </Typography>
+        <Button
+          size="small"
+          sx={secondaryActionStyles}
+          onClick={() => setPlenoMatchId(null)}
+        >
+          {t("autoFillModal.skipPleno") || "Skip Pleno selection"}
+        </Button>
+      </Stack>
       {selectionWarning && <Alert severity="warning">{selectionWarning}</Alert>}
       <Box sx={{ overflowX: "auto" }}>
         <Table size="small">
@@ -795,7 +811,7 @@ export function MatchAutoFillModal({
             "Choose up to 15 matches. Selecting 15 will auto-set the Quinipolo deadline (you can edit it later)."
           }
         >
-          <IconButton size="small" sx={{ color: "#fff" }}>
+          <IconButton size="small" sx={{ color: "#3e2723" }}>
             <InfoOutlinedIcon fontSize="small" />
           </IconButton>
         </Tooltip>

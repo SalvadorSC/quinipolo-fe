@@ -34,6 +34,7 @@
     "noMatchesSelected": "Veuillez sélectionner au moins un match pour continuer.",
     "plenoInstructions": "Choisissez lequel des matchs sélectionnés sera le Pleno al 15 (il sera placé en dernier).",
     "noPlenoSelected": "Sélectionnez un Pleno al 15 avant d'appliquer la sélection.",
+    "skipPleno": "Ignorer le choix du Pleno al 15",
     "table": {
       "select": "Sélectionner",
       "pleno": "Pleno 15",

@@ -6,6 +6,7 @@ import {
   Box,
   FormControlLabel,
   Switch,
+  Paper,
 } from "@mui/material";
 import { SurveyData, TeamOptionsBySport } from "../../types/quinipolo";
 import MatchForm from "../../Components/MatchForm/MatchForm";
@@ -274,11 +275,9 @@ const SurveyForm = () => {
         style={{
           color: "white",
           display: "flex",
-          alignItems: "center",
-          marginTop: 60,
-          marginBottom: 30,
+          // alignItems: "center",
           justifyContent: "space-between",
-          padding: 26,
+          marginBottom: 20,
         }}
       >
         <h2>{t("createQuinipolo")}</h2>
@@ -287,7 +286,41 @@ const SurveyForm = () => {
           style={{ cursor: "pointer" }}
         />
       </div>
-
+      {isAdminUser && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginBottom: 20,
+          }}
+        >
+          <Button
+            variant="contained"
+            startIcon={<AutoAwesomeIcon />}
+            onClick={() => setAutoFillModalOpen(true)}
+            disabled={loading}
+            sx={{
+              width: { xs: "100%", sm: "auto" },
+              background: "linear-gradient(135deg, #b8860b, #ffd54f)",
+              color: "#3e2723",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: 0.5,
+              "&:hover": {
+                background: "linear-gradient(135deg, #a07007, #ffca28)",
+                color: "#3e2723",
+              },
+              "&.Mui-disabled": {
+                background:
+                  "linear-gradient(135deg, rgba(184,134,11,0.4), rgba(255,213,79,0.4))",
+                color: "rgba(62,39,35,0.6)",
+              },
+            }}
+          >
+            {t("autoFillSurvey") || "Auto-fill Survey"}
+          </Button>
+        </div>
+      )}
       <p className={styles.dateTimeDisclaimer}>{t("dateTimeDisclaimer")}</p>
       <div className={styles.datePickerContainer}>
         <DatePicker
@@ -302,27 +335,7 @@ const SurveyForm = () => {
           value={selectedDate ? dayjs(selectedDate) : null}
         />
       </div>
-      {isAdminUser && (
-        <div style={{ marginTop: 16, marginBottom: 16 }}>
-          <Button
-            variant="outlined"
-            color="secondary"
-            startIcon={<AutoAwesomeIcon />}
-            onClick={() => setAutoFillModalOpen(true)}
-            disabled={loading}
-            sx={{
-              color: "white",
-              borderColor: "white",
-              "&:hover": {
-                borderColor: "white",
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
-              },
-            }}
-          >
-            {t("autoFillSurvey") || "Auto-fill Survey"}
-          </Button>
-        </div>
-      )}
+
       <FormControlLabel
         control={
           <Switch

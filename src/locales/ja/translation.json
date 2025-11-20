@@ -34,6 +34,7 @@
     "noMatchesSelected": "続行するには少なくとも1試合を選択してください。",
     "plenoInstructions": "選択済みの試合からプレノ15にする試合を選んでください（最後に配置されます）。",
     "noPlenoSelected": "プレノ15を選択してから適用してください。",
+    "skipPleno": "Pleno al 15 の選択をスキップ",
     "table": {
       "select": "選択",
       "pleno": "Pleno 15",
