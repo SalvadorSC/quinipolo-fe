@@ -6,7 +6,7 @@
   "dashboard": "ダッシュボード",
   "createQuinipolo": "Quinipoloを作成",
   "creatingQuinipolo": "Quinipoloを作成中...",
-  "autoFillSurvey": "Auto-fill Survey",
+  "autoFillSurvey": "アンケートを自動入力",
   "autoFilling": "Auto-filling...",
   "autoFillSuccess": "Survey form filled successfully!",
   "autoFillError": "Failed to auto-fill survey. Please try again.",

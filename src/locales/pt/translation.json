@@ -6,7 +6,7 @@
   "dashboard": "Painel",
   "createQuinipolo": "Criar Quinipolo",
   "creatingQuinipolo": "Criando Quinipolo...",
-  "autoFillSurvey": "Auto-fill Survey",
+  "autoFillSurvey": "Preencher o Quinipolo automaticamente",
   "autoFilling": "Auto-filling...",
   "autoFillSuccess": "Survey form filled successfully!",
   "autoFillError": "Failed to auto-fill survey. Please try again.",

@@ -6,7 +6,7 @@
   "dashboard": "仪表板",
   "createQuinipolo": "创建 Quinipolo",
   "creatingQuinipolo": "正在创建 Quinipolo...",
-  "autoFillSurvey": "Auto-fill Survey",
+  "autoFillSurvey": "自动填写问卷",
   "autoFilling": "Auto-filling...",
   "autoFillSuccess": "Survey form filled successfully!",
   "autoFillError": "Failed to auto-fill survey. Please try again.",
