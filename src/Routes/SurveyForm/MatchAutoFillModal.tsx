@@ -615,17 +615,6 @@ export function MatchAutoFillModal({
                           fontWeight: 600,
                         }}
                       />
-                      {match.isChampionsLeague && (
-                        <Chip
-                          label="CL"
-                          size="small"
-                          sx={{
-                            background: leagueChipStyles.CL?.background,
-                            color: leagueChipStyles.CL?.color,
-                            fontWeight: 600,
-                          }}
-                        />
-                      )}
                       <Chip
                         label={formattedDate}
                         size="small"
@@ -722,17 +711,6 @@ export function MatchAutoFillModal({
                           fontWeight: 600,
                         }}
                       />
-                      {match.isChampionsLeague && (
-                        <Chip
-                          label="CL"
-                          size="small"
-                          sx={{
-                            background: leagueChipStyles.CL?.background,
-                            color: leagueChipStyles.CL?.color,
-                            fontWeight: 600,
-                          }}
-                        />
-                      )}
                       <Chip
                         label={formattedDate}
                         size="small"
