@@ -604,7 +604,7 @@ const AnswersForm = () => {
         />
       ) : null}
       {(correctingModeOn || editCorrectionModeOn) &&
-        (isModerator || isSystemModerator(user.userData.role)) && (
+        isSystemModerator(user.userData.role) && (
           <div
             style={{
               display: "flex",
