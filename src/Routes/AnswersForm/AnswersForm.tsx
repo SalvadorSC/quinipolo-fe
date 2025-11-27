@@ -324,7 +324,8 @@ const AnswersForm = () => {
       } else if (
         editCorrectionModeOn &&
         quinipolo.league_id &&
-        isUserModerator(user.userData.userLeagues, quinipolo.league_id)
+        isUserModerator(user.userData.userLeagues, quinipolo.league_id) &&
+        isSystemModerator(user.userData.role)
       ) {
         const response = await apiPost<CorrectionResponseType>(
           `/api/quinipolos/quinipolo/${quinipolo.id}/submit-correction-edit`,
