@@ -48,6 +48,41 @@
     "cancel": "Cancel·lar",
     "fetchError": "No s'han pogut obtenir els partits. Torna-ho a provar en uns instants."
   },
+  "resultsAutoFill": {
+    "title": "Autocompletar Resultats de Correcció",
+    "helperText": "Selecciona partits per omplir automàticament el formulari de correcció. Els partits amb alta confiança es seleccionen automàticament.",
+    "button": "Autocompletar Resultats",
+    "loading": "Carregant resultats...",
+    "fetchError": "No s'han pogut obtenir els resultats. Torna-ho a provar.",
+    "selectedCount": "Seleccionats {{count}} / {{total}} partits",
+    "noMatchesSelected": "Selecciona almenys un partit per continuar.",
+    "lowConfidenceWarning": "Partits amb Baixa Confiança Detectats",
+    "lowConfidenceMessage": "{{count}} partit(s) tenen puntuacions de confiança baixes. Si us plau, verifica aquests resultats en línia abans d'enviar.",
+    "lowConfidenceTooltip": "Partit amb baixa confiança - si us plau verifica en línia",
+    "confidenceHigh": "Alta",
+    "confidenceMedium": "Mitjana",
+    "confidenceLow": "Baixa",
+    "penalties": "Penals",
+    "success": "Formulari de correcció omplert amb èxit!",
+    "cancel": "Cancel·lar",
+    "apply": "Aplicar Selecció",
+    "table": {
+      "match": "Partit",
+      "result": "Resultat",
+      "confidence": "Confiança",
+      "time": "Hora"
+    },
+    "outcome": {
+      "tie": "Empat",
+      "tiePen": "Empat (PEN)"
+    },
+    "leagueLegend": "Filtrar per Lliga:",
+    "filtered": "filtrat",
+    "autoSelectInfo": {
+      "title": "Per què alguns partits no es seleccionen automàticament",
+      "message": "{{count}} partit(s) tenen puntuacions de confiança per sota del llindar alt (70%). Només els partits amb alta confiança es seleccionen automàticament per garantir la precisió. Pots seleccionar manualment aquests partits si cal."
+    }
+  },
   "autoFillDifficulty": {
     "easy": "Fàcil",
     "moderate": "Moderada",

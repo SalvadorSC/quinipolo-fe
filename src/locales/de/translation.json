@@ -48,6 +48,41 @@
     "cancel": "Abbrechen",
     "fetchError": "Spiele konnten nicht geladen werden. Bitte versuche es in Kürze erneut."
   },
+  "resultsAutoFill": {
+    "title": "Korrektur-Ergebnisse automatisch ausfüllen",
+    "helperText": "Wählen Sie Spiele aus, um das Korrekturformular automatisch auszufüllen. Spiele mit hohem Vertrauen werden automatisch ausgewählt.",
+    "button": "Ergebnisse ausfüllen",
+    "loading": "Ergebnisse werden geladen...",
+    "fetchError": "Ergebnisse konnten nicht abgerufen werden. Bitte versuchen Sie es erneut.",
+    "selectedCount": "{{count}} / {{total}} Spiele ausgewählt",
+    "noMatchesSelected": "Bitte wählen Sie mindestens ein Spiel aus, um fortzufahren.",
+    "lowConfidenceWarning": "Spiele mit niedrigem Vertrauen erkannt",
+    "lowConfidenceMessage": "{{count}} Spiel(e) haben niedrige Vertrauenswerte. Bitte überprüfen Sie diese Ergebnisse online, bevor Sie absenden.",
+    "lowConfidenceTooltip": "Spiel mit niedrigem Vertrauen - bitte online überprüfen",
+    "confidenceHigh": "Hoch",
+    "confidenceMedium": "Mittel",
+    "confidenceLow": "Niedrig",
+    "penalties": "Elfmeterschießen",
+    "success": "Korrekturformular erfolgreich ausgefüllt!",
+    "cancel": "Abbrechen",
+    "apply": "Auswahl anwenden",
+    "table": {
+      "match": "Spiel",
+      "result": "Ergebnis",
+      "confidence": "Vertrauen",
+      "time": "Zeit"
+    },
+    "outcome": {
+      "tie": "Unentschieden",
+      "tiePen": "Unentschieden (PEN)"
+    },
+    "leagueLegend": "Nach Liga filtern:",
+    "filtered": "gefiltert",
+    "autoSelectInfo": {
+      "title": "Warum einige Spiele nicht automatisch ausgewählt werden",
+      "message": "{{count}} Spiel(e) haben Vertrauenswerte unter der hohen Schwelle (70%). Nur Spiele mit hohem Vertrauen werden automatisch ausgewählt, um Genauigkeit zu gewährleisten. Sie können diese Spiele bei Bedarf manuell auswählen."
+    }
+  },
   "autoFillDifficulty": {
     "easy": "Einfach",
     "moderate": "Mittel",

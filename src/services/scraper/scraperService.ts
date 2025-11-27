@@ -7,6 +7,7 @@ import {
   RankedMatch,
   ScraperMatchV2,
   ScraperPresetResponse,
+  ResultsResponse,
 } from "./types";
 import { getWindowBounds, isWithinWindow } from "./utils/date";
 import {
@@ -177,5 +178,29 @@ export async function fetchScraperDataV2(): Promise<{
     response.presets ?? { easy: [], moderate: [], hard: [] };
   const quotas = response.quotas ?? {};
   return { matches, presets, quotas };
+}
+
+/**
+ * Fetches last week's results for a quinipolo
+ * @param quinipoloId - The quinipolo ID to match results against
+ * @param days - Number of days to look back (default: 7)
+ */
+export async function fetchQuinipoloResults(
+  quinipoloId: string,
+  days: number = 7
+): Promise<ResultsResponse> {
+  try {
+    return await apiGet<ResultsResponse>(
+      `/api/scraper/results?quinipoloId=${encodeURIComponent(quinipoloId)}&days=${days}`,
+      {
+        timeout: 60000, // 60 seconds timeout
+      }
+    );
+  } catch (error: any) {
+    console.error("Failed to fetch results from API:", error);
+    throw new Error(
+      `Failed to fetch results: ${error.message || "Unknown error"}`
+    );
+  }
 }
 

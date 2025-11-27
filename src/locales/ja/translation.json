@@ -48,6 +48,41 @@
     "cancel": "キャンセル",
     "fetchError": "試合を取得できませんでした。しばらくしてから再試行してください。"
   },
+  "resultsAutoFill": {
+    "title": "修正結果を自動入力",
+    "helperText": "試合を選択して修正フォームを自動入力します。信頼度の高い試合は自動的に選択されます。",
+    "button": "結果を自動入力",
+    "loading": "結果を読み込み中...",
+    "fetchError": "結果を取得できませんでした。もう一度お試しください。",
+    "selectedCount": "{{count}} / {{total}} 試合を選択",
+    "noMatchesSelected": "続行するには、少なくとも1つの試合を選択してください。",
+    "lowConfidenceWarning": "信頼度の低い試合が検出されました",
+    "lowConfidenceMessage": "{{count}} 試合の信頼度スコアが低いです。送信する前に、これらの結果をオンラインで確認してください。",
+    "lowConfidenceTooltip": "信頼度の低い試合 - オンラインで確認してください",
+    "confidenceHigh": "高",
+    "confidenceMedium": "中",
+    "confidenceLow": "低",
+    "penalties": "PK戦",
+    "success": "修正フォームが正常に入力されました！",
+    "cancel": "キャンセル",
+    "apply": "選択を適用",
+    "table": {
+      "match": "試合",
+      "result": "結果",
+      "confidence": "信頼度",
+      "time": "時間"
+    },
+    "outcome": {
+      "tie": "引き分け",
+      "tiePen": "引き分け（PEN）"
+    },
+    "leagueLegend": "リーグでフィルター:",
+    "filtered": "フィルター済み",
+    "autoSelectInfo": {
+      "title": "一部の試合が自動選択されない理由",
+      "message": "{{count}} 試合の信頼度スコアが高しきい値（70%）を下回っています。精度を確保するため、信頼度の高い試合のみが自動的に選択されます。必要に応じて、これらの試合を手動で選択できます。"
+    }
+  },
   "autoFillDifficulty": {
     "easy": "簡単",
     "moderate": "普通",

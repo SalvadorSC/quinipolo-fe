@@ -48,6 +48,41 @@
     "cancel": "取消",
     "fetchError": "无法获取比赛，请稍后重试。"
   },
+  "resultsAutoFill": {
+    "title": "自动填充更正结果",
+    "helperText": "选择比赛以自动填充更正表单。高置信度的比赛会自动选择。",
+    "button": "填充结果",
+    "loading": "正在加载结果...",
+    "fetchError": "无法获取结果。请重试。",
+    "selectedCount": "已选择 {{count}} / {{total}} 场比赛",
+    "noMatchesSelected": "请至少选择一场比赛以继续。",
+    "lowConfidenceWarning": "检测到低置信度比赛",
+    "lowConfidenceMessage": "{{count}} 场比赛的置信度得分较低。请在提交前在线验证这些结果。",
+    "lowConfidenceTooltip": "低置信度比赛 - 请在线验证",
+    "confidenceHigh": "高",
+    "confidenceMedium": "中",
+    "confidenceLow": "低",
+    "penalties": "点球",
+    "success": "更正表单已成功填充！",
+    "cancel": "取消",
+    "apply": "应用选择",
+    "table": {
+      "match": "比赛",
+      "result": "结果",
+      "confidence": "置信度",
+      "time": "时间"
+    },
+    "outcome": {
+      "tie": "平局",
+      "tiePen": "平局（点球）"
+    },
+    "leagueLegend": "按联赛筛选：",
+    "filtered": "已筛选",
+    "autoSelectInfo": {
+      "title": "为什么某些比赛未自动选择",
+      "message": "{{count}} 场比赛的置信度得分低于高阈值（70%）。为确保准确性，只有高置信度的比赛才会自动选择。如果需要，您可以手动选择这些比赛。"
+    }
+  },
   "autoFillDifficulty": {
     "easy": "简单",
     "moderate": "中等",

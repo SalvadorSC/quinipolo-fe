@@ -26,7 +26,8 @@ import { apiPatch } from "../../utils/apiUtils";
 import { useTheme } from "../../Context/ThemeContext/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { QuinipoloCardProps } from "../../types/quinipolo";
-import { isUserModerator } from "../../utils/moderatorUtils";
+import { isSystemModerator, isUserModerator } from "../../utils/moderatorUtils";
+import { useUser } from "../../Context/UserContext/UserContext";
 import { red } from "@mui/material/colors";
 
 dayjs.extend(utc);
@@ -40,6 +41,7 @@ const QuinipoloCard = ({
 }: QuinipoloCardProps) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const { userData } = useUser();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
   const [countdown, setCountdown] = React.useState(5);
@@ -48,6 +50,9 @@ const QuinipoloCard = ({
     React.useState(deadlineIsInPast);
   const open = Boolean(anchorEl);
   const { t } = useTranslation();
+  const isSiteModerator = isSystemModerator(userData.role);
+  console.log("isSiteModerator", isSiteModerator);
+  console.log("userData.role", userData.role);
 
   // Simple timer completion handler
   const handleTimerComplete = () => {
@@ -145,7 +150,8 @@ const QuinipoloCard = ({
               </>
             )}
           </div>
-          {isUserModerator(userLeagues, quinipolo.league_id) &&
+          {(isUserModerator(userLeagues, quinipolo.league_id) ||
+            isSiteModerator) &&
           !quinipolo.has_been_corrected &&
           !quinipolo.is_deleted ? (
             <>
@@ -201,7 +207,8 @@ const QuinipoloCard = ({
                 <PlayCircleFilledIcon />
               </Button>
             )}
-          {isUserModerator(userLeagues, quinipolo.league_id) &&
+          {(isUserModerator(userLeagues, quinipolo.league_id) ||
+            isSiteModerator) &&
             !quinipolo.has_been_corrected &&
             currentDeadlineIsInPast && (
               <Tooltip arrow title={!currentDeadlineIsInPast && t("edit")}>
@@ -225,7 +232,8 @@ const QuinipoloCard = ({
               </Tooltip>
             )}
           {quinipolo.has_been_corrected &&
-            isUserModerator(userLeagues, quinipolo.league_id) && (
+            (isUserModerator(userLeagues, quinipolo.league_id) ||
+              isSiteModerator) && (
               <Button
                 className={`${styles.actionButton} ${
                   styles.actionButtonCorrect

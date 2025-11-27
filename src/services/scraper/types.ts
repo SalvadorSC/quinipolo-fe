@@ -43,3 +43,33 @@ export interface ScraperPresetResponse {
   moderate: string[];
   hard: string[];
 }
+
+export interface MatchResult {
+  matchNumber: number;
+  leagueId: LeagueId;
+  leagueName: string;
+  homeTeam: string;
+  awayTeam: string;
+  startTime: string; // ISO string
+  homeScore: number;
+  awayScore: number;
+  status?: string;
+  wentToPenalties?: boolean;
+  homeRegulationScore?: number;
+  awayRegulationScore?: number;
+  outcome: string; // Winner team name, "Tie", "Tie (PEN)", or "N/A"
+  confidence: number; // 0.0 to 1.0
+  homeTeamId?: string | null;
+  awayTeamId?: string | null;
+  sourceUrl: string;
+}
+
+export interface ResultsResponse {
+  matches: MatchResult[];
+  window: {
+    start: string;
+    end: string;
+  };
+  totalResults: number;
+  matchedCount: number;
+}

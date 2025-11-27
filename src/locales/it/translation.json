@@ -48,6 +48,41 @@
     "cancel": "Annulla",
     "fetchError": "Impossibile recuperare le partite. Riprova tra qualche istante."
   },
+  "resultsAutoFill": {
+    "title": "Compila automaticamente i risultati della correzione",
+    "helperText": "Seleziona le partite per compilare automaticamente il modulo di correzione. Le partite ad alta confidenza sono selezionate automaticamente.",
+    "button": "Compila risultati",
+    "loading": "Caricamento risultati...",
+    "fetchError": "Impossibile recuperare i risultati. Riprova.",
+    "selectedCount": "{{count}} / {{total}} partite selezionate",
+    "noMatchesSelected": "Seleziona almeno una partita per continuare.",
+    "lowConfidenceWarning": "Partite a bassa confidenza rilevate",
+    "lowConfidenceMessage": "{{count}} partita(e) hanno punteggi di confidenza bassi. Si prega di verificare questi risultati online prima di inviare.",
+    "lowConfidenceTooltip": "Partita a bassa confidenza - si prega di verificare online",
+    "confidenceHigh": "Alta",
+    "confidenceMedium": "Media",
+    "confidenceLow": "Bassa",
+    "penalties": "Rigori",
+    "success": "Modulo di correzione compilato con successo!",
+    "cancel": "Annulla",
+    "apply": "Applica selezione",
+    "table": {
+      "match": "Partita",
+      "result": "Risultato",
+      "confidence": "Confidenza",
+      "time": "Ora"
+    },
+    "outcome": {
+      "tie": "Pareggio",
+      "tiePen": "Pareggio (PEN)"
+    },
+    "leagueLegend": "Filtra per lega:",
+    "filtered": "filtrato",
+    "autoSelectInfo": {
+      "title": "Perché alcune partite non sono selezionate automaticamente",
+      "message": "{{count}} partita(e) hanno punteggi di confidenza al di sotto della soglia alta (70%). Solo le partite ad alta confidenza sono selezionate automaticamente per garantire la precisione. Puoi selezionare manualmente queste partite se necessario."
+    }
+  },
   "autoFillDifficulty": {
     "easy": "Facile",
     "moderate": "Media",

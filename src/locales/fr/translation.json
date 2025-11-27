@@ -48,6 +48,41 @@
     "cancel": "Annuler",
     "fetchError": "Impossible de récupérer les matchs. Veuillez réessayer dans quelques instants."
   },
+  "resultsAutoFill": {
+    "title": "Remplir automatiquement les résultats de correction",
+    "helperText": "Sélectionnez les matchs pour remplir automatiquement le formulaire de correction. Les matchs à haute confiance sont sélectionnés automatiquement.",
+    "button": "Remplir les résultats",
+    "loading": "Chargement des résultats...",
+    "fetchError": "Impossible de récupérer les résultats. Veuillez réessayer.",
+    "selectedCount": "{{count}} / {{total}} matchs sélectionnés",
+    "noMatchesSelected": "Veuillez sélectionner au moins un match pour continuer.",
+    "lowConfidenceWarning": "Matchs à faible confiance détectés",
+    "lowConfidenceMessage": "{{count}} match(s) ont des scores de confiance faibles. Veuillez vérifier ces résultats en ligne avant de soumettre.",
+    "lowConfidenceTooltip": "Match à faible confiance - veuillez vérifier en ligne",
+    "confidenceHigh": "Élevée",
+    "confidenceMedium": "Moyenne",
+    "confidenceLow": "Faible",
+    "penalties": "Tirs au but",
+    "success": "Formulaire de correction rempli avec succès !",
+    "cancel": "Annuler",
+    "apply": "Appliquer la sélection",
+    "table": {
+      "match": "Match",
+      "result": "Résultat",
+      "confidence": "Confiance",
+      "time": "Heure"
+    },
+    "outcome": {
+      "tie": "Match nul",
+      "tiePen": "Match nul (PEN)"
+    },
+    "leagueLegend": "Filtrer par ligue :",
+    "filtered": "filtré",
+    "autoSelectInfo": {
+      "title": "Pourquoi certains matchs ne sont pas sélectionnés automatiquement",
+      "message": "{{count}} match(s) ont des scores de confiance en dessous du seuil élevé (70%). Seuls les matchs à haute confiance sont sélectionnés automatiquement pour garantir la précision. Vous pouvez sélectionner manuellement ces matchs si nécessaire."
+    }
+  },
   "autoFillDifficulty": {
     "easy": "Facile",
     "moderate": "Moyenne",

@@ -17,15 +17,18 @@ import style from "./AnswersForm.module.scss";
 import { useNavigate } from "react-router-dom";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { apiGet, apiPost } from "../../utils/apiUtils";
-import { useUser } from "../../Context/UserContext/UserContext";
 import GoalsToggleButtonGroup from "./GoalsToggleButtonGroup";
 import { useTranslation } from "react-i18next";
-import { isUserModerator } from "../../utils/moderatorUtils";
+import { isSystemModerator, isUserModerator } from "../../utils/moderatorUtils";
 import ScoreSummary from "./ScoreSummary";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 
 import { QuinipoloType, CorrectAnswer } from "../../types/quinipolo";
 import { Tooltip } from "antd";
+import { MatchResult } from "../../services/scraper/types";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import { useUser } from "../../Context/UserContext/UserContext";
+import { ResultsAutoFillModal } from "./ResultsAutoFillModal/index";
 
 type AnswersType = CorrectAnswer;
 
@@ -103,6 +106,7 @@ const AnswersForm = () => {
     []
   );
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState<boolean>(false);
+  const [resultsModalOpen, setResultsModalOpen] = useState<boolean>(false);
 
   // Helper: map server-side correct_answers into our local answers shape
   const mapCorrectAnswersToInitial = (correctAnswers: any[]): AnswersType[] => {
@@ -457,6 +461,86 @@ const AnswersForm = () => {
     });
   };
 
+  /**
+   * Converts a score to goal range for waterpolo
+   * Returns: "-" for <11, "11/12" for 11-12, "+" for >12
+   */
+  const scoreToGoalRange = (score: number): string => {
+    if (score < 11) return "-";
+    if (score >= 11 && score <= 12) return "11/12";
+    return "+";
+  };
+
+  /**
+   * Handles auto-fill from results modal
+   */
+  const handleResultsAutoFill = (matches: MatchResult[]) => {
+    const updatedAnswers = [...answers];
+
+    matches.forEach((result) => {
+      const matchIndex = result.matchNumber - 1; // Convert to 0-based index
+      if (matchIndex < 0 || matchIndex >= 15) return;
+
+      // Set winner
+      let chosenWinner = "";
+      if (result.outcome === "Tie" || result.outcome === "Tie (PEN)") {
+        chosenWinner = "empat";
+      } else {
+        // Find the team name in the quinipolo match
+        const quinipoloMatch = quinipolo.quinipolo[matchIndex];
+        if (quinipoloMatch) {
+          if (result.outcome === quinipoloMatch.homeTeam) {
+            chosenWinner = quinipoloMatch.homeTeam;
+          } else if (result.outcome === quinipoloMatch.awayTeam) {
+            chosenWinner = quinipoloMatch.awayTeam;
+          }
+        }
+      }
+
+      updatedAnswers[matchIndex] = {
+        ...updatedAnswers[matchIndex],
+        matchNumber: result.matchNumber,
+        chosenWinner,
+        isGame15: matchIndex === 14,
+      };
+
+      // For game 15, also set goals
+      if (matchIndex === 14) {
+        let homeScore = result.homeScore;
+        let awayScore = result.awayScore;
+
+        // If it was a tie and went to penalties, use regulation scores
+        if (
+          result.outcome === "Tie (PEN)" &&
+          result.homeRegulationScore !== undefined &&
+          result.awayRegulationScore !== undefined
+        ) {
+          homeScore = result.homeRegulationScore;
+          awayScore = result.awayRegulationScore;
+        }
+
+        updatedAnswers[14] = {
+          ...updatedAnswers[14],
+          goalsHomeTeam: scoreToGoalRange(homeScore),
+          goalsAwayTeam: scoreToGoalRange(awayScore),
+        };
+      }
+    });
+
+    setAnswers(updatedAnswers);
+    setFeedback({
+      message:
+        t("resultsAutoFill.success") || "Correction form filled successfully!",
+      severity: "success",
+      open: true,
+    });
+  };
+
+  // Check if user is moderator for this league
+  const isModerator =
+    quinipolo.league_id &&
+    isUserModerator(user.userData.userLeagues, quinipolo.league_id);
+
   const matchOption = (value: string, index: number) => {
     const text = value === "empat" ? t("draw") : value;
     if (!quinipolo.has_been_corrected) {
@@ -519,6 +603,42 @@ const AnswersForm = () => {
           hasBeenCorrected={quinipolo.has_been_corrected}
         />
       ) : null}
+      {(correctingModeOn || editCorrectionModeOn) &&
+        (isModerator || isSystemModerator(user.userData.role)) && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: 20,
+            }}
+          >
+            <Button
+              variant="contained"
+              startIcon={<AutoAwesomeIcon />}
+              onClick={() => setResultsModalOpen(true)}
+              disabled={loading || !quinipolo.id}
+              sx={{
+                width: { xs: "100%", sm: "auto" },
+                background: "linear-gradient(135deg, #b8860b, #ffd54f)",
+                color: "#3e2723",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+                "&:hover": {
+                  background: "linear-gradient(135deg, #a07007, #ffca28)",
+                  color: "#3e2723",
+                },
+                "&.Mui-disabled": {
+                  background:
+                    "linear-gradient(135deg, rgba(184,134,11,0.4), rgba(255,213,79,0.4))",
+                  color: "rgba(62,39,35,0.6)",
+                },
+              }}
+            >
+              {t("resultsAutoFill.button") || "Auto-fill Results"}
+            </Button>
+          </div>
+        )}
       <TableContainer sx={{ mb: 8, borderRadius: 4 }} component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
@@ -693,6 +813,14 @@ const AnswersForm = () => {
           )}
         </Table>
       </TableContainer>
+      {quinipolo.id && (
+        <ResultsAutoFillModal
+          open={resultsModalOpen}
+          onClose={() => setResultsModalOpen(false)}
+          onConfirm={handleResultsAutoFill}
+          quinipoloId={quinipolo.id}
+        />
+      )}
     </FormControl>
   );
 };

@@ -48,6 +48,41 @@
     "cancel": "Cancelar",
     "fetchError": "Não foi possível carregar as partidas. Tente novamente em instantes."
   },
+  "resultsAutoFill": {
+    "title": "Preencher Automaticamente Resultados de Correção",
+    "helperText": "Selecione partidas para preencher automaticamente o formulário de correção. Partidas com alta confiança são selecionadas automaticamente.",
+    "button": "Preencher Resultados",
+    "loading": "Carregando resultados...",
+    "fetchError": "Não foi possível buscar os resultados. Tente novamente.",
+    "selectedCount": "Selecionadas {{count}} / {{total}} partidas",
+    "noMatchesSelected": "Selecione pelo menos uma partida para continuar.",
+    "lowConfidenceWarning": "Partidas com Baixa Confiança Detectadas",
+    "lowConfidenceMessage": "{{count}} partida(s) têm pontuações de confiança baixas. Por favor, verifique estes resultados online antes de enviar.",
+    "lowConfidenceTooltip": "Partida com baixa confiança - por favor verifique online",
+    "confidenceHigh": "Alta",
+    "confidenceMedium": "Média",
+    "confidenceLow": "Baixa",
+    "penalties": "Pênaltis",
+    "success": "Formulário de correção preenchido com sucesso!",
+    "cancel": "Cancelar",
+    "apply": "Aplicar Seleção",
+    "table": {
+      "match": "Partida",
+      "result": "Resultado",
+      "confidence": "Confiança",
+      "time": "Hora"
+    },
+    "outcome": {
+      "tie": "Empate",
+      "tiePen": "Empate (PEN)"
+    },
+    "leagueLegend": "Filtrar por Liga:",
+    "filtered": "filtrado",
+    "autoSelectInfo": {
+      "title": "Por que algumas partidas não são selecionadas automaticamente",
+      "message": "{{count}} partida(s) têm pontuações de confiança abaixo do limite alto (70%). Apenas partidas com alta confiança são selecionadas automaticamente para garantir precisão. Você pode selecionar manualmente essas partidas se necessário."
+    }
+  },
   "autoFillDifficulty": {
     "easy": "Fácil",
     "moderate": "Moderada",

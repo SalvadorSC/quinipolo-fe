@@ -48,6 +48,41 @@
     "cancel": "Cancel",
     "fetchError": "Unable to fetch matches. Please try again in a few moments."
   },
+  "resultsAutoFill": {
+    "title": "Auto-fill Correction Results",
+    "helperText": "Select matches to automatically fill correction form. High confidence matches are auto-selected.",
+    "button": "Auto-fill Results",
+    "loading": "Loading results...",
+    "fetchError": "Unable to fetch results. Please try again.",
+    "selectedCount": "Selected {{count}} / {{total}} matches",
+    "noMatchesSelected": "Please select at least one match to continue.",
+    "lowConfidenceWarning": "Low Confidence Matches Detected",
+    "lowConfidenceMessage": "{{count}} match(es) have low confidence scores. Please verify these results online before submitting.",
+    "lowConfidenceTooltip": "Low confidence match - please verify online",
+    "confidenceHigh": "High",
+    "confidenceMedium": "Medium",
+    "confidenceLow": "Low",
+    "penalties": "Penalties",
+    "success": "Correction form filled successfully!",
+    "cancel": "Cancel",
+    "apply": "Apply Selection",
+    "table": {
+      "match": "Match",
+      "result": "Result",
+      "confidence": "Confidence",
+      "time": "Time"
+    },
+    "outcome": {
+      "tie": "Tie",
+      "tiePen": "Tie (PEN)"
+    },
+    "leagueLegend": "Filter by League:",
+    "filtered": "filtered",
+    "autoSelectInfo": {
+      "title": "Why some matches aren't automatically selected",
+      "message": "{{count}} match(es) have confidence scores below the high threshold (70%). Only high confidence matches are automatically selected to ensure accuracy. You can manually select these matches if needed."
+    }
+  },
   "autoFillDifficulty": {
     "easy": "Easy",
     "moderate": "Moderate",
