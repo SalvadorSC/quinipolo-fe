@@ -286,12 +286,21 @@ const AnswersForm = () => {
     const answerToSubmit = {
       username: localStorage.getItem("username") ?? user.userData.username,
       quinipoloId: quinipolo.id,
-      answers: answers.map((answer, index) => ({
-        matchNumber: index + 1,
-        chosenWinner: answer.chosenWinner,
-        goalsHomeTeam: answer.goalsHomeTeam,
-        goalsAwayTeam: answer.goalsAwayTeam,
-      })),
+      answers: answers.map((answer, index) => {
+        const baseAnswer = {
+          matchNumber: index + 1,
+          chosenWinner: answer.chosenWinner,
+        };
+        // Only include goals for match 15 (pleno al 15)
+        if (index === 14) {
+          return {
+            ...baseAnswer,
+            goalsHomeTeam: answer.goalsHomeTeam,
+            goalsAwayTeam: answer.goalsAwayTeam,
+          };
+        }
+        return baseAnswer;
+      }),
     };
 
     setLoading(true);

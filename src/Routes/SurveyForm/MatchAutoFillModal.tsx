@@ -415,6 +415,7 @@ export function MatchAutoFillModal({
           flexWrap="wrap"
           justifyContent={{ xs: "space-between", md: "center" }}
           sx={{ width: "100%" }}
+          gap={1}
         >
           {(["easy", "moderate", "hard"] as const).map((preset) => {
             const isActive = activePreset === preset;
