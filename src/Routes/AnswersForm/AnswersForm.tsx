@@ -146,7 +146,11 @@ const AnswersForm = () => {
             disabled={loading || !quinipolo.id}
           />
         )}
-      <TableContainer className={style.tableContainer} component={Paper}>
+      <TableContainer
+        className={style.tableContainer}
+        component={Paper}
+        sx={{ borderRadius: "12px" }}
+      >
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>

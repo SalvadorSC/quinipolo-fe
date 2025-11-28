@@ -8,8 +8,8 @@ import {
   Tooltip,
   Box,
   Divider,
-  Avatar,
   Stack,
+  IconButton,
 } from "@mui/material";
 import {
   Person,
@@ -21,6 +21,7 @@ import {
   Edit,
   ManageAccounts,
   Share,
+  Close,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import styles from "./LeagueInfo.module.scss";
@@ -48,6 +49,7 @@ interface LeagueInfoProps {
   onManageModerators?: () => void;
   onShareLeague?: () => void;
   onEditIcon?: () => void;
+  setShowLeagueInfo?: () => void;
 }
 
 const LeagueInfo: React.FC<LeagueInfoProps> = ({
@@ -59,6 +61,7 @@ const LeagueInfo: React.FC<LeagueInfoProps> = ({
   onManageModerators,
   onShareLeague,
   onEditIcon,
+  setShowLeagueInfo,
 }) => {
   const { t, i18n } = useTranslation();
 
@@ -89,9 +92,14 @@ const LeagueInfo: React.FC<LeagueInfoProps> = ({
 
   return (
     <Card className={styles.leagueInfoCard}>
-      <Typography variant="h6" gutterBottom className={styles.leagueInfoTitle}>
-        {t("leagueInformation")}
-      </Typography>
+      <div className={styles.leagueInfoTitle}>
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+          {t("leagueInformation")}
+        </Typography>
+        <IconButton onClick={setShowLeagueInfo} aria-label={t("close")}>
+          <Close />
+        </IconButton>
+      </div>
       <CardContent className={styles.cardContent}>
         <Stack spacing={3}>
           {/* League Creator */}

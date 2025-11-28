@@ -15,11 +15,12 @@ import LeagueEditModal from "../../Components/LeagueEditModal/LeagueEditModal";
 import LeagueIconEditModal from "../../Components/LeagueIconEditModal/LeagueIconEditModal";
 import ModeratorManagementModal from "../../Components/ModeratorManagementModal/ModeratorManagementModal";
 import ShareLinkModal from "../../Components/ShareLinkModal/ShareLinkModal";
-import { Tabs, TabsProps } from "antd";
+import { Button, Tabs, TabsProps } from "antd";
 import { useTranslation } from "react-i18next";
 import ActionRequests from "./ActionRequests";
 import { isSystemModerator } from "../../utils/moderatorUtils";
 import LeagueIconBadge from "../../Components/LeagueIconBadge/LeagueIconBadge";
+import { InfoOutlined } from "@mui/icons-material";
 
 export type LeaguesTypes = {
   quinipolosToAnswer: any[];
@@ -98,6 +99,7 @@ const LeagueDashboard = () => {
   const [isShareLinkModalOpen, setIsShareLinkModalOpen] =
     useState<boolean>(false);
   const [isIconModalOpen, setIsIconModalOpen] = useState<boolean>(false);
+  const [showLeagueInfo, setShowLeagueInfo] = useState<boolean>(false);
   const queryParams = new URLSearchParams(window.location.search);
   const leagueId = queryParams.get("id");
   const { setFeedback } = useFeedback();
@@ -413,7 +415,7 @@ const LeagueDashboard = () => {
         </div>
       ),
     },
-    {
+    /* {
       key: "3",
       label: t("info"),
       children: (
@@ -428,7 +430,7 @@ const LeagueDashboard = () => {
           onEditIcon={handleOpenEditIcon}
         />
       ),
-    },
+    }, */
   ];
 
   return (
@@ -437,12 +439,24 @@ const LeagueDashboard = () => {
         elevation={3}
         sx={{
           width: "100%",
-          p: 4,
+          p: showLeagueInfo ? 0 : 4,
           borderRadius: "20px",
         }}
       >
         {loading ? (
           <CircularProgress />
+        ) : showLeagueInfo ? (
+          <LeagueInfo
+            leagueData={leagueData}
+            isUserModerator={isUserModeratorInThisLeague}
+            isUserCreator={isUserCreator}
+            isSystemModerator={isSystemModerator(userData.role)}
+            onEditLeague={handleOpenEditLeague}
+            onManageModerators={handleOpenManageModerators}
+            onShareLeague={handleOpenShareLeague}
+            onEditIcon={handleOpenEditIcon}
+            setShowLeagueInfo={() => setShowLeagueInfo(false)}
+          />
         ) : (
           <>
             <div
@@ -454,14 +468,37 @@ const LeagueDashboard = () => {
                 gap: 12,
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <LeagueIconBadge
-                  icon={leagueData.icon_style?.icon}
-                  accentColor={leagueData.icon_style?.accent_color}
-                  marginLeftPx={0}
-                  iconColor={leagueData.icon_style?.icon_color}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    flex: 1,
+                  }}
+                >
+                  <LeagueIconBadge
+                    icon={leagueData.icon_style?.icon}
+                    accentColor={leagueData.icon_style?.accent_color}
+                    marginLeftPx={0}
+                    iconColor={leagueData.icon_style?.icon_color}
+                  />
+                  <h1 className={styles.leagueTitle}>
+                    {leagueData.league_name}
+                  </h1>
+                </div>
+                <InfoOutlined
+                  onClick={() => setShowLeagueInfo(!showLeagueInfo)}
+                  sx={{ cursor: "pointer" }}
                 />
-                <h1 className={styles.leagueTitle}>{leagueData.league_name}</h1>
               </div>
               {isUserModeratorInThisLeague && (
                 <Box sx={{ display: { xs: "none", md: "block" } }}>
@@ -482,7 +519,7 @@ const LeagueDashboard = () => {
               leagueId={leagueId!}
               appLocation="league-dashboard"
             />
-            <Stack>
+            <Stack sx={{ mt: 2 }}>
               <Tabs defaultActiveKey="1" items={items} />
             </Stack>
             {isUserModeratorInThisLeague ? (
