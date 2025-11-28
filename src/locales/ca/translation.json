@@ -487,6 +487,7 @@
   "hideStatistics": "Ocultar Estadístiques",
   "statisticsNoAnswers": "Estadístiques no disponibles: Ningú ha respost aquesta quinipolo encara",
   "loadingStatistics": "Carregant estadístiques...",
+  "answerStatisticsTitle": "% de respostes",
   "howWorks.title": "Com Funciona Quinipolo",
   "howWorks.intro": "Quinipolo és un joc de prediccions. Tria el resultat de 15 partits abans de la data límit.",
   "howWorks.steps.title": "Passos",

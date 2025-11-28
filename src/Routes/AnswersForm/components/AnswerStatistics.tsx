@@ -49,6 +49,9 @@ export const AnswerStatistics: React.FC<AnswerStatisticsProps> = ({
         border: "1px solid rgba(0, 0, 0, 0.08)",
       }}
     >
+      <Typography variant="caption" sx={{ fontWeight: 600, display: "block" }}>
+        {t("answerStatisticsTitle")}
+      </Typography>
       {/* Segmented bar - visual representation */}
       <Box
         sx={{

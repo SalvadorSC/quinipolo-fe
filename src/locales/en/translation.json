@@ -502,6 +502,7 @@
   "hideStatistics": "Hide Statistics",
   "statisticsNoAnswers": "Statistics unavailable: No one has answered this quinipolo yet",
   "loadingStatistics": "Loading statistics...",
+  "answerStatisticsTitle": "% of responses",
   "footer.terms": "Terms & Conditions",
   "footer.privacy": "Privacy Policy",
   "footer.contact": "Contact",

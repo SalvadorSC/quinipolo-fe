@@ -487,6 +487,7 @@
   "hideStatistics": "Masquer les statistiques",
   "statisticsNoAnswers": "Statistiques indisponibles : Personne n'a encore répondu à ce quinipolo",
   "loadingStatistics": "Chargement des statistiques...",
+  "answerStatisticsTitle": "% de réponses",
   "no-answer-available": "Vous n'avez aucune réponse pour ce Quinipolo",
   "howWorks.title": "Comment fonctionne Quinipolo",
   "howWorks.intro": "Quinipolo est un jeu de prédictions. Devinez l'issue de 15 matchs avant la date limite.",

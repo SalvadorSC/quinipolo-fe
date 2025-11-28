@@ -487,6 +487,7 @@
   "hideStatistics": "隐藏统计",
   "statisticsNoAnswers": "统计不可用：还没有人回答此 Quinipolo",
   "loadingStatistics": "正在加载统计...",
+  "answerStatisticsTitle": "% 的回复",
   "howWorks.title": "Quinipolo 如何运作",
   "howWorks.intro": "Quinipolo 是一个预测游戏。请在截止时间前预测15场比赛的结果。",
   "howWorks.steps.title": "步骤",
