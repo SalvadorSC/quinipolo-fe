@@ -2,7 +2,10 @@
  * Shared league chip styles for consistent styling across the application
  */
 
-export const leagueChipStyles: Record<string, { background: string; color: string }> = {
+export const leagueChipStyles: Record<
+  string,
+  { background: string; color: string }
+> = {
   CL: {
     background: "linear-gradient(135deg, #b8860b, #ffd54f)",
     color: "#2d1600",
@@ -37,10 +40,11 @@ export const defaultLeagueChipStyle = {
 /**
  * Get the style for a league chip based on league ID
  */
-export const getLeagueChipStyle = (leagueId?: string | null): { background: string; color: string } => {
+export const getLeagueChipStyle = (
+  leagueId?: string | null
+): { background: string; color: string } => {
   if (!leagueId) {
     return defaultLeagueChipStyle;
   }
   return leagueChipStyles[leagueId] ?? defaultLeagueChipStyle;
 };
-

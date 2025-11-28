@@ -13,7 +13,11 @@ import { useNavigate } from "react-router-dom";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { useTranslation } from "react-i18next";
 import { useUser } from "../../Context/UserContext/UserContext";
-import { isSystemModerator, isUserModerator } from "../../utils/moderatorUtils";
+import {
+  isSystemModerator,
+  isUserModerator,
+  isSystemAdmin,
+} from "../../utils/moderatorUtils";
 import ScoreSummary from "./ScoreSummary";
 import { ResultsAutoFillModal } from "./ResultsAutoFillModal/index";
 import { MatchRow } from "./components/MatchRow";
@@ -82,11 +86,14 @@ const AnswersForm = () => {
   );
 
   // Show statistics if deadline passed and user is viewing (not answering)
+  // Only super admins can see statistics
+  const isSystemAdministrator = isSystemAdmin(user.userData.role);
   const shouldShowStatistics =
-    modes.seeUserAnswersModeOn ||
-    modes.viewOnlyModeOn ||
-    modes.correctingModeOn ||
-    modes.editCorrectionModeOn;
+    isSystemAdministrator &&
+    (modes.seeUserAnswersModeOn ||
+      modes.viewOnlyModeOn ||
+      modes.correctingModeOn ||
+      modes.editCorrectionModeOn);
 
   const { statistics, loading: statisticsLoading } = useAnswerStatistics(
     quinipolo.id,
@@ -163,23 +170,22 @@ const AnswersForm = () => {
                 }}
               >
                 {getHeaderText(modes, t)}
-                {shouldShowStatistics &&
-                  isSystemModerator(user.userData.role) && (
-                    <StatisticsToggleButton
-                      showStatistics={showStatistics}
-                      onToggle={() => setShowStatistics(!showStatistics)}
-                      disabled={
-                        statisticsLoading ||
-                        !statistics?.total_responses ||
-                        statistics.total_responses === 0
-                      }
-                      hasNoAnswers={
-                        !statisticsLoading &&
-                        (!statistics?.total_responses ||
-                          statistics.total_responses === 0)
-                      }
-                    />
-                  )}
+                {shouldShowStatistics && isSystemAdministrator && (
+                  <StatisticsToggleButton
+                    showStatistics={showStatistics}
+                    onToggle={() => setShowStatistics(!showStatistics)}
+                    disabled={
+                      statisticsLoading ||
+                      !statistics?.total_responses ||
+                      statistics.total_responses === 0
+                    }
+                    hasNoAnswers={
+                      !statisticsLoading &&
+                      (!statistics?.total_responses ||
+                        statistics.total_responses === 0)
+                    }
+                  />
+                )}
               </TableCell>
             </TableRow>
           </TableHead>
