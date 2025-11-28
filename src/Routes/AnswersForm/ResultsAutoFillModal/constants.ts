@@ -1,38 +1,7 @@
 export const CONFIDENCE_THRESHOLD_HIGH = 0.7;
 export const CONFIDENCE_THRESHOLD_LOW = 0.5;
 
-export const leagueChipStyles: Record<string, { background: string; color: string }> =
-  {
-    CL: {
-      background: "linear-gradient(135deg, #b8860b, #ffd54f)",
-      color: "#2d1600",
-    },
-    DHM: {
-      background: "linear-gradient(135deg, #0d47a1, #42a5f5)",
-      color: "#e3f2fd",
-    },
-    DHF: {
-      background: "linear-gradient(135deg, #0288d1, #80d8ff)",
-      color: "#e3f2fd",
-    },
-    PDM: {
-      background: "linear-gradient(135deg, #b71c1c, #ff5252)",
-      color: "#fff5f5",
-    },
-    PDF: {
-      background: "linear-gradient(135deg, #e64a19, #ffab40)",
-      color: "#fff8e1",
-    },
-    SDM: {
-      background: "linear-gradient(135deg, #9575cd, #d1c4e9)",
-      color: "#2f1b4d",
-    },
-  };
-
-export const defaultLeagueChipStyle = {
-  background: "linear-gradient(135deg, #37474f, #607d8b)",
-  color: "#ffffff",
-};
+// League chip styles have been moved to utils/leagueChipStyles.ts
 
 export const primaryActionStyles = {
   background: "linear-gradient(135deg, #b8860b, #ffd54f)",

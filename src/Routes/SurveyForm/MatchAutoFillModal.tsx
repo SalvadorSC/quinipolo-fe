@@ -24,6 +24,8 @@ import {
   Checkbox,
   Radio,
 } from "@mui/material";
+import { LeagueChip } from "../../Components/LeagueChip/LeagueChip";
+import { getLeagueChipStyle } from "../../utils/leagueChipStyles";
 import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -93,38 +95,7 @@ const presetTextColors: Record<Exclude<DifficultyPreset, "custom">, string> = {
   hard: "#c62828",
 };
 
-const leagueChipStyles: Record<string, { background: string; color: string }> =
-  {
-    CL: {
-      background: "linear-gradient(135deg, #b8860b, #ffd54f)",
-      color: "#2d1600",
-    },
-    DHM: {
-      background: "linear-gradient(135deg, #0d47a1, #42a5f5)",
-      color: "#e3f2fd",
-    },
-    DHF: {
-      background: "linear-gradient(135deg, #0288d1, #80d8ff)",
-      color: "#e3f2fd",
-    },
-    PDM: {
-      background: "linear-gradient(135deg, #b71c1c, #ff5252)",
-      color: "#fff5f5",
-    },
-    PDF: {
-      background: "linear-gradient(135deg, #e64a19, #ffab40)",
-      color: "#fff8e1",
-    },
-    SDM: {
-      background: "linear-gradient(135deg, #9575cd, #d1c4e9)",
-      color: "#2f1b4d",
-    },
-  };
-
-const defaultLeagueChipStyle = {
-  background: "linear-gradient(135deg, #37474f, #607d8b)",
-  color: "#ffffff",
-};
+// League chip styles are now imported from utils/leagueChipStyles
 
 const primaryActionStyles = {
   background: "linear-gradient(135deg, #b8860b, #ffd54f)",
@@ -554,8 +525,7 @@ export function MatchAutoFillModal({
               const formattedDate = dayjs(match.startTime).format(
                 "DD/MM HH:mm"
               );
-              const leagueStyle =
-                leagueChipStyles[match.leagueId] ?? defaultLeagueChipStyle;
+              const leagueStyle = getLeagueChipStyle(match.leagueId);
               return (
                 <TableRow
                   key={match.matchId}
@@ -607,15 +577,7 @@ export function MatchAutoFillModal({
                     }}
                   >
                     <Stack direction="column" spacing={0.5}>
-                      <Chip
-                        label={match.leagueId}
-                        size="small"
-                        sx={{
-                          background: leagueStyle.background,
-                          color: leagueStyle.color,
-                          fontWeight: 600,
-                        }}
-                      />
+                      <LeagueChip leagueId={match.leagueId} size="small" />
                       <Chip
                         label={formattedDate}
                         size="small"
@@ -657,8 +619,7 @@ export function MatchAutoFillModal({
                 "DD/MM HH:mm"
               );
               const isPleno = plenoMatchId === match.matchId;
-              const leagueStyle =
-                leagueChipStyles[match.leagueId] ?? defaultLeagueChipStyle;
+              const leagueStyle = getLeagueChipStyle(match.leagueId);
               return (
                 <TableRow key={match.matchId} selected={isPleno} hover>
                   <TableCell padding="checkbox" sx={{ px: 1.5 }}>
@@ -703,15 +664,7 @@ export function MatchAutoFillModal({
                     }}
                   >
                     <Stack direction="column" spacing={0.5}>
-                      <Chip
-                        label={match.leagueId}
-                        size="small"
-                        sx={{
-                          background: leagueStyle.background,
-                          color: leagueStyle.color,
-                          fontWeight: 600,
-                        }}
-                      />
+                      <LeagueChip leagueId={match.leagueId} size="small" />
                       <Chip
                         label={formattedDate}
                         size="small"

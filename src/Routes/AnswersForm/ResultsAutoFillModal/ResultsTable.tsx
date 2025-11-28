@@ -15,11 +15,8 @@ import dayjs from "dayjs";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { useTranslation } from "react-i18next";
 import type { MatchResult } from "../../../services/scraper/types";
-import {
-  leagueChipStyles,
-  defaultLeagueChipStyle,
-  CONFIDENCE_THRESHOLD_LOW,
-} from "./constants";
+import { CONFIDENCE_THRESHOLD_LOW } from "./constants";
+import { getLeagueChipStyle } from "../../../utils/leagueChipStyles";
 import {
   getConfidenceColor,
   getConfidenceLabel,
@@ -59,8 +56,7 @@ export function ResultsTable({
           {matches.map((match) => {
             const isSelected = selectedMatchNumbers.has(match.matchNumber);
             const formattedDate = dayjs(match.startTime).format("DD/MM HH:mm");
-            const leagueStyle =
-              leagueChipStyles[match.leagueId] ?? defaultLeagueChipStyle;
+            const leagueStyle = getLeagueChipStyle(match.leagueId);
             const confidenceStyle = getConfidenceColor(match.confidence);
             const isLowConfidence = match.confidence < CONFIDENCE_THRESHOLD_LOW;
             const outcomeLabel = getOutcomeLabel(match.outcome, t);

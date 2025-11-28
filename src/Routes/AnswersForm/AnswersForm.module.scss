@@ -18,15 +18,39 @@
   // fancy border for a title
   text-align: left;
   font-weight: bold;
-  border-bottom: 2px solid #2273b9;
-  margin-bottom: 6px;
 }
 
+.matchNameContainer {
+  border-bottom: 2px solid #2273b9;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+}
 .matchNameContainer {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+}
+
+.leagueBadge {
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 8px;
+  padding: 1px 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  white-space: nowrap;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.2s ease;
+  line-height: 1.2;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.12);
+  }
 }
 
 .nameInput {
@@ -62,4 +86,31 @@
   border-top: 2px solid transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+
+.tableContainer {
+  margin-bottom: 64px;
+  border-radius: 16px;
+}
+
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.matchRow {
+  transition: background-color 0.2s ease;
+  border-radius: 8px;
+
+  &:last-child td,
+  &:last-child th {
+    border: 0;
+  }
+
+  &.missing {
+    background-color: rgba(255, 99, 71, 0.05);
+    outline: 2px solid rgba(255, 99, 71, 0.6);
+    outline-offset: -2px;
+  }
 }

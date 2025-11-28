@@ -1,9 +1,6 @@
-import { Box, Chip, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import {
-  leagueChipStyles,
-  defaultLeagueChipStyle,
-} from "./constants";
+import { LeagueChip } from "../../../Components/LeagueChip/LeagueChip";
 import type { LeagueWithCount } from "./types";
 
 interface LeagueLegendProps {
@@ -35,31 +32,15 @@ export function LeagueLegend({
       >
         {leagues.map((league) => {
           const isSelected = selectedLeagues.has(league.id);
-          const leagueStyle =
-            leagueChipStyles[league.id] ?? defaultLeagueChipStyle;
 
           return (
-            <Chip
+            <LeagueChip
               key={league.id}
+              leagueId={league.id}
               label={`${league.id} (${league.count})`}
+              clickable
+              selected={isSelected}
               onClick={() => onToggle(league.id)}
-              sx={{
-                background: isSelected
-                  ? leagueStyle.background
-                  : "rgba(0,0,0,0.1)",
-                color: isSelected ? leagueStyle.color : "#666",
-                fontWeight: 600,
-                cursor: "pointer",
-                opacity: isSelected ? 1 : 0.6,
-                border: isSelected
-                  ? "0px solid transparent"
-                  : "2px solid rgba(0,0,0,0.2)",
-                "&:hover": {
-                  opacity: 1,
-                  transform: "scale(1.05)",
-                  transition: "all 0.2s ease",
-                },
-              }}
             />
           );
         })}
@@ -67,4 +48,3 @@ export function LeagueLegend({
     </Box>
   );
 }
-

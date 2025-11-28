@@ -33,7 +33,7 @@ const SurveyForm = () => {
   const [quinipolo, setQuinipolo] = useState<SurveyData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [autoFillModalOpen, setAutoFillModalOpen] = useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [teamOptions, setTeamOptions] = useState<TeamOptionsBySport>({
     waterpolo: [],
     football: [],
@@ -61,14 +61,8 @@ const SurveyForm = () => {
   const handleDateChange: (
     date: Dayjs | null,
     dateString: string | string[]
-  ) => void = (date, dateString) => {
-    const dateStringSingle = Array.isArray(dateString)
-      ? dateString[0] || ""
-      : dateString;
-    const parsed = date
-      ? date.toDate()
-      : dayjs(dateStringSingle, "DD/MM/YYYY hh:mm").toDate();
-    setSelectedDate(parsed);
+  ) => void = (date) => {
+    setSelectedDate(date);
   };
 
   const handleHelpClick = () => {
@@ -95,7 +89,11 @@ const SurveyForm = () => {
         return;
       }
 
-      if (selectedDate === null || selectedDate < new Date()) {
+      if (
+        selectedDate === null ||
+        !selectedDate.isValid() ||
+        selectedDate.toDate() < new Date()
+      ) {
         setFeedback({
           message: t("selectDateTimeForQuinipolo"),
           severity: "error",
@@ -113,7 +111,7 @@ const SurveyForm = () => {
       let requestBody: any = {
         league_id: leagueId,
         quinipolo,
-        end_date: selectedDate,
+        end_date: selectedDate.toDate(),
         creation_date: new Date(),
       };
 
@@ -121,14 +119,14 @@ const SurveyForm = () => {
         endpoint = "/api/quinipolos/all-leagues";
         requestBody = {
           quinipolo,
-          end_date: selectedDate,
+          end_date: selectedDate.toDate(),
           creation_date: new Date(),
         };
       } else if (isForManagedLeagues) {
         endpoint = "/api/quinipolos/managed-leagues";
         requestBody = {
           quinipolo,
-          end_date: selectedDate,
+          end_date: selectedDate.toDate(),
           creation_date: new Date(),
         };
       }
@@ -250,9 +248,9 @@ const SurveyForm = () => {
 
     if (matches.length === 15) {
       const earliest = matches
-        .map((match) => new Date(match.startTime))
-        .sort((a, b) => a.getTime() - b.getTime())[0];
-      setSelectedDate(earliest ?? null);
+        .map((match) => dayjs(match.startTime))
+        .sort((a, b) => a.valueOf() - b.valueOf())[0];
+      setSelectedDate(earliest && earliest.isValid() ? earliest : null);
     } else {
       setSelectedDate(null);
     }
@@ -332,7 +330,7 @@ const SurveyForm = () => {
           showNow={false}
           popupClassName={styles.datePickerPopup}
           showTime={{ format: "HH:mm" }}
-          value={selectedDate ? dayjs(selectedDate) : null}
+          value={selectedDate}
         />
       </div>
 
@@ -434,6 +432,8 @@ function buildSurveyDataFromSelection(
       awayTeam: match.awayTeam,
       date: new Date(match.startTime),
       isGame15: false,
+      leagueId: match.leagueId,
+      leagueName: match.leagueName,
     };
   });
 

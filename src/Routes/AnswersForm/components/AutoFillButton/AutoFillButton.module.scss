@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.button {
+  width: 100%;
+  background: linear-gradient(135deg, #b8860b, #ffd54f);
+  color: #3e2723;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &:hover {
+    background: linear-gradient(135deg, #a07007, #ffca28);
+    color: #3e2723;
+  }
+
+  // Material-UI disabled class
+  :global(.Mui-disabled) {
+    background: linear-gradient(135deg, rgba(184, 134, 11, 0.4), rgba(255, 213, 79, 0.4));
+    color: rgba(62, 39, 35, 0.6);
+  }
+
+  @media (min-width: 600px) {
+    width: auto;
+  }
+}
+

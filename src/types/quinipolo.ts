@@ -5,6 +5,8 @@ export interface SurveyData {
   awayTeam: string;
   date: Date | null;
   isGame15: boolean;
+  leagueId?: string; // Optional: League ID from scraper (e.g., "DHM", "DHF", "PDM", "PDF", "SDM", "CL")
+  leagueName?: string; // Optional: League name from scraper (e.g., "División de Honor Masculina")
 }
 
 export interface TeamOption {
@@ -41,6 +43,34 @@ export interface SupabaseQuinipolo {
   answered?: boolean; // Added by getQuinipolosToAnswer
 }
 
+// Answer Statistics structure
+export interface AnswerStatistics {
+  computed_at: string;
+  total_responses: number;
+  matches: Array<{
+    matchNumber: number;
+    homeTeam: string;
+    awayTeam: string;
+    statistics: {
+      homeTeam: { count: number; percentage: number };
+      awayTeam: { count: number; percentage: number };
+      empat: { count: number; percentage: number };
+      goals?: {
+        homeTeam: {
+          "-": { count: number; percentage: number };
+          "11/12": { count: number; percentage: number };
+          "+": { count: number; percentage: number };
+        };
+        awayTeam: {
+          "-": { count: number; percentage: number };
+          "11/12": { count: number; percentage: number };
+          "+": { count: number; percentage: number };
+        };
+      };
+    };
+  }>;
+}
+
 // Frontend Quinipolo structure (what the frontend expects)
 export interface QuinipoloType {
   id: string;
@@ -54,6 +84,7 @@ export interface QuinipoloType {
   participants_who_answered?: string[];
   correct_answers?: CorrectAnswer[];
   answered?: boolean;
+  answer_statistics?: AnswerStatistics;
 }
 
 // API Response types
