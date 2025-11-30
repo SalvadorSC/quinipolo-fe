@@ -14,6 +14,7 @@ import { SurveyData, TeamOption } from "../../types/quinipolo";
 import styles from "./MatchForm.module.scss";
 import { useTranslation } from "react-i18next";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
+import { leagues } from "../../services/scraper/config";
 
 interface MatchFormProps {
   teamOptions: { waterpolo: TeamOption[]; football: TeamOption[] };
@@ -191,30 +192,73 @@ const MatchForm = ({
         }}
       >
         <Box>
-          <FormControl
-            className="matchForm__gameType"
-            fullWidth
-            variant="outlined"
-            margin="normal"
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              alignItems: "flex-start",
+              marginTop: 2,
+              marginBottom: 1,
+            }}
           >
-            <InputLabel>{t("sport")}</InputLabel>
-            <Select
-              label={t("sport")}
-              name="gameType"
-              value={matchData.gameType}
-              onChange={(event) => {
-                setMatchData({
-                  ...matchData,
-                  gameType: event.target.value as "waterpolo" | "football",
-                  homeTeam: "",
-                  awayTeam: "",
-                });
-              }}
+            <FormControl
+              className="matchForm__gameType"
+              sx={{ flex: 1 }}
+              variant="outlined"
             >
-              <MenuItem value="waterpolo">{t("waterpolo")}</MenuItem>
-              <MenuItem value="football">{t("football")}</MenuItem>
-            </Select>
-          </FormControl>
+              <InputLabel>{t("sport")}</InputLabel>
+              <Select
+                label={t("sport")}
+                name="gameType"
+                value={matchData.gameType}
+                onChange={(event) => {
+                  setMatchData({
+                    ...matchData,
+                    gameType: event.target.value as "waterpolo" | "football",
+                    homeTeam: "",
+                    awayTeam: "",
+                    leagueId:
+                      event.target.value === "waterpolo"
+                        ? matchData.leagueId
+                        : undefined,
+                  });
+                }}
+              >
+                <MenuItem value="waterpolo">{t("waterpolo")}</MenuItem>
+                <MenuItem value="football">{t("football")}</MenuItem>
+              </Select>
+            </FormControl>
+
+            {matchData.gameType === "waterpolo" && (
+              <FormControl
+                className="matchForm__league"
+                sx={{ minWidth: 120 }}
+                variant="outlined"
+              >
+                <InputLabel>{t("league")}</InputLabel>
+                <Select
+                  label={t("league")}
+                  name="leagueId"
+                  value={matchData.leagueId || ""}
+                  onChange={(event) => {
+                    setMatchData({
+                      ...matchData,
+                      leagueId: event.target.value || undefined,
+                    });
+                  }}
+                >
+                  <MenuItem value="">
+                    <em>{t("none")}</em>
+                  </MenuItem>
+                  {leagues.map((league) => (
+                    <MenuItem key={league.id} value={league.id}>
+                      {league.id}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          </Box>
 
           {loading ? (
             <>

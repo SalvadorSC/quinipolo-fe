@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Tooltip } from "antd";
+import { Flex, Tooltip } from "antd";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import style from "../AnswersForm.module.scss";
 import { LeagueChip } from "../../../Components/LeagueChip/LeagueChip";
@@ -24,9 +24,18 @@ export const MatchHeader: React.FC<MatchHeaderProps> = ({
     return (
       <div className={style.matchNameContainer}>
         <p>{t("game15")}</p>
-        <Tooltip title={t("game15help")}>
-          <HelpOutlineRoundedIcon style={{ cursor: "pointer" }} />
-        </Tooltip>
+        <Flex align="center" gap={4}>
+          {leagueId && (
+            <LeagueChip
+              leagueId={leagueId}
+              size="small"
+              className={style.leagueBadge}
+            />
+          )}
+          <Tooltip title={t("game15help")}>
+            <HelpOutlineRoundedIcon style={{ cursor: "pointer" }} />
+          </Tooltip>
+        </Flex>
       </div>
     );
   }

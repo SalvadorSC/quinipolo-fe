@@ -46,5 +46,20 @@ export const leagues: LeagueConfig[] = [
       "https://www.flashscore.es/waterpolo/espana/segunda-division/",
     rfenCompetitionId: 1514,
   },
+  {
+    id: "CL",
+    name: "Champions League",
+    quota: 0,
+    primarySource: "flashscore",
+    flashscoreUrl:
+      "https://www.flashscore.es/waterpolo/europa/champions-league/",
+  },
+  {
+    id: "CLF",
+    name: "Champions League (Women)",
+    quota: 0,
+    primarySource: "flashscore",
+    flashscoreUrl:
+      "https://www.flashscore.es/waterpolo/europa/champions-league-women/",
+  },
 ];
-

@@ -401,6 +401,7 @@
   "footballGoalsText": "少于11个，11或12个，多于12个",
   "matchNumber": "比赛 {{number}}：",
   "sport": "运动",
+  "league": "联赛",
   "waterpolo": "水球",
   "football": "足球",
   "homeTeam": "主队",

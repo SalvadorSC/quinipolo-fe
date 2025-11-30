@@ -5,7 +5,7 @@ export interface SurveyData {
   awayTeam: string;
   date: Date | null;
   isGame15: boolean;
-  leagueId?: string; // Optional: League ID from scraper (e.g., "DHM", "DHF", "PDM", "PDF", "SDM", "CL")
+  leagueId?: string; // Optional: League ID from scraper (e.g., "DHM", "DHF", "PDM", "PDF", "SDM", "CL", "CLF")
   leagueName?: string; // Optional: League name from scraper (e.g., "División de Honor Masculina")
 }
 
