@@ -147,7 +147,7 @@ const AnswersForm = () => {
       )}
 
       {(modes.correctingModeOn || modes.editCorrectionModeOn) &&
-        isSystemModerator(user.userData.role) && (
+        user.userData.hasScraperAccess === true && (
           <AutoFillButton
             onClick={() => setResultsModalOpen(true)}
             disabled={loading || !quinipolo.id}

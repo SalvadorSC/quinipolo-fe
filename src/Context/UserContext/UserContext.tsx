@@ -34,6 +34,7 @@ export type UserDataType = {
   productId?: string;
   isAuthenticated: boolean;
   authInitialized?: boolean;
+  hasScraperAccess?: boolean; // Access to scraper features
 };
 
 // Define a type for the context value
@@ -65,6 +66,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     hasBeenChecked: false,
     isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
     authInitialized: false,
+    hasScraperAccess: false,
   });
 
   const updateUser = useCallback((newData: Partial<UserDataType>) => {
@@ -104,6 +106,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         hasBeenChecked: false,
         isAuthenticated: false,
         authInitialized: true,
+        hasScraperAccess: false,
       });
       // Clear localStorage
       // move the user to the home page

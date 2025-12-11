@@ -264,8 +264,8 @@ const SurveyForm = () => {
 
   const hasBlockingErrors = Object.values(matchErrors).some(Boolean);
 
-  // Check if user is info@quinipolo.com
-  const isAdminUser = userData.emailAddress === "info@quinipolo.com";
+  // Check if user has scraper access
+  const hasScraperAccess = userData.hasScraperAccess === true;
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
@@ -284,7 +284,7 @@ const SurveyForm = () => {
           style={{ cursor: "pointer" }}
         />
       </div>
-      {isAdminUser && (
+      {hasScraperAccess && (
         <div
           style={{
             display: "flex",
