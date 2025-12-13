@@ -76,8 +76,42 @@ export const useAnswerHandlers = (
     });
   };
 
+  const handleCancelMatch = (matchIndex: number) => {
+    if (seeUserAnswersModeOn || viewOnlyModeOn) return;
+
+    setAnswers((prevAnswers) => {
+      const updatedData = [...prevAnswers];
+      const currentAnswer = updatedData[matchIndex];
+
+      if (currentAnswer.cancelled) {
+        // Uncancel: restore the match
+        updatedData[matchIndex] = {
+          ...currentAnswer,
+          cancelled: false,
+        };
+      } else {
+        // Cancel: mark as cancelled and clear answers
+        updatedData[matchIndex] = {
+          ...currentAnswer,
+          cancelled: true,
+          chosenWinner: "",
+          goalsHomeTeam: "",
+          goalsAwayTeam: "",
+        };
+      }
+
+      // Remove from missing indices when cancelled
+      if (updatedData[matchIndex].cancelled) {
+        setMissingAnswerIndices((prev) => prev.filter((i) => i !== matchIndex));
+      }
+
+      return updatedData;
+    });
+  };
+
   return {
     handleChange,
     handleGame15Change,
+    handleCancelMatch,
   };
 };

@@ -57,13 +57,14 @@ const AnswersForm = () => {
     setAnswers,
   } = useQuinipoloData(modes.editCorrectionModeOn, modes.seeUserAnswersModeOn);
 
-  const { handleChange, handleGame15Change } = useAnswerHandlers(
-    answers,
-    setAnswers,
-    modes.seeUserAnswersModeOn,
-    modes.viewOnlyModeOn,
-    setMissingAnswerIndices
-  );
+  const { handleChange, handleGame15Change, handleCancelMatch } =
+    useAnswerHandlers(
+      answers,
+      setAnswers,
+      modes.seeUserAnswersModeOn,
+      modes.viewOnlyModeOn,
+      setMissingAnswerIndices
+    );
 
   const { submitQuinipolo, loading: submitLoading } = useAnswerSubmission(
     answers,
@@ -216,12 +217,15 @@ const AnswersForm = () => {
                   seeUserAnswersModeOn={modes.seeUserAnswersModeOn}
                   viewOnlyModeOn={modes.viewOnlyModeOn}
                   answerModeOn={modes.answerModeOn}
+                  correctingModeOn={modes.correctingModeOn}
+                  editCorrectionModeOn={modes.editCorrectionModeOn}
                   loading={loading}
                   hasAttemptedSubmit={hasAttemptedSubmit}
                   missingAnswerIndices={missingAnswerIndices}
                   rowRef={(el) => (rowRefs.current[index] = el)}
                   onChange={handleChange}
                   handleGame15Change={handleGame15Change}
+                  handleCancelMatch={handleCancelMatch}
                   matchOption={matchOption}
                   matchStatistics={matchStatistics}
                   statisticsLoading={statisticsLoading}

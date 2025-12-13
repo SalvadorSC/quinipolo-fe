@@ -113,4 +113,11 @@
     outline: 2px solid rgba(255, 99, 71, 0.6);
     outline-offset: -2px;
   }
+
+  &.cancelled {
+    background-color: rgba(33, 150, 243, 0.05);
+    outline: 2px solid rgba(33, 150, 243, 0.4);
+    outline-offset: -2px;
+    opacity: 0.8;
+  }
 }

@@ -26,11 +26,18 @@ const ScoreSummary: React.FC<ScoreSummaryProps> = ({
 
     // Check matches 1-14 (regular matches)
     for (let i = 0; i < 14; i++) {
-      const userAnswer = userAnswers[i]?.chosenWinner;
-      const correctAnswer =
-        correctAnswers[i]?.chosenWinner?.split("__")[0] || "";
+      const correctAnswer = correctAnswers[i];
 
-      if (userAnswer === correctAnswer) {
+      // If match is cancelled, count it as correct for everyone
+      if (correctAnswer?.cancelled === true) {
+        correctCount++;
+        continue;
+      }
+
+      const userAnswer = userAnswers[i]?.chosenWinner;
+      const correctWinner = correctAnswer?.chosenWinner?.split("__")[0] || "";
+
+      if (userAnswer === correctWinner) {
         correctCount++;
       }
     }
@@ -40,27 +47,33 @@ const ScoreSummary: React.FC<ScoreSummaryProps> = ({
     const correctGame15 = correctAnswers[14];
 
     if (userGame15 && correctGame15) {
-      const userWinner = userGame15.chosenWinner;
-      const correctWinner = correctGame15.chosenWinner?.split("__")[0] || "";
-      const userHomeGoals = userGame15.goalsHomeTeam;
-      const userAwayGoals = userGame15.goalsAwayTeam;
-      const correctHomeGoals =
-        correctGame15.goalsHomeTeam?.split("__")[0] || "";
-      const correctAwayGoals =
-        correctGame15.goalsAwayTeam?.split("__")[0] || "";
-
-      // Check if winner is correct
-      const winnerCorrect = userWinner === correctWinner;
-
-      // Check if both goals are correct
-      const homeGoalsCorrect = userHomeGoals === correctHomeGoals;
-      const awayGoalsCorrect = userAwayGoals === correctAwayGoals;
-
-      // Game 15 is fully correct if winner and both goals are correct
-      game15Correct = winnerCorrect && homeGoalsCorrect && awayGoalsCorrect;
-
-      if (game15Correct) {
+      // If match 15 is cancelled, count it as correct for everyone
+      if (correctGame15.cancelled === true) {
+        game15Correct = true;
         correctCount++;
+      } else {
+        const userWinner = userGame15.chosenWinner;
+        const correctWinner = correctGame15.chosenWinner?.split("__")[0] || "";
+        const userHomeGoals = userGame15.goalsHomeTeam;
+        const userAwayGoals = userGame15.goalsAwayTeam;
+        const correctHomeGoals =
+          correctGame15.goalsHomeTeam?.split("__")[0] || "";
+        const correctAwayGoals =
+          correctGame15.goalsAwayTeam?.split("__")[0] || "";
+
+        // Check if winner is correct
+        const winnerCorrect = userWinner === correctWinner;
+
+        // Check if both goals are correct
+        const homeGoalsCorrect = userHomeGoals === correctHomeGoals;
+        const awayGoalsCorrect = userAwayGoals === correctAwayGoals;
+
+        // Game 15 is fully correct if winner and both goals are correct
+        game15Correct = winnerCorrect && homeGoalsCorrect && awayGoalsCorrect;
+
+        if (game15Correct) {
+          correctCount++;
+        }
       }
     }
 

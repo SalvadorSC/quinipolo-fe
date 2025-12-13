@@ -14,6 +14,7 @@ export const mapCorrectAnswersToInitial = (
           chosenWinner: correctAnswer.chosenWinner || "",
           goalsHomeTeam: correctAnswer.goalsHomeTeam || "",
           goalsAwayTeam: correctAnswer.goalsAwayTeam || "",
+          cancelled: correctAnswer.cancelled || false,
         }
       : defaultAnswer;
   });
@@ -26,19 +27,29 @@ export const prepareAnswersForSubmission = (
   chosenWinner: string;
   goalsHomeTeam?: string;
   goalsAwayTeam?: string;
+  cancelled?: boolean;
 }> => {
   return answers.map((answer, index) => {
-    const baseAnswer = {
+    const baseAnswer: {
+      matchNumber: number;
+      chosenWinner: string;
+      goalsHomeTeam?: string;
+      goalsAwayTeam?: string;
+      cancelled?: boolean;
+    } = {
       matchNumber: index + 1,
       chosenWinner: answer.chosenWinner,
     };
+
+    // Include cancelled status if present
+    if (answer.cancelled) {
+      baseAnswer.cancelled = true;
+    }
+
     // Only include goals for match 15 (pleno al 15)
     if (index === 14) {
-      return {
-        ...baseAnswer,
-        goalsHomeTeam: answer.goalsHomeTeam,
-        goalsAwayTeam: answer.goalsAwayTeam,
-      };
+      baseAnswer.goalsHomeTeam = answer.goalsHomeTeam;
+      baseAnswer.goalsAwayTeam = answer.goalsAwayTeam;
     }
     return baseAnswer;
   });

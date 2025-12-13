@@ -27,6 +27,7 @@ export interface CorrectAnswer {
   goalsHomeTeam: string;
   goalsAwayTeam: string;
   isGame15: boolean;
+  cancelled?: boolean; // If true, this match is cancelled and counts as correct for everyone
 }
 
 // Supabase Quinipolo structure (what comes from the database)
