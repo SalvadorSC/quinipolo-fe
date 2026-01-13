@@ -30,6 +30,14 @@ export const leagueChipStyles: Record<
     background: "linear-gradient(135deg, #9575cd, #d1c4e9)",
     color: "#2f1b4d",
   },
+  "SEL. M": {
+    background: "linear-gradient(135deg, #4caf50, #81c784)",
+    color: "#ffffff",
+  },
+  "SEL. F": {
+    background: "linear-gradient(135deg, #9c27b0, #e91e63)",
+    color: "#ffffff",
+  },
 };
 
 export const defaultLeagueChipStyle = {
