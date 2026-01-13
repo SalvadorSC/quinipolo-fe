@@ -1,5 +1,14 @@
 // Types for the scraper service
-export type LeagueId = "DHM" | "DHF" | "PDM" | "PDF" | "SDM" | "CL" | "CLF";
+export type LeagueId =
+  | "DHM"
+  | "DHF"
+  | "PDM"
+  | "PDF"
+  | "SDM"
+  | "CL"
+  | "CLF"
+  | "SEL. M"
+  | "SEL. F";
 
 export interface Match {
   leagueId: LeagueId;

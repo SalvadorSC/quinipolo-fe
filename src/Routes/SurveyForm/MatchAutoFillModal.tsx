@@ -41,7 +41,7 @@ type DifficultySort = "none" | "asc" | "desc";
 type ModalStep = "selection" | "pleno";
 
 const MAX_SELECTION = 15;
-const LEAGUE_ORDER = ["CL", "DHM", "DHF", "PDM", "PDF", "SDM"];
+const LEAGUE_ORDER = ["CL", "DHM", "DHF", "PDM", "PDF", "SDM", "SEL. M", "SEL. F"];
 const difficultyRanking: Record<ScraperMatchV2["difficulty"], number> = {
   hard: 0,
   moderate: 1,

@@ -62,4 +62,16 @@ export const leagues: LeagueConfig[] = [
     flashscoreUrl:
       "https://www.flashscore.es/waterpolo/europa/champions-league-women/",
   },
+  {
+    id: "SEL. M",
+    name: "Selección Masculina",
+    quota: 0,
+    primarySource: "flashscore",
+  },
+  {
+    id: "SEL. F",
+    name: "Selección Femenina",
+    quota: 0,
+    primarySource: "flashscore",
+  },
 ];
