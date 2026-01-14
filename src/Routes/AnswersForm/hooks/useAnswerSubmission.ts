@@ -78,6 +78,7 @@ export const useAnswerSubmission = (
           state: {
             results: response.results,
             leagueId: response.leagueId || quinipolo.league_id,
+            endDate: response.endDate,
             participantsLeaderboard:
               response.participantsLeaderboard || undefined,
             averagePointsThisQuinipolo: response.averagePointsThisQuinipolo,
@@ -103,6 +104,7 @@ export const useAnswerSubmission = (
           state: {
             results: response.results,
             leagueId: response.leagueId || quinipolo.league_id,
+            endDate: response.endDate,
             participantsLeaderboard:
               response.participantsLeaderboard || undefined,
             averagePointsThisQuinipolo: response.averagePointsThisQuinipolo,

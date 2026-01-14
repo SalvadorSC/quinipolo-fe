@@ -27,6 +27,7 @@ const CorrectionSuccess = () => {
   const navigate = useNavigate();
   const { setFeedback } = useFeedback();
   const leagueId: string | undefined = location.state?.leagueId;
+  const endDate: string | undefined = location.state?.endDate;
   const averagePointsThisQuinipolo: number | undefined =
     location.state?.averagePointsThisQuinipolo;
   const mostFailed:
@@ -154,9 +155,10 @@ const CorrectionSuccess = () => {
       mergedLeaderboard && mergedLeaderboard.length > 0
         ? mergedLeaderboard
         : results;
-    const date = new Date();
     const locale = "es-ES";
 
+    // Use endDate from quinipolo if available, otherwise fall back to current date
+    const date = endDate ? new Date(endDate) : new Date();
     const formattedDate = date.toLocaleDateString(locale, {
       year: "numeric",
       month: "numeric",

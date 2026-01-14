@@ -12,6 +12,7 @@ export type CorrectionResponseType = {
       }[]
     | any; // backend returns an array of per-user results already used in CorrectionSuccess
   leagueId?: string;
+  endDate?: string;
   participantsLeaderboard?: Array<{
     username: string;
     points: number;
