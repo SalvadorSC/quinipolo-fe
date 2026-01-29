@@ -9,7 +9,7 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 import { SurveyData, TeamOption } from "../../types/quinipolo";
 import styles from "./MatchForm.module.scss";
 import { useTranslation } from "react-i18next";
@@ -57,12 +57,46 @@ const MatchForm = ({
     value || initialSurveyData
   );
   const [genderError, setGenderError] = useState<string | null>(null);
+  const isUpdatingFromParentRef = useRef(false);
+  const lastValueRef = useRef<SurveyData | undefined>(value);
+  const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Sync internal state when value prop changes (for controlled mode)
+  // Only update if the value actually changed and we're not in the middle of a local update
   useEffect(() => {
-    if (value) {
-      setMatchData(value);
+    if (value && !isUpdatingFromParentRef.current) {
+      // Deep comparison to avoid unnecessary updates
+      const valueChanged =
+        !lastValueRef.current ||
+        value.homeTeam !== lastValueRef.current.homeTeam ||
+        value.awayTeam !== lastValueRef.current.awayTeam ||
+        value.gameType !== lastValueRef.current.gameType ||
+        value.leagueId !== lastValueRef.current.leagueId;
+      
+      if (valueChanged) {
+        isUpdatingFromParentRef.current = true;
+        setMatchData(value);
+        lastValueRef.current = value;
+        
+        // Clear any pending timeout
+        if (updateTimeoutRef.current) {
+          clearTimeout(updateTimeoutRef.current);
+        }
+        
+        // Reset flag after state update completes
+        updateTimeoutRef.current = setTimeout(() => {
+          isUpdatingFromParentRef.current = false;
+          updateTimeoutRef.current = null;
+        }, 0);
+      }
     }
+    
+    // Cleanup timeout on unmount
+    return () => {
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+      }
+    };
   }, [value]);
 
   const normalizeTeamArray = () =>
@@ -113,21 +147,25 @@ const MatchForm = ({
     return [...canonicalOptions, ...aliasOptions];
   };
 
-  const getSelectedOption = (
-    teamName: string
-  ): TeamAutocompleteOption | null => {
-    const team = findTeamByName(teamName);
-    if (!team) return null;
-    return {
-      key: `${team.name}::canonical`,
-      label: team.name,
-      team,
-      isAlias: false,
-    };
-  };
-
+  // Update parent state when matchData changes, but avoid loops
   useEffect(() => {
+    // Skip update if we're currently syncing from parent
+    if (isUpdatingFromParentRef.current) {
+      return;
+    }
+    
     setQuinipolo((prevquinipolo) => {
+      const currentMatch = prevquinipolo[index];
+      // Only update if the data actually changed
+      if (
+        currentMatch?.homeTeam === matchData.homeTeam &&
+        currentMatch?.awayTeam === matchData.awayTeam &&
+        currentMatch?.gameType === matchData.gameType &&
+        currentMatch?.leagueId === matchData.leagueId
+      ) {
+        return prevquinipolo;
+      }
+      
       const updatedData = [...prevquinipolo];
       updatedData[index] = matchData;
       return updatedData;
@@ -276,7 +314,6 @@ const MatchForm = ({
                 groupBy={(option: TeamAutocompleteOption) =>
                   option.label.charAt(0)
                 }
-                value={getSelectedOption(matchData.homeTeam)}
                 inputValue={matchData.homeTeam}
                 getOptionLabel={(option) =>
                   typeof option === "string" ? option : option?.label ?? ""
@@ -310,13 +347,20 @@ const MatchForm = ({
                     margin="normal"
                   />
                 )}
-                onInputChange={(_, newInputValue) =>
-                  setMatchData((prevData: SurveyData) => ({
-                    ...prevData,
-                    homeTeam: newInputValue ?? "",
-                  }))
-                }
-                onChange={(_, value) => handleTeamChange("homeTeam", value)}
+                onInputChange={(_, newInputValue) => {
+                  // Only update if we're not syncing from parent
+                  if (!isUpdatingFromParentRef.current) {
+                    setMatchData((prevData: SurveyData) => ({
+                      ...prevData,
+                      homeTeam: newInputValue ?? "",
+                    }));
+                  }
+                }}
+                onChange={(_, value) => {
+                  if (!isUpdatingFromParentRef.current) {
+                    handleTeamChange("homeTeam", value);
+                  }
+                }}
               />
 
               <Autocomplete
@@ -327,7 +371,6 @@ const MatchForm = ({
                 groupBy={(option: TeamAutocompleteOption) =>
                   option.label.charAt(0)
                 }
-                value={getSelectedOption(matchData.awayTeam)}
                 inputValue={matchData.awayTeam}
                 getOptionLabel={(option) =>
                   typeof option === "string" ? option : option?.label ?? ""
@@ -361,13 +404,20 @@ const MatchForm = ({
                     margin="normal"
                   />
                 )}
-                onInputChange={(_, newInputValue) =>
-                  setMatchData((prevData: SurveyData) => ({
-                    ...prevData,
-                    awayTeam: newInputValue ?? "",
-                  }))
-                }
-                onChange={(_, value) => handleTeamChange("awayTeam", value)}
+                onInputChange={(_, newInputValue) => {
+                  // Only update if we're not syncing from parent
+                  if (!isUpdatingFromParentRef.current) {
+                    setMatchData((prevData: SurveyData) => ({
+                      ...prevData,
+                      awayTeam: newInputValue ?? "",
+                    }));
+                  }
+                }}
+                onChange={(_, value) => {
+                  if (!isUpdatingFromParentRef.current) {
+                    handleTeamChange("awayTeam", value);
+                  }
+                }}
               />
 
               {genderError && (

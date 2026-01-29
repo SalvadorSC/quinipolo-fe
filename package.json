@@ -15,6 +15,7 @@
     "@mui/icons-material": "^5.16.0",
     "@mui/lab": "^5.0.0-alpha.160",
     "@mui/material": "^5.15.4",
+    "@salvadorsc/quinipolo-shared": "^1.0.0",
     "@stripe/react-stripe-js": "^2.7.3",
     "@stripe/stripe-js": "^4.1.0",
     "@supabase/supabase-js": "^2.50.3",

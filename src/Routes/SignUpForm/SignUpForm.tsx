@@ -1,13 +1,8 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-// removed unused login styles
+import React from "react";
 import MenuBar from "../../Components/MenuBar/MenuBar";
-import { useTheme } from "../../Context/ThemeContext/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
-import { supabase } from "../../lib/supabaseClient";
 import { Form, Input, Button, Alert, Card } from "antd";
-import { apiPost } from "../../utils/apiUtils";
 import {
   MailOutlined,
   LockOutlined,
@@ -17,12 +12,11 @@ import {
 } from "@ant-design/icons";
 import stylesSignUpForm from "./SignUpForm.module.scss";
 import { calculateAge } from "../../utils/calculateAge";
+import { useSignup } from "../../hooks/auth";
 
 const SignUpForm = () => {
-  const navigate = useNavigate();
   const { t } = useTranslation();
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { signup, loading, error } = useSignup();
 
   const onFinish = async (values: {
     email: string;
@@ -32,92 +26,17 @@ const SignUpForm = () => {
     confirmPassword: string;
     birthday: string;
   }) => {
-    setLoading(true);
-    setError(null);
-    const { email, password, username, fullName, birthday, confirmPassword } =
-      values;
+    // Password confirmation is already validated by the form
+    // Just extract the fields we need
+    const { email, password, username, fullName, birthday } = values;
 
-    if (password !== confirmPassword) {
-      setError(t("passwordsDoNotMatch") || "Passwords do not match");
-      setLoading(false);
-      return;
-    }
-
-    // Calculate age from birthday
-    const age = calculateAge(birthday);
-
-    try {
-      // Sign up with Supabase auth first
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            username,
-            fullName,
-            birthday,
-            isUserOver18: age >= 18,
-          },
-        },
-      });
-
-      if (error) {
-        setError(error.message);
-        setLoading(false);
-        return;
-      }
-
-      // Then call backend API to create profile and add to leagues
-      try {
-        await apiPost("/api/auth/signup", {
-          email,
-          username,
-          fullName,
-          birthday,
-          isUserOver18: age >= 18,
-          leagues: ["global"],
-          userId: data.user?.id, // Pass the user ID from Supabase auth
-        });
-      } catch (backendError: any) {
-        // Handle backend validation errors
-        if (backendError?.response?.data?.error) {
-          const errorMessage = backendError.response.data.error;
-          if (
-            errorMessage.includes("quinipolo") ||
-            errorMessage.includes("already exists") ||
-            errorMessage.includes("restricted words")
-          ) {
-            setError(errorMessage);
-            setLoading(false);
-            return;
-          }
-        }
-        console.warn(
-          "Backend signup failed, but auth was successful:",
-          backendError
-        );
-        // Don't fail the signup if backend call fails, as the profile will be created when user first accesses it
-      }
-
-      setLoading(false);
-      navigate("/email-confirmation");
-    } catch (error: any) {
-      setLoading(false);
-
-      // Handle backend validation errors
-      if (error?.response?.data?.error) {
-        const errorMessage = error.response.data.error;
-        if (
-          errorMessage.includes("quinipolo") ||
-          errorMessage.includes("already exists")
-        ) {
-          setError(errorMessage);
-          return;
-        }
-      }
-
-      setError(error instanceof Error ? error.message : "An error occurred");
-    }
+    await signup({
+      email,
+      password,
+      username,
+      fullName,
+      birthday,
+    });
   };
 
   return (

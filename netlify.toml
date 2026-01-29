@@ -1,0 +1,16 @@
+# Netlify configuration for quinipolo-fe
+[build]
+  command = "npm run build"
+  publish = "build"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_FLAGS = "--legacy-peer-deps"
+  NPM_USE_PRODUCTION = "false"
+  # NPM_TOKEN should be set in Netlify UI
+
+# Redirect all routes to index.html for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
