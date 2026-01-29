@@ -147,40 +147,6 @@ const MatchForm = ({
     return [...canonicalOptions, ...aliasOptions];
   };
 
-  const getSelectedOption = (
-    teamName: string
-  ): TeamAutocompleteOption | null => {
-    if (!teamName) return null;
-    
-    const team = findTeamByName(teamName);
-    if (!team) {
-      // If team name doesn't match exactly, check if it matches an alias
-      const teamsForSport = normalizeTeamArray();
-      const teamWithAlias = teamsForSport.find((t) => 
-        t.aliases?.some(alias => alias === teamName)
-      );
-      
-      if (teamWithAlias) {
-        return {
-          key: `${teamWithAlias.name}::alias::${teamName}`,
-          label: teamName,
-          team: teamWithAlias,
-          isAlias: true,
-        };
-      }
-      
-      // Return null for free text that doesn't match any team
-      return null;
-    }
-    
-    return {
-      key: `${team.name}::canonical`,
-      label: team.name,
-      team,
-      isAlias: false,
-    };
-  };
-
   // Update parent state when matchData changes, but avoid loops
   useEffect(() => {
     // Skip update if we're currently syncing from parent
@@ -348,7 +314,6 @@ const MatchForm = ({
                 groupBy={(option: TeamAutocompleteOption) =>
                   option.label.charAt(0)
                 }
-                value={getSelectedOption(matchData.homeTeam)}
                 inputValue={matchData.homeTeam}
                 getOptionLabel={(option) =>
                   typeof option === "string" ? option : option?.label ?? ""
@@ -406,7 +371,6 @@ const MatchForm = ({
                 groupBy={(option: TeamAutocompleteOption) =>
                   option.label.charAt(0)
                 }
-                value={getSelectedOption(matchData.awayTeam)}
                 inputValue={matchData.awayTeam}
                 getOptionLabel={(option) =>
                   typeof option === "string" ? option : option?.label ?? ""
