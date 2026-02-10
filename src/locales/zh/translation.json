@@ -402,7 +402,7 @@
   "shareQuinipoloWithFriends": "要与朋友分享你的 Quinipolo，请使用以下方法之一：",
   "none": "无",
   "waterpoloGoalsText": "少于11个，11或12个，多于12个。",
-  "footballGoalsText": "少于11个，11或12个，多于12个",
+  "footballGoalsText": "0个进球，1或2个进球，多于2个进球",
   "matchNumber": "比赛 {{number}}：",
   "sport": "运动",
   "league": "联赛",
@@ -565,5 +565,14 @@
   "accentColor": "强调颜色",
   "iconColor": "图标颜色",
   "selectLeagueIcon": "选择联赛图标",
-  "searchByUsername": "按用户名搜索"
+  "searchByUsername": "按用户名搜索",
+  "match15": {
+    "lockTooltip": "锁定最后一场比赛在第15位。解锁后，您可以自由重新排序，列表中的最后一场比赛将成为第15场比赛。",
+    "unlockTooltip": "第15场比赛已解锁。您可以自由重新排序。列表中的最后一场比赛将成为第15场比赛。",
+    "lockedWarning": "第15场比赛已锁定。解锁以重新排序。"
+  },
+  "reordering": {
+    "tooltip": "提示：您可以拖动比赛来重新排序。使用每场比赛左侧的拖动手柄（☰）。",
+    "dragging": "正在重新排序比赛..."
+  }
 }

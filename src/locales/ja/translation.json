@@ -402,7 +402,7 @@
   "shareQuinipoloWithFriends": "友達とQuinipoloを共有するには、以下のいずれかの方法を使用してください：",
   "none": "なし",
   "waterpoloGoalsText": "11未満、11または12、12より多い",
-  "footballGoalsText": "11未満、11または12、12より多い",
+  "footballGoalsText": "0ゴール、1または2ゴール、2より多い",
   "matchNumber": "試合{{number}}：",
   "sport": "スポーツ",
   "league": "リーグ",
@@ -566,5 +566,14 @@
   "accentColor": "アクセントカラー",
   "iconColor": "アイコンの色",
   "selectLeagueIcon": "リーグのアイコンを選択",
-  "searchByUsername": "ユーザー名で検索"
+  "searchByUsername": "ユーザー名で検索",
+  "match15": {
+    "lockTooltip": "最後の試合を15番目の位置にロックします。ロックを解除すると、自由に並べ替えることができ、リストの最後の試合が試合15になります。",
+    "unlockTooltip": "試合15のロックが解除されています。自由に並べ替えることができます。リストの最後の試合が試合15になります。",
+    "lockedWarning": "試合15はロックされています。並べ替えるにはロックを解除してください。"
+  },
+  "reordering": {
+    "tooltip": "ヒント：試合をドラッグして並べ替えることができます。各試合の左側にあるドラッグハンドル（☰）を使用してください。",
+    "dragging": "試合を並べ替え中..."
+  }
 }

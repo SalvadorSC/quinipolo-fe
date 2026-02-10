@@ -402,7 +402,7 @@
   "shareQuinipoloWithFriends": "Pour partager votre Quinipolo avec vos amis, utilisez l'une des méthodes suivantes :",
   "none": "Aucun",
   "waterpoloGoalsText": "Moins de 11, 11 ou 12, plus de 12.",
-  "footballGoalsText": "Moins de 11, 11 ou 12, plus de 12",
+  "footballGoalsText": "0 buts, 1 ou 2 buts, plus de 2 buts",
   "matchNumber": "Match {{number}} :",
   "sport": "Sport",
   "league": "Ligue",
@@ -566,5 +566,14 @@
   "accentColor": "Couleur d’accent",
   "iconColor": "Couleur de l’icône",
   "selectLeagueIcon": "Sélectionnez l’icône de la ligue",
-  "searchByUsername": "Rechercher par nom d'utilisateur"
+  "searchByUsername": "Rechercher par nom d'utilisateur",
+  "match15": {
+    "lockTooltip": "Verrouillez le dernier match en position 15. Lorsqu'il est déverrouillé, vous pouvez le réorganiser librement, et le dernier match de la liste deviendra le Match 15.",
+    "unlockTooltip": "Le Match 15 est déverrouillé. Vous pouvez le réorganiser librement. Le dernier match de la liste deviendra le Match 15.",
+    "lockedWarning": "Le Match 15 est verrouillé. Déverrouillez-le pour réorganiser."
+  },
+  "reordering": {
+    "tooltip": "Astuce : Vous pouvez faire glisser les matchs pour les réorganiser. Utilisez la poignée de glissement (☰) sur le côté gauche de chaque match.",
+    "dragging": "Réorganisation du match..."
+  }
 }

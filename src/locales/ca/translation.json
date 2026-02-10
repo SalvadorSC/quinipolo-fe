@@ -397,7 +397,7 @@
   "shareQuinipoloWithFriends": "Per compartir la teva Quinipolo amb els teus amics, utilitza algun dels següents mètodes:",
   "none": "Cap",
   "waterpoloGoalsText": "Menys de 11, 11 o 12, més de 12.",
-  "footballGoalsText": "Menys de 11, 11 o 12, més de 12",
+  "footballGoalsText": "0 gols, 1 o 2 gols, més de 2 gols",
   "matchNumber": "Partit {{number}}:",
   "sport": "Esport",
   "league": "Lliga",
@@ -566,6 +566,15 @@
   "iconColor": "Color de la icona",
   "selectLeagueIcon": "Selecciona la icona de la lliga",
   "searchByUsername": "Cerca per nom d'usuari",
+  "match15": {
+    "lockTooltip": "Bloqueja l'últim partit a la posició 15. Quan estigui desbloquejat, podràs reordenar-lo lliurement, i l'últim partit de la llista es convertirà en el Partit 15.",
+    "unlockTooltip": "El Partit 15 està desbloquejat. Pots reordenar-lo lliurement. L'últim partit de la llista es convertirà en el Partit 15.",
+    "lockedWarning": "El Partit 15 està bloquejat. Desbloqueja'l per reordenar."
+  },
+  "reordering": {
+    "tooltip": "Consell: Pots arrossegar partits per reordenar-los. Utilitza el control d'arrossegament (☰) al costat esquerre de cada partit.",
+    "dragging": "Reordenant partit..."
+  },
   "common": {
     "back": "Tornar"
   },
