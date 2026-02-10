@@ -484,6 +484,7 @@
   "viewQuinipoloResults": "Voici les résultats du Quinipolo",
   "invalid_credentials": "Identifiants invalides",
   "allowRepeatTeams": "Autoriser la répétition des équipes",
+  "enableMatchReordering": "Activer la réorganisation des matchs",
   "draw": "Match nul",
   "missingAnswersForMatches": "Réponses manquantes pour les matchs : {{matches}}",
   "game15": "Plein au 15",

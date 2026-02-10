@@ -31,7 +31,7 @@ const SurveyForm = () => {
   const navigate = useNavigate();
   const { setFeedback } = useFeedback();
   const { userData } = useUser();
-  
+
   // Initialize quinipolo with 15 empty matches
   const [quinipolo, setQuinipolo] = useState<SurveyData[]>(
     new Array(15).fill(null).map((_, index) => ({
@@ -40,9 +40,9 @@ const SurveyForm = () => {
       awayTeam: "",
       date: null,
       isGame15: index === 14,
-    }))
+    })),
   );
-  
+
   const [loading, setLoading] = useState<boolean>(false);
   const [autoFillModalOpen, setAutoFillModalOpen] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
@@ -53,9 +53,11 @@ const SurveyForm = () => {
   const [helpModalOpen, setHelpModalOpen] = useState<boolean>(false);
   const [allowRepeatedTeams, setAllowRepeatedTeams] = useState<boolean>(false);
   const [matchErrors, setMatchErrors] = useState<Record<number, string | null>>(
-    {}
+    {},
   );
   const [isMatch15Locked, setIsMatch15Locked] = useState<boolean>(true);
+  const [isReorderingEnabled, setIsReorderingEnabled] =
+    useState<boolean>(false);
 
   // Check if this is for all leagues
   const isForAllLeagues =
@@ -73,7 +75,7 @@ const SurveyForm = () => {
 
   const handleDateChange: (
     date: Dayjs | null,
-    dateString: string | string[]
+    dateString: string | string[],
   ) => void = (date) => {
     setSelectedDate(date);
   };
@@ -186,7 +188,7 @@ const SurveyForm = () => {
       try {
         // Use only the backend API since Supabase teams calls are failing
         const response = await fetch(
-          `${process.env.REACT_APP_API_BASE_URL}/api/teams/all`
+          `${process.env.REACT_APP_API_BASE_URL}/api/teams/all`,
         );
         if (!response.ok) {
           throw new Error(`Backend API failed: ${response.status}`);
@@ -201,8 +203,8 @@ const SurveyForm = () => {
                 aliases: Array.isArray(team?.alias)
                   ? team.alias
                   : Array.isArray(team?.aliases)
-                  ? team.aliases
-                  : [],
+                    ? team.aliases
+                    : [],
               }))
             : [],
           football: Array.isArray(backendTeams?.football)
@@ -213,8 +215,8 @@ const SurveyForm = () => {
                 aliases: Array.isArray(team?.alias)
                   ? team.alias
                   : Array.isArray(team?.aliases)
-                  ? team.aliases
-                  : [],
+                    ? team.aliases
+                    : [],
               }))
             : [],
         };
@@ -238,7 +240,7 @@ const SurveyForm = () => {
 
   const handleMatchValidationChange = (
     matchIndex: number,
-    error: string | null
+    error: string | null,
   ) => {
     setMatchErrors((prev) => {
       if (prev[matchIndex] === error) {
@@ -347,17 +349,40 @@ const SurveyForm = () => {
         />
       </div>
 
-      <FormControlLabel
-        control={
-          <Switch
-            checked={allowRepeatedTeams}
-            onChange={(e) => setAllowRepeatedTeams(e.target.checked)}
-            color="primary"
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: 16,
+          marginBottom: 8,
+        }}
+      >
+        <FormControlLabel
+          control={
+            <Switch
+              checked={allowRepeatedTeams}
+              onChange={(e) => setAllowRepeatedTeams(e.target.checked)}
+              color="primary"
+            />
+          }
+          style={{ color: "white", marginLeft: 2, marginRight: "0" }}
+          label={t("allowRepeatTeams")}
+        />
+        {hasScraperAccess && (
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isReorderingEnabled}
+                onChange={(e) => setIsReorderingEnabled(e.target.checked)}
+                color="primary"
+              />
+            }
+            style={{ color: "white", marginLeft: 2, marginRight: "0" }}
+            label={t("enableMatchReordering")}
           />
-        }
-        style={{ color: "white", marginLeft: 2, marginTop: 16 }}
-        label={t("allowRepeatTeams")}
-      />
+        )}
+      </div>
       <ReorderableMatchList
         quinipolo={quinipolo}
         setQuinipolo={setQuinipolo}
@@ -369,6 +394,7 @@ const SurveyForm = () => {
         setIsMatch15Locked={setIsMatch15Locked}
         onValidationChange={handleMatchValidationChange}
         matchErrors={matchErrors}
+        isReorderingEnabled={isReorderingEnabled}
       />
 
       <div className={styles.submitButton}>
@@ -403,7 +429,7 @@ export default SurveyForm;
 
 function buildSurveyDataFromSelection(
   matches: ScraperMatchV2[],
-  plenoMatchId: string | null
+  plenoMatchId: string | null,
 ): SurveyData[] {
   if (!matches.length) {
     return new Array(15).fill(null).map((_, index) => ({
@@ -416,12 +442,12 @@ function buildSurveyDataFromSelection(
   }
 
   const sorted = [...matches].sort(
-    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
   );
 
   if (plenoMatchId) {
     const plenoIndex = sorted.findIndex(
-      (match) => match.matchId === plenoMatchId
+      (match) => match.matchId === plenoMatchId,
     );
     if (plenoIndex > -1) {
       const [plenoMatch] = sorted.splice(plenoIndex, 1);

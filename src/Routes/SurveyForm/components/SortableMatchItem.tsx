@@ -21,6 +21,7 @@ interface SortableMatchItemProps {
   matchErrors: Record<number, string | null>;
   isMatch15Locked: boolean;
   setIsMatch15Locked: React.Dispatch<React.SetStateAction<boolean>>;
+  isReorderingEnabled: boolean;
 }
 
 export const SortableMatchItem: React.FC<SortableMatchItemProps> = ({
@@ -36,9 +37,11 @@ export const SortableMatchItem: React.FC<SortableMatchItemProps> = ({
   matchErrors,
   isMatch15Locked,
   setIsMatch15Locked,
+  isReorderingEnabled,
 }) => {
   const isLastMatch = index === 14;
   const isLocked = isLastMatch && isMatch15Locked;
+  const isDragDisabled = !isReorderingEnabled || isLocked;
 
   const {
     attributes,
@@ -49,7 +52,7 @@ export const SortableMatchItem: React.FC<SortableMatchItemProps> = ({
     isDragging,
   } = useSortable({
     id,
-    disabled: isLocked,
+    disabled: isDragDisabled,
   });
 
   const style = {
@@ -74,17 +77,21 @@ export const SortableMatchItem: React.FC<SortableMatchItemProps> = ({
         }}
       >
         <Box sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 0.5, alignItems: "center" }}>
-          <DragHandle
-            listeners={listeners}
-            attributes={attributes}
-            isDragging={isDragging}
-            disabled={isLocked}
-          />
-          {isLastMatch && (
-            <Match15LockToggle
-              isLocked={isMatch15Locked}
-              onToggle={() => setIsMatch15Locked(!isMatch15Locked)}
-            />
+          {isReorderingEnabled && (
+            <>
+              <DragHandle
+                listeners={listeners}
+                attributes={attributes}
+                isDragging={isDragging}
+                disabled={isDragDisabled}
+              />
+              {isLastMatch && (
+                <Match15LockToggle
+                  isLocked={isMatch15Locked}
+                  onToggle={() => setIsMatch15Locked(!isMatch15Locked)}
+                />
+              )}
+            </>
           )}
         </Box>
 

@@ -498,6 +498,7 @@
   "viewQuinipoloResults": "These are the results of the Quinipolo",
   "invalid_credentials": "Invalid credentials",
   "allowRepeatTeams": "Allow repeated teams",
+  "enableMatchReordering": "Enable match reordering",
   "draw": "Tie",
   "missingAnswersForMatches": "Missing answers for matches: {{matches}}",
   "game15": "Game 15",

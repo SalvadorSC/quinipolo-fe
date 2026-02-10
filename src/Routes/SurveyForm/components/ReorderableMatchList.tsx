@@ -36,6 +36,7 @@ interface ReorderableMatchListProps {
   setIsMatch15Locked: React.Dispatch<React.SetStateAction<boolean>>;
   onValidationChange: (matchIndex: number, error: string | null) => void;
   matchErrors: Record<number, string | null>;
+  isReorderingEnabled: boolean;
 }
 
 export const ReorderableMatchList: React.FC<ReorderableMatchListProps> = ({
@@ -49,6 +50,7 @@ export const ReorderableMatchList: React.FC<ReorderableMatchListProps> = ({
   setIsMatch15Locked,
   onValidationChange,
   matchErrors,
+  isReorderingEnabled,
 }) => {
   const { setFeedback } = useFeedback();
   const { t } = useTranslation();
@@ -127,7 +129,7 @@ export const ReorderableMatchList: React.FC<ReorderableMatchListProps> = ({
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <ReorderingTooltip />
+      {isReorderingEnabled && <ReorderingTooltip />}
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         <Box className={styles.matchList}>
           {quinipolo.map((_, index) => (
@@ -145,6 +147,7 @@ export const ReorderableMatchList: React.FC<ReorderableMatchListProps> = ({
               matchErrors={matchErrors}
               isMatch15Locked={isMatch15Locked}
               setIsMatch15Locked={setIsMatch15Locked}
+              isReorderingEnabled={isReorderingEnabled}
             />
           ))}
         </Box>
