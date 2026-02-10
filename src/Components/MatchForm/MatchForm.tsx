@@ -71,7 +71,8 @@ const MatchForm = ({
         value.homeTeam !== lastValueRef.current.homeTeam ||
         value.awayTeam !== lastValueRef.current.awayTeam ||
         value.gameType !== lastValueRef.current.gameType ||
-        value.leagueId !== lastValueRef.current.leagueId;
+        value.leagueId !== lastValueRef.current.leagueId ||
+        value.isGame15 !== lastValueRef.current.isGame15;
       
       if (valueChanged) {
         isUpdatingFromParentRef.current = true;
