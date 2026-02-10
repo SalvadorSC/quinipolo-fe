@@ -483,7 +483,7 @@
   "viewQuinipoloResults": "Aquests són els resultats de la Quinipolo",
   "invalid_credentials": "Credencials invàlides",
   "allowRepeatTeams": "Permetre repetir equips",
-  "enableMatchReordering": "Habilitar reordenació de partits",
+  "enableMatchReordering": "Permetre reordenar partits",
   "draw": "Empat",
   "missingAnswersForMatches": "Falten respostes als partits: {{matches}}",
   "game15": "Ple al 15",
