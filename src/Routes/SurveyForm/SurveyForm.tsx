@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { SurveyData, TeamOptionsBySport } from "../../types/quinipolo";
 import MatchForm from "../../Components/MatchForm/MatchForm";
+import { ReorderableMatchList } from "./components/ReorderableMatchList";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import locale from "antd/es/date-picker/locale/es_ES";
 import { DatePicker } from "antd";
@@ -30,7 +31,18 @@ const SurveyForm = () => {
   const navigate = useNavigate();
   const { setFeedback } = useFeedback();
   const { userData } = useUser();
-  const [quinipolo, setQuinipolo] = useState<SurveyData[]>([]);
+  
+  // Initialize quinipolo with 15 empty matches
+  const [quinipolo, setQuinipolo] = useState<SurveyData[]>(
+    new Array(15).fill(null).map((_, index) => ({
+      gameType: "waterpolo",
+      homeTeam: "",
+      awayTeam: "",
+      date: null,
+      isGame15: index === 14,
+    }))
+  );
+  
   const [loading, setLoading] = useState<boolean>(false);
   const [autoFillModalOpen, setAutoFillModalOpen] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
@@ -43,6 +55,7 @@ const SurveyForm = () => {
   const [matchErrors, setMatchErrors] = useState<Record<number, string | null>>(
     {}
   );
+  const [isMatch15Locked, setIsMatch15Locked] = useState<boolean>(true);
 
   // Check if this is for all leagues
   const isForAllLeagues =
@@ -345,19 +358,18 @@ const SurveyForm = () => {
         style={{ color: "white", marginLeft: 2, marginTop: 16 }}
         label={t("allowRepeatTeams")}
       />
-      {matchArray.map((_, index) => (
-        <MatchForm
-          key={index}
-          teamOptions={teamOptions}
-          selectedTeams={allowRepeatedTeams ? [] : selectedTeams}
-          index={index}
-          setQuinipolo={setQuinipolo}
-          loading={loading}
-          allowRepeatedTeams={allowRepeatedTeams}
-          onValidationChange={handleMatchValidationChange}
-          value={quinipolo[index]}
-        />
-      ))}
+      <ReorderableMatchList
+        quinipolo={quinipolo}
+        setQuinipolo={setQuinipolo}
+        teamOptions={teamOptions}
+        selectedTeams={allowRepeatedTeams ? [] : selectedTeams}
+        loading={loading}
+        allowRepeatedTeams={allowRepeatedTeams}
+        isMatch15Locked={isMatch15Locked}
+        setIsMatch15Locked={setIsMatch15Locked}
+        onValidationChange={handleMatchValidationChange}
+        matchErrors={matchErrors}
+      />
 
       <div className={styles.submitButton}>
         <Button
