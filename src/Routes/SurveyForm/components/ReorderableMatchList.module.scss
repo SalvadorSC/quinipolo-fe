@@ -1,0 +1,28 @@
+.matchList {
+  position: relative;
+  width: 100%;
+}
+
+.dragOverlay {
+  cursor: grabbing;
+  pointer-events: none;
+  
+  // Add a subtle rotation and scale for visual feedback
+  animation: floatDrag 0.3s ease-out;
+}
+
+@keyframes floatDrag {
+  from {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.5;
+  }
+  to {
+    transform: scale(1.03) rotate(2deg);
+    opacity: 0.8;
+  }
+}
+
+// Smooth transitions for reordering
+.matchList > * {
+  transition: transform 0.3s ease, opacity 0.2s ease;
+}

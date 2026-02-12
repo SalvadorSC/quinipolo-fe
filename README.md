@@ -40,20 +40,49 @@ The password reset flow includes:
 - Node.js (v16 or higher)
 - npm or yarn
 
+### Environment Setup
+
+1. Copy the `.env.example` file to `.env`:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Fill in the required environment variables in `.env`:
+   - `REACT_APP_SUPABASE_URL`: Your Supabase project URL
+   - `REACT_APP_SUPABASE_ANON_KEY`: Your Supabase anonymous key
+   - `NPM_TOKEN`: GitHub personal access token for private packages (required for `@salvadorsc/quinipolo-shared`)
+
+3. **GitHub NPM Token Setup** (Required):
+
+   The project uses a private GitHub package (`@salvadorsc/quinipolo-shared`). You need to create a GitHub Personal Access Token:
+
+   a. Go to [GitHub → Settings → Developer Settings → Personal Access Tokens](https://github.com/settings/tokens)
+   b. Click "Generate new token (classic)"
+   c. Give it a name (e.g., "Quinipolo NPM")
+   d. Select the `read:packages` scope
+   e. Generate and copy the token
+   f. Add it to your `.env` file as `NPM_TOKEN=your_token_here`
+
+   Or add it to your shell profile:
+
+   ```bash
+   echo 'export NPM_TOKEN=your_github_token_here' >> ~/.zshrc
+   source ~/.zshrc
+   ```
+
 ### Installation
+
+**Important**: The project requires TypeScript 4.9.5 (compatible with react-scripts 5.0.1).
 
 ```bash
 npm install
 ```
 
-### Environment Variables
+If you encounter peer dependency issues, you can use:
 
-Create a `.env` file in the root directory:
-
-```env
-REACT_APP_SUPABASE_URL=your_supabase_url
-REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
-REACT_APP_API_BASE_URL=http://localhost:3000
+```bash
+npm install --legacy-peer-deps
 ```
 
 ### Running the Application

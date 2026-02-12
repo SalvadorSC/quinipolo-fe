@@ -419,7 +419,7 @@
   "shareQuinipoloWithFriends": "To share your Quinipolo with your friends, use one of the following methods:",
   "none": "None",
   "waterpoloGoalsText": "Less than 11, 11 or 12, more than 12.",
-  "footballGoalsText": "Less than 11, 11 or 12, more than 12",
+  "footballGoalsText": "0 goals, 1 or 2 goals, more than 2 goals",
   "matchNumber": "Match {{number}}:",
   "sport": "Sport",
   "league": "League",
@@ -498,6 +498,7 @@
   "viewQuinipoloResults": "These are the results of the Quinipolo",
   "invalid_credentials": "Invalid credentials",
   "allowRepeatTeams": "Allow repeated teams",
+  "enableMatchReordering": "Allow match reordering",
   "draw": "Tie",
   "missingAnswersForMatches": "Missing answers for matches: {{matches}}",
   "game15": "Game 15",
@@ -566,6 +567,15 @@
   "iconColor": "Icon color",
   "selectLeagueIcon": "Select league icon",
   "searchByUsername": "Search username",
+  "match15": {
+    "lockTooltip": "Lock the last match in position 15. When unlocked, you can reorder it freely, and the last match in the list will become Match 15.",
+    "unlockTooltip": "Match 15 is unlocked. You can reorder it freely. The last match in the list will become Match 15.",
+    "lockedWarning": "Match 15 is locked. Unlock it to reorder."
+  },
+  "reordering": {
+    "tooltip": "Tip: You can drag matches to reorder them. Use the drag handle (☰) on the left side of each match.",
+    "dragging": "Reordering match..."
+  },
   "common": {
     "back": "Back"
   },

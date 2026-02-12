@@ -1,0 +1,30 @@
+.dragHandle {
+  color: #9e9e9e;
+  transition: color 0.2s ease, transform 0.1s ease;
+  
+  &:hover:not(.disabled) {
+    color: #1976d2;
+    transform: scale(1.1);
+  }
+
+  &.dragging {
+    color: #1976d2;
+  }
+
+  &.disabled {
+    color: #bdbdbd;
+    opacity: 0.5;
+  }
+
+  &:active:not(.disabled) {
+    transform: scale(0.95);
+  }
+}
+
+// Increase touch target size on mobile
+@media (max-width: 768px) {
+  .dragHandle {
+    min-width: 48px;
+    min-height: 48px;
+  }
+}
