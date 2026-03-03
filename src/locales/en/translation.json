@@ -408,6 +408,7 @@
   "messageCopied": "Message copied to clipboard!",
   "shareSuccess": "Shared successfully!",
   "errorCopyingMessage": "Error copying the message to clipboard!",
+  "errorGeneratingImages": "Could not generate images",
   "quinipoloCorrectedSuccess": "Quinipolo corrected successfully!",
   "resultsTableInfo": "Below is the table with user results.",
   "noOneAnswered": "Oops! It looks like no one answered this Quinipolo!",

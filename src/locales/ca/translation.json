@@ -386,6 +386,7 @@
   "messageCopied": "Missatge copiat al porta-retalls!",
   "shareSuccess": "Compartit correctament!",
   "errorCopyingMessage": "Error copiant el missatge al porta-retalls!",
+  "errorGeneratingImages": "No s'han pogut generar les imatges",
   "quinipoloCorrectedSuccess": "Quinipolo corregida amb èxit!",
   "resultsTableInfo": "A continuació, es mostra la taula amb els resultats dels usuaris.",
   "noOneAnswered": "Vaja! Sembla que ningú ha respost aquesta Quinipolo!",
