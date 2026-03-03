@@ -29,6 +29,7 @@ export type CorrectionResponseType = {
     correctWinner?: string; // "home" | "away" | "draw"
     mostWrongWinner?: string; // same domain
   } | null;
+  matchday?: string;
 };
 
 export type AnswerResponseType = {

@@ -30,6 +30,7 @@ import {
   SurveyForm,
   Admin,
   JoinLeague,
+  GraphicsGeneratorPage,
 } from "./Routes";
 import { About } from "./Routes";
 import { Terms } from "./Routes";
@@ -145,6 +146,14 @@ function App() {
                     <Route path="/" element={<Landing />} />
                   )}
 
+                  <Route
+                    path="graphics"
+                    element={
+                      <ProtectedRoute fallbackPath="/">
+                        <GraphicsGeneratorPage />
+                      </ProtectedRoute>
+                    }
+                  />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Route>
 

@@ -184,6 +184,14 @@ const Dashboard = () => {
                 gap: 2,
               }}
             >
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => navigate("/graphics")}
+                sx={{ width: "100%" }}
+              >
+                {t("graphicsGenerator") || "Graphics Generator"}
+              </Button>
               {/* Admin Link - Only visible to system admins */}
               {isSystemAdmin(userData.role) ? (
                 <LoadingButton

@@ -83,6 +83,8 @@ export const useAnswerSubmission = (
               response.participantsLeaderboard || undefined,
             averagePointsThisQuinipolo: response.averagePointsThisQuinipolo,
             mostFailed: response.mostFailed,
+            quinipoloId: quinipolo.id,
+            matchday: response.matchday,
           },
         });
         setFeedback({
@@ -109,6 +111,8 @@ export const useAnswerSubmission = (
               response.participantsLeaderboard || undefined,
             averagePointsThisQuinipolo: response.averagePointsThisQuinipolo,
             mostFailed: response.mostFailed,
+            quinipoloId: quinipolo.id,
+            matchday: response.matchday,
           },
         });
         setFeedback({
