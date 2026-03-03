@@ -14,6 +14,7 @@ import LeagueIconBadge from "../../Components/LeagueIconBadge/LeagueIconBadge";
 import { useTranslation } from "react-i18next";
 import { apiGet } from "../../utils/apiUtils";
 import { isSystemAdmin } from "../../utils/moderatorUtils";
+import { config } from "../../utils/config";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -184,14 +185,16 @@ const Dashboard = () => {
                 gap: 2,
               }}
             >
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => navigate("/graphics")}
-                sx={{ width: "100%" }}
-              >
-                {t("graphicsGenerator") || "Graphics Generator"}
-              </Button>
+              {config.isDevelopment && (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => navigate("/graphics")}
+                  sx={{ width: "100%" }}
+                >
+                  {t("graphicsGenerator") || "Graphics Generator"}
+                </Button>
+              )}
               {/* Admin Link - Only visible to system admins */}
               {isSystemAdmin(userData.role) ? (
                 <LoadingButton
