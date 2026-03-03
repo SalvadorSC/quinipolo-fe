@@ -13,6 +13,7 @@ import {
   formatWinnersSection,
 } from "../../utils/shareMessage";
 import CorrectionStats from "../../Components/CorrectionStats/CorrectionStats";
+import { LEAGUES_WITH_IMAGE_SHARE_BETA } from "../../config/leaguesWithImageShare";
 
 export type Result = {
   username: string;
@@ -29,13 +30,6 @@ type LeaderboardParticipant = {
   nQuinipolosParticipated?: number;
   fullCorrectQuinipolos?: number;
 };
-
-/** Beta: only these leagues can share ranking images */
-const LEAGUES_WITH_IMAGE_SHARE_BETA = [
-  "351a1949-f6c5-4940-ac70-1c7dd08e8b1a", // Global
-  "4cae8d44-f3bd-42a5-a899-78e64fdb0181", // Sant Feliu
-  "3cc750df-b2ee-4a1f-92e4-cc743b9d01c4", // TEST
-];
 
 const CorrectionSuccess = () => {
   const location = useLocation();
@@ -60,7 +54,7 @@ const CorrectionSuccess = () => {
     () => (location.state?.results as Result[]) || [],
     [location.state?.results],
   );
-  const matchday: string = location.state?.matchday ?? "";
+  const matchday: string | undefined = location.state?.matchday;
   const participantsLeaderboardRaw = useMemo(
     () => location.state?.participantsLeaderboard || [],
     [location.state?.participantsLeaderboard],
@@ -187,12 +181,12 @@ const CorrectionSuccess = () => {
 
     return {
       image3_quinipoloRanking: {
-        matchday,
+        ...(matchday != null && { matchday }),
         rankingType: "quinipolo",
         participants: quinipoloParticipants,
       },
       image4_generalLeagueRanking: {
-        matchday,
+        ...(matchday != null && { matchday }),
         rankingType: "general",
         leagueId,
         participantsLeaderboard: generalParticipants,
@@ -230,7 +224,7 @@ const CorrectionSuccess = () => {
       })
       .catch(() => {
         setFeedback({
-          message: t("errorCopyingMessage") ?? "Could not generate images",
+          message: t("errorGeneratingImages"),
           severity: "error",
           open: true,
         });
@@ -336,7 +330,7 @@ const CorrectionSuccess = () => {
       }
       if (!image3 || !image4) {
         setFeedback({
-          message: t("errorCopyingMessage") ?? "Could not generate images",
+          message: t("errorGeneratingImages"),
           severity: "error",
           open: true,
         });
@@ -360,21 +354,19 @@ const CorrectionSuccess = () => {
       const shareData: ShareData = {
         files: [file3, file4],
         text: messageToShare,
-        title: t("shareTitle") ?? "Quinipolo Resultados",
+        title: t("shareTitle"),
       };
 
       if (navigator.canShare && navigator.canShare(shareData)) {
         await navigator.share(shareData);
         setFeedback({
-          message: t("shareSuccess") ?? "Shared successfully",
+          message: t("shareSuccess"),
           severity: "success",
           open: true,
         });
       } else {
         setFeedback({
-          message:
-            t("shareNotSupported") ??
-            "Sharing with images is not supported on this device. Try copying the message.",
+          message: t("shareNotSupported"),
           severity: "warning",
           open: true,
         });
@@ -417,13 +409,13 @@ const CorrectionSuccess = () => {
         new ClipboardItem({ "image/png": blob }),
       ]);
       setFeedback({
-        message: t("imageCopied") ?? "Image copied to clipboard",
+        message: t("imageCopied"),
         severity: "success",
         open: true,
       });
     } catch {
       setFeedback({
-        message: t("errorCopyingMessage") ?? "Could not copy image",
+        message: t("errorCopyingMessage"),
         severity: "error",
         open: true,
       });
@@ -496,7 +488,7 @@ const CorrectionSuccess = () => {
               className={style.copyCorrection}
               style={{ fontWeight: "bold", marginBottom: 8 }}
             >
-              {t("shareImagesTitle") ?? "Share images"}
+              {t("shareImagesTitle")}
             </p>
             {shareImagesLoading ? (
               <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
@@ -507,7 +499,7 @@ const CorrectionSuccess = () => {
                 <Box>
                   <img
                     src={shareImages.image3}
-                    alt={t("quinipoloRankingImageAlt") ?? "Quinipolo ranking"}
+                    alt={t("quinipoloRankingImageAlt")}
                     style={{ width: "100%", borderRadius: 8, display: "block" }}
                   />
                   <Button
@@ -516,14 +508,14 @@ const CorrectionSuccess = () => {
                     onClick={() => copyImageToClipboard(shareImages.image3)}
                     sx={{ mt: 1, width: "100%" }}
                   >
-                    {t("copyImage") ?? "Copy image"}
+                    {t("copyImage")}
                   </Button>
                 </Box>
                 <Box>
                   <img
                     src={shareImages.image4}
                     alt={
-                      t("generalRankingImageAlt") ?? "General league ranking"
+                      t("generalRankingImageAlt")
                     }
                     style={{ width: "100%", borderRadius: 8, display: "block" }}
                   />
@@ -533,7 +525,7 @@ const CorrectionSuccess = () => {
                     onClick={() => copyImageToClipboard(shareImages.image4)}
                     sx={{ mt: 1, width: "100%" }}
                   >
-                    {t("copyImage") ?? "Copy image"}
+                    {t("copyImage")}
                   </Button>
                 </Box>
               </Box>
@@ -571,7 +563,7 @@ const CorrectionSuccess = () => {
           >
             {sharingWithImages
               ? "..."
-              : `${t("shareOnWhatsAppWithImages") ?? "Share with images"} (beta)`}
+              : `${t("shareOnWhatsAppWithImages")} (beta)`}
           </Button>
         )}
         <Button
