@@ -56,7 +56,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate-sitemap": "node generate-sitemap.js"
+    "generate-sitemap": "node generate-sitemap.js",
+    "sync-translations": "node scripts/sync-translations.js",
+    "sync-translations:fix": "node scripts/sync-translations.js --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -65,7 +67,18 @@
     ],
     "rules": {
       "no-unused-vars": 0,
-      "@typescript-eslint/no-unused-vars": 0
+      "@typescript-eslint/no-unused-vars": 0,
+      "no-restricted-syntax": [
+        "error",
+        {
+          "selector": "BinaryExpression[left.type='CallExpression'][left.callee.name='t'][operator='??']",
+          "message": "Do not use t() with ?? fallback. Add the key to all locales instead."
+        },
+        {
+          "selector": "LogicalExpression[left.type='CallExpression'][left.callee.name='t'][operator='||']",
+          "message": "Do not use t() with || fallback. Add the key to all locales instead."
+        }
+      ]
     }
   },
   "browserslist": {
