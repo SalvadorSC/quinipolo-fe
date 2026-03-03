@@ -34,7 +34,11 @@ import {
   JoinLeague,
   Terms,
 } from "./Routes";
+import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
+import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
+import Layout from "./Components/Layout/Layout";
 import { config } from "./utils/config";
+import { trackPageView } from "./utils/analytics";
 
 const GraphicsGeneratorPage = lazy(
   () =>
@@ -42,10 +46,6 @@ const GraphicsGeneratorPage = lazy(
       default: m.default,
     }))
 );
-import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
-import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
-import { trackPageView } from "./utils/analytics";
-import Layout from "./Components/Layout/Layout";
 
 // Custom hook to handle URL cleanup
 function useUrlCleanup() {
