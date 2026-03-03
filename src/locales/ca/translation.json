@@ -411,7 +411,6 @@
   "footballGoalsText": "0 gols, 1 o 2 gols, més de 2 gols",
   "matchNumber": "Partit {{number}}:",
   "sport": "Esport",
-  "league": "Lliga",
   "waterpolo": "Waterpolo",
   "football": "Futbol",
   "homeTeam": "Local",
@@ -901,5 +900,6 @@
         ]
       }
     ]
-  }
+  },
+  "uploadImage": "Upload Image"
 }

@@ -416,7 +416,6 @@
   "footballGoalsText": "0 gol, 1 o 2 gol, più di 2 gol",
   "matchNumber": "Partita {{number}}:",
   "sport": "Sport",
-  "league": "Lega",
   "waterpolo": "Pallanuoto",
   "football": "Calcio",
   "homeTeam": "Squadra di casa",
@@ -432,7 +431,6 @@
   "joinedLeague": "Ti sei unito alla lega",
   "errorJoiningLeague": "Errore nell'unirsi alla lega",
   "createNewLeague": "Crea Nuova Lega",
-  "leagueName": "Nome della Lega",
   "privateLeague": "Lega Privata",
   "alreadyHaveAccountLogin": "Hai già un account? Accedi qui.",
   "noAccountSignUpHere": "Non hai un account? Registrati qui.",
@@ -888,5 +886,26 @@
         ]
       }
     ]
-  }
+  },
+  "about": {
+    "disclaimerText": "Quinipolo is a recreational game of skill. It is not a betting house or a game of chance. What matters here is knowledge, intuition, and, why not, a bit of luck.",
+    "disclaimerTitle": "Important",
+    "howItWorks": "Each week you can make your predictions about match results, compete on leaderboards, and join private leagues with your group to see who gets the most right.",
+    "intro": "Quinipolo is an app for water polo fans who want to test their knowledge and share the excitement of matches with friends and teammates.",
+    "philosophyText": "We want Quinipolo to be a safe, inclusive, and entertaining experience. There is no money at stake here—only the satisfaction of beating your friends and showing who knows the most about water polo.",
+    "philosophyTitle": "Our philosophy",
+    "title": "About Quinipolo",
+    "what": {
+      "items": {
+        "leagues": "Create and manage private leagues to compete with your friends.",
+        "predict": "Make your predictions for each matchday.",
+        "progress": "Track your progress and improve week by week.",
+        "rankings": "Compete in rankings and leaderboards."
+      }
+    },
+    "whatTitle": "What can you do in Quinipolo?",
+    "whyText": "Because we believe water polo deserves a digital, fun, simple, and accessible community. We want to bring more life to every match and offer a space where fans can share their passion, compare results, and challenge each other in a healthy way.",
+    "whyTitle": "Why did we create Quinipolo?"
+  },
+  "uploadImage": "Upload Image"
 }
