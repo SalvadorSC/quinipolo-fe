@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { lazy, Suspense, useEffect, useRef } from "react";
 import "./App.css";
 import {
   BrowserRouter,
@@ -12,6 +12,7 @@ import { FeedbackProvider } from "./Context/FeedbackContext/FeedbackContext";
 import { ThemeProvider } from "./Context/ThemeContext/ThemeContext";
 import MenuBar from "./Components/MenuBar/MenuBar";
 import {
+  About,
   AnswersForm,
   CorrectionSuccess,
   CreateLeague,
@@ -24,17 +25,23 @@ import {
   LoginForm,
   NewLeague,
   QuinipoloSuccess,
+  Privacy,
   ResetPassword,
   SignUpForm,
   EmailConfirmation,
   SurveyForm,
   Admin,
   JoinLeague,
-  GraphicsGeneratorPage,
+  Terms,
 } from "./Routes";
-import { About } from "./Routes";
-import { Terms } from "./Routes";
-import { Privacy } from "./Routes";
+import { config } from "./utils/config";
+
+const GraphicsGeneratorPage = lazy(
+  () =>
+    import("./Routes/GraphicsGenerator/GraphicsGeneratorPage").then((m) => ({
+      default: m.default,
+    }))
+);
 import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import { trackPageView } from "./utils/analytics";
@@ -146,14 +153,18 @@ function App() {
                     <Route path="/" element={<Landing />} />
                   )}
 
-                  <Route
-                    path="graphics"
-                    element={
-                      <ProtectedRoute fallbackPath="/">
-                        <GraphicsGeneratorPage />
-                      </ProtectedRoute>
-                    }
-                  />
+                  {config.isDevelopment && (
+                    <Route
+                      path="graphics"
+                      element={
+                        <ProtectedRoute fallbackPath="/">
+                          <Suspense fallback={null}>
+                            <GraphicsGeneratorPage />
+                          </Suspense>
+                        </ProtectedRoute>
+                      }
+                    />
+                  )}
                   <Route path="*" element={<Navigate to="/" />} />
                 </Route>
 

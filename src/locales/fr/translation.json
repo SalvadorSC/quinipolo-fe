@@ -388,6 +388,7 @@
   "noWinner": "Pas de gagnant.",
   "thanksForParticipating": "Merci d'avoir participé au Quinipolo. Ne manquez pas le prochain !",
   "messageCopied": "Message copié dans le presse-papiers !",
+  "shareSuccess": "Partagé avec succès !",
   "errorCopyingMessage": "Erreur lors de la copie du message dans le presse-papiers !",
   "quinipoloCorrectedSuccess": "Quinipolo corrigé avec succès !",
   "resultsTableInfo": "Ci-dessous le tableau avec les résultats des utilisateurs.",

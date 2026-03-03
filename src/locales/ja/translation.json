@@ -388,6 +388,7 @@
   "noWinner": "優勝者なし",
   "thanksForParticipating": "Quinipoloへの参加ありがとうございます。次回もお見逃しなく！",
   "messageCopied": "メッセージをクリップボードにコピーしました！",
+  "shareSuccess": "共有しました！",
   "errorCopyingMessage": "メッセージのクリップボードへのコピーに失敗しました！",
   "quinipoloCorrectedSuccess": "Quinipoloが正常に修正されました！",
   "resultsTableInfo": "以下はユーザー結果の表です。",

@@ -61,8 +61,10 @@ const CorrectionSuccess = () => {
     [location.state?.results],
   );
   const matchday: string = location.state?.matchday ?? "";
-  const participantsLeaderboardRaw =
-    location.state?.participantsLeaderboard || [];
+  const participantsLeaderboardRaw = useMemo(
+    () => location.state?.participantsLeaderboard || [],
+    [location.state?.participantsLeaderboard],
+  );
 
   const participantsFromState: Result[] = (
     location.state?.participantsLeaderboard || []
@@ -204,9 +206,15 @@ const CorrectionSuccess = () => {
     leagueId,
   ]);
 
-  // Fetch share images when we have results (leaderboard may still be loading)
+  // Fetch share images only when merged leaderboard is ready to avoid incorrect rankings
   useEffect(() => {
-    if (!canShareImages || results.length === 0 || shareImages) return;
+    if (
+      !canShareImages ||
+      results.length === 0 ||
+      shareImages ||
+      mergedLeaderboard === null
+    )
+      return;
 
     setShareImagesLoading(true);
     apiPost<{ matchday: string; images: Record<string, string> }>(
@@ -358,7 +366,7 @@ const CorrectionSuccess = () => {
       if (navigator.canShare && navigator.canShare(shareData)) {
         await navigator.share(shareData);
         setFeedback({
-          message: t("messageCopied") ?? "Shared successfully",
+          message: t("shareSuccess") ?? "Shared successfully",
           severity: "success",
           open: true,
         });

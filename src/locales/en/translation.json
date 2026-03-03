@@ -406,6 +406,7 @@
   "noWinner": "No winner.",
   "thanksForParticipating": "Thanks for participating in Quinipolo. Don't miss the next one!",
   "messageCopied": "Message copied to clipboard!",
+  "shareSuccess": "Shared successfully!",
   "errorCopyingMessage": "Error copying the message to clipboard!",
   "quinipoloCorrectedSuccess": "Quinipolo corrected successfully!",
   "resultsTableInfo": "Below is the table with user results.",
