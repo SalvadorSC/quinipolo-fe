@@ -16,10 +16,8 @@ export const Match15LockToggle: React.FC<Match15LockToggleProps> = ({
   const { t } = useTranslation();
 
   const tooltipText = isLocked
-    ? t("match15.lockTooltip") ||
-      "Lock the last match in position 15. When unlocked, you can reorder it freely, and the last match in the list will become Match 15."
-    : t("match15.unlockTooltip") ||
-      "Match 15 is unlocked. You can reorder it freely. The last match in the list will become Match 15.";
+    ? t("match15.lockTooltip")
+    : t("match15.unlockTooltip");
 
   return (
     <Tooltip title={tooltipText} placement="right">

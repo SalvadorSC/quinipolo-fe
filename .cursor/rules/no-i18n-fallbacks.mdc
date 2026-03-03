@@ -1,0 +1,35 @@
+# No i18n Fallbacks
+
+Do not use `??` or `||` fallbacks with `t()` from react-i18next.
+
+- ✅ Use `t("key")` only — ensure the key exists in all locales
+- ✅ Use `t("key", { defaultValue: "..." })` only when adding a new key temporarily
+- ❌ No `t("key") ?? "fallback"`
+- ❌ No `t("key") || "fallback"`
+
+i18next returns a non-null string (translation or fallbackLng), so these fallbacks rarely behave as intended and can hide missing translations.
+
+ESLint rule `no-restricted-syntax` is set to "error" in package.json. Do not add `eslint-disable` to skip this rule.
+
+## Edge cases (valid patterns, rule needs refinement)
+
+The rule currently flags `data || t("key")` (t() as fallback for empty data). These are valid — we use t() when data is missing, not as an i18n fallback.
+
+**Proper fix**: Refine the rule to only match when `t()` is on the *left* of `||` or `??`:
+
+```json
+{
+  "selector": "BinaryExpression[left.type='CallExpression'][left.callee.name='t'][operator='??']",
+  "message": "..."
+},
+{
+  "selector": "LogicalExpression[left.type='CallExpression'][left.callee.name='t'][operator='||']",
+  "message": "..."
+}
+```
+
+**Affected files** (will pass after rule refinement):
+- `CorrectionStats.tsx`: `homeTeam || t("home")`, `awayTeam || t("away")`
+- `LeagueInfo.tsx`: `leagueData.description || t("noDescription")`
+- `useAnswerSubmission.ts`: `error.response?.data?.message || t("errorSubmittingAnswers")`
+- `shareMessage.ts`: `mostFailed.homeTeam || t("home")`, `mostFailed.awayTeam || t("away")`

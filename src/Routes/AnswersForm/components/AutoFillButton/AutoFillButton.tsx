@@ -24,7 +24,7 @@ export const AutoFillButton: React.FC<AutoFillButtonProps> = ({
         disabled={disabled}
         className={styles.button}
       >
-        {t("resultsAutoFill.button") || "Auto-fill Results"}
+        {t("resultsAutoFill.button")}
       </Button>
     </div>
   );

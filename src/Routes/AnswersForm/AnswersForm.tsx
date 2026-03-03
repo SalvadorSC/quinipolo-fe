@@ -113,7 +113,7 @@ const AnswersForm = () => {
     setAnswers(updatedAnswers);
     setFeedback({
       message:
-        t("resultsAutoFill.success") || "Correction form filled successfully!",
+        t("resultsAutoFill.success"),
       severity: "success",
       open: true,
     });
@@ -129,7 +129,7 @@ const AnswersForm = () => {
 
   if (!quinipolo.quinipolo) {
     setFeedback({
-      message: t("errorLoadingQuinipolo") || "Error loading Quinipolo",
+      message: t("errorLoadingQuinipolo"),
       severity: "error",
       open: true,
     });

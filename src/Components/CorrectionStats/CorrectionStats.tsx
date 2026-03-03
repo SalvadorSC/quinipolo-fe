@@ -52,7 +52,7 @@ export default function CorrectionStats({
         </p>
       ) : null}
       {mostFailed && mostFailed.matchNumber ? (
-        <p className={copyClassName} title={t("mostFailedMatch") || undefined}>
+        <p className={copyClassName} title={t("mostFailedMatch")}>
           {t("mostFailedMatch")} {t("match")} {mostFailed.matchNumber} ·{" "}
           {mostFailed.failedPercentage.toFixed(1)}% {t("failed")}
           {counts ? ` (${counts})` : ""} ({t("mostAnsweredWrong")}{" "}

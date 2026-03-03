@@ -161,7 +161,7 @@ const LoginForm = () => {
         </Button>
         <div style={{ marginTop: 20, textAlign: "center" }}>
           <a href="/signup" style={{ color: "#1890ff", fontWeight: 500 }}>
-            {t("noAccountSignUpHere") || "No account? Sign up here."}
+            {t("noAccountSignUpHere")}
           </a>
         </div>
         <div style={{ marginTop: 12, textAlign: "center" }}>
@@ -181,7 +181,7 @@ const LoginForm = () => {
       </Card>
 
       <Modal
-        title={t("passwordResetEmailSent") || "Password Reset Email Sent"}
+        title={t("passwordResetEmailSent")}
         open={showSuccessModal}
         onCancel={closeSuccessModal}
         footer={[
@@ -190,23 +190,20 @@ const LoginForm = () => {
             type="primary"
             onClick={closeSuccessModal}
           >
-            {t("ok") || "OK"}
+            {t("ok")}
           </Button>,
         ]}
         centered
       >
         <div style={{ textAlign: "center", margin: 16 }}>
           <p>
-            {t("passwordResetEmailSentMessage") ||
-              "A password reset email has been sent to your email address."}
+            {t("passwordResetEmailSentMessage")}
           </p>
           <p>
-            {t("checkYourInbox") ||
-              "Please check your inbox and follow the instructions to reset your password."}
+            {t("checkYourInbox")}
           </p>
           <p style={{ marginTop: 16, fontWeight: "bold", color: "#ff4d4f" }}>
-            {t("cooldownMessage") ||
-              "You won't be able to send another password reset email for 2 minutes."}
+            {t("cooldownMessage")}
           </p>
         </div>
       </Modal>

@@ -49,8 +49,7 @@ export function useResultsData(open: boolean, quinipoloId: string) {
         console.error(err);
         setError(
           err?.message ??
-            t("resultsAutoFill.fetchError") ??
-            "Unable to fetch results. Please try again."
+            t("resultsAutoFill.fetchError")
         );
       })
       .finally(() => {

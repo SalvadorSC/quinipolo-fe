@@ -27,14 +27,14 @@ export function SummarySection({
         {t("resultsAutoFill.selectedCount", {
           count: selectedCount,
           total: totalCount,
-        }) || `Selected ${selectedCount} / ${totalCount} matches`}
+        })}
         {filteredCount !== totalCount && (
           <Typography
             component="span"
             variant="body2"
             sx={{ ml: 1, fontWeight: "normal", color: "text.secondary" }}
           >
-            ({t("resultsAutoFill.filtered") || "filtered"}: {filteredCount})
+            ({t("resultsAutoFill.filtered")}: {filteredCount})
           </Typography>
         )}
       </Typography>
@@ -46,14 +46,12 @@ export function SummarySection({
           sx={{ mb: 2, maxWidth: "600px" }}
         >
           <Typography variant="body2" fontWeight="bold" gutterBottom>
-            {t("resultsAutoFill.autoSelectInfo.title") ||
-              "Why some matches aren't automatically selected"}
+            {t("resultsAutoFill.autoSelectInfo.title")}
           </Typography>
           <Typography variant="body2">
             {t("resultsAutoFill.autoSelectInfo.message", {
               count: nonHighConfidenceMatches.length,
-            }) ||
-              `${nonHighConfidenceMatches.length} match(es) have confidence scores below the high threshold (70%). Only high confidence matches are automatically selected to ensure accuracy. You can manually select these matches if needed.`}
+            })}
           </Typography>
         </Alert>
       )}
@@ -61,12 +59,10 @@ export function SummarySection({
       {lowConfidenceMatches.length > 0 && (
         <Alert severity="warning" icon={<WarningAmberIcon />} sx={{ mb: 2 }}>
           <Typography variant="body2" fontWeight="bold" gutterBottom>
-            {t("resultsAutoFill.lowConfidenceWarning") ||
-              "Low Confidence Matches Detected"}
+            {t("resultsAutoFill.lowConfidenceWarning")}
           </Typography>
           <Typography variant="body2">
-            {t("resultsAutoFill.lowConfidenceMessage") ||
-              `${lowConfidenceMatches.length} match(es) have low confidence scores. Please verify these results online before submitting.`}
+            {t("resultsAutoFill.lowConfidenceMessage", { count: lowConfidenceMatches.length })}
           </Typography>
         </Alert>
       )}

@@ -14,9 +14,7 @@ export function LoadingState() {
     >
       <CircularProgress />
       <Typography variant="body2">
-        {t("resultsAutoFill.loading") ||
-          t("loading") ||
-          "Loading results..."}
+        {t("resultsAutoFill.loading")}
       </Typography>
     </Box>
   );

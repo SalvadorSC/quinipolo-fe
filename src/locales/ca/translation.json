@@ -155,6 +155,7 @@
   "goBack": "Tornar",
   "noData": "No hi ha dades disponibles",
   "actions": "Accions",
+  "graphicsGenerator": "Generador de gràfics",
   "search": "Cercar",
   "filter": "Filtrar",
   "close": "Tancar",
@@ -383,14 +384,24 @@
   "noWinner": "Sense guanyador.",
   "thanksForParticipating": "Gràcies per participar en la Quinipolo. No et perdis la propera!",
   "messageCopied": "Missatge copiat al porta-retalls!",
+  "shareSuccess": "Compartit correctament!",
   "errorCopyingMessage": "Error copiant el missatge al porta-retalls!",
+  "errorGeneratingImages": "No s'han pogut generar les imatges",
   "quinipoloCorrectedSuccess": "Quinipolo corregida amb èxit!",
   "resultsTableInfo": "A continuació, es mostra la taula amb els resultats dels usuaris.",
   "noOneAnswered": "Vaja! Sembla que ningú ha respost aquesta Quinipolo!",
   "communicateWell": "Assegura't de comunicar bé com funciona!",
   "dontForgetToShare": "No t'oblidis de compartir els resultats!",
   "copyMessage": "Copiar missatge",
+  "copyImage": "Copiar imatge",
+  "imageCopied": "Imatge copiada al porta-retalls",
+  "shareImagesTitle": "Imatges per compartir",
   "shareOnWhatsApp": "Compartir a WhatsApp",
+  "shareOnWhatsAppWithImages": "Compartir amb imatges",
+  "shareNotSupported": "Compartir amb imatges no està suportat en aquest dispositiu.",
+  "shareTitle": "Quinipolo Resultats",
+  "quinipoloRankingImageAlt": "Ranking quinipolo",
+  "generalRankingImageAlt": "Ranking general de la lliga",
   "returnToMainMenu": "Tornar a l'inici",
   "inviteToQuinipolo": "Hola! Et convido a participar en la Quinipolo d'aquesta setmana. Introdueix les teves prediccions pels partits i competeix amb altres participants. Bona sort! 🏆",
   "deadlineToAnswer": "La data límit per respondre aquesta Quinipolo és:",
@@ -400,7 +411,6 @@
   "footballGoalsText": "0 gols, 1 o 2 gols, més de 2 gols",
   "matchNumber": "Partit {{number}}:",
   "sport": "Esport",
-  "league": "Lliga",
   "waterpolo": "Waterpolo",
   "football": "Futbol",
   "homeTeam": "Local",
@@ -890,5 +900,6 @@
         ]
       }
     ]
-  }
+  },
+  "uploadImage": "Upload Image"
 }
