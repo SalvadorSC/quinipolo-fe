@@ -25,12 +25,11 @@ export function ModalHeader() {
           letterSpacing: 1,
         }}
       >
-        {t("resultsAutoFill.title") || "Auto-fill Correction Results"}
+        {t("resultsAutoFill.title")}
       </Typography>
       <Tooltip
         title={
-          t("resultsAutoFill.helperText") ||
-          "Select matches to automatically fill correction form. High confidence matches are auto-selected."
+          t("resultsAutoFill.helperText")
         }
       >
         <IconButton size="small" sx={{ color: "#fff" }}>

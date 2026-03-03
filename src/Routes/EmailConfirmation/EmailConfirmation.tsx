@@ -54,7 +54,7 @@ const EmailConfirmation = () => {
             mb={2}
             style={{ fontWeight: 700, marginBottom: 16 }}
           >
-            {t("checkYourEmail") || "Check Your Email"}
+            {t("checkYourEmail")}
           </Typography>
           <Typography
             variant="body1"
@@ -64,8 +64,7 @@ const EmailConfirmation = () => {
               marginBottom: 8,
             }}
           >
-            {t("emailConfirmationSent") ||
-              "We've sent a confirmation email to your inbox. Please check your email and click the confirmation link to activate your account."}
+            {t("emailConfirmationSent")}
           </Typography>
           <Typography
             variant="body2"
@@ -75,8 +74,7 @@ const EmailConfirmation = () => {
               marginTop: 16,
             }}
           >
-            {t("emailConfirmationNote") ||
-              "Didn't receive the email? Check your spam folder or try signing up again."}
+            {t("emailConfirmationNote")}
           </Typography>
         </div>
 
@@ -92,7 +90,7 @@ const EmailConfirmation = () => {
               marginBottom: 16,
             }}
           >
-            {t("backToLogin") || "Back to Login"}
+            {t("backToLogin")}
           </Button>
 
           <div style={{ marginTop: 20 }}>
@@ -103,8 +101,7 @@ const EmailConfirmation = () => {
                 fontSize: "14px",
               }}
             >
-              {t("emailConfirmationHelp") ||
-                "Need help? Contact our support team."}
+              {t("emailConfirmationHelp")}
             </Typography>
           </div>
         </div>

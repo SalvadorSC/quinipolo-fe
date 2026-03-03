@@ -97,9 +97,7 @@ export const ReorderableMatchList: React.FC<ReorderableMatchListProps> = ({
     // If Match 15 is locked and the drag involves index 14
     if (isMatch15Locked && (oldIndex === 14 || newIndex === 14)) {
       setFeedback({
-        message:
-          t("match15.lockedWarning") ||
-          "Match 15 is locked. Unlock it to reorder.",
+        message: t("match15.lockedWarning"),
         severity: "warning",
         open: true,
       });
@@ -175,7 +173,7 @@ export const ReorderableMatchList: React.FC<ReorderableMatchListProps> = ({
                 justifyContent: "center",
               }}
             >
-              {t("reordering.dragging") || "Reordering match..."}
+              {t("reordering.dragging")}
             </Box>
           </Box>
         ) : null}

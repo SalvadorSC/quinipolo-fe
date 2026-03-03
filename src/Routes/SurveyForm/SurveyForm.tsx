@@ -271,7 +271,7 @@ const SurveyForm = () => {
     }
 
     setFeedback({
-      message: t("autoFillSuccess") || "Survey form filled successfully!",
+      message: t("autoFillSuccess"),
       severity: "success",
       open: true,
     });
@@ -330,7 +330,7 @@ const SurveyForm = () => {
               },
             }}
           >
-            {t("autoFillSurvey") || "Auto-fill Survey"}
+            {t("autoFillSurvey")}
           </Button>
         </div>
       )}

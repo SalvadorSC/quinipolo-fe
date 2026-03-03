@@ -53,7 +53,7 @@ const ResetPassword = () => {
               variant="h6"
               style={{ fontWeight: 500, marginTop: 16 }}
             >
-              {t("loading") || "Loading..."}
+              {t("loading")}
             </Typography>
           </div>
         </Card>
@@ -89,18 +89,17 @@ const ResetPassword = () => {
               mb={2}
               style={{ fontWeight: 700, marginTop: 8, color: "#ff4d4f" }}
             >
-              {t("invalidResetLink") || "Invalid Reset Link"}
+              {t("invalidResetLink")}
             </Typography>
             <p style={{ color: "#666", marginBottom: 16 }}>
-              {t("invalidResetLinkMessage") ||
-                "This password reset link is invalid or has expired. Please request a new password reset."}
+              {t("invalidResetLinkMessage")}
             </p>
             <Button
               type="primary"
               onClick={() => navigate("/sign-in")}
               style={{ borderRadius: 8, fontWeight: 600 }}
             >
-              {t("backToLogin") || "Back to Login"}
+              {t("backToLogin")}
             </Button>
           </div>
         </Card>
@@ -136,18 +135,17 @@ const ResetPassword = () => {
               mb={2}
               style={{ fontWeight: 700, marginTop: 8, color: "#52c41a" }}
             >
-              {t("passwordResetSuccess") || "Password Reset Successful! 🎉"}
+              {t("passwordResetSuccess")}
             </Typography>
             <p style={{ color: "#666", marginBottom: 16 }}>
-              {t("passwordResetSuccessMessage") ||
-                "Your password has been successfully reset. You will be redirected to the login page shortly."}
+              {t("passwordResetSuccessMessage")}
             </p>
             <Button
               type="primary"
               onClick={() => navigate("/sign-in")}
               style={{ borderRadius: 8, fontWeight: 600 }}
             >
-              {t("goToLogin") || "Go to Login"}
+              {t("goToLogin")}
             </Button>
           </div>
         </Card>
@@ -185,7 +183,7 @@ const ResetPassword = () => {
             {t("resetPassword")} 🔐
           </Typography>
           <p style={{ color: "#666", marginBottom: 24 }}>
-            {t("enterNewPassword") || "Please enter your new password below."}
+            {t("enterNewPassword")}
           </p>
         </div>
 
@@ -197,24 +195,23 @@ const ResetPassword = () => {
         >
           <Form.Item
             name="password"
-            label={t("newPassword") || "New Password"}
+            label={t("newPassword")}
             rules={[
               {
                 required: true,
                 message:
-                  t("newPasswordRequired") || "Please enter your new password",
+                  t("newPasswordRequired"),
               },
               {
                 min: 6,
                 message:
-                  t("passwordMinLength") ||
-                  "Password must be at least 6 characters long",
+                  t("passwordMinLength"),
               },
             ]}
           >
             <Input.Password
               prefix={<LockOutlined style={{ color: "#1890ff" }} />}
-              placeholder={t("newPassword") || "New Password"}
+              placeholder={t("newPassword")}
               size="large"
               autoComplete="new-password"
             />
@@ -222,13 +219,12 @@ const ResetPassword = () => {
 
           <Form.Item
             name="confirmPassword"
-            label={t("confirmNewPassword") || "Confirm New Password"}
+            label={t("confirmNewPassword")}
             rules={[
               {
                 required: true,
                 message:
-                  t("confirmPasswordRequired") ||
-                  "Please confirm your new password",
+                  t("confirmPasswordRequired"),
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
@@ -237,7 +233,7 @@ const ResetPassword = () => {
                   }
                   return Promise.reject(
                     new Error(
-                      t("passwordsDoNotMatch") || "Passwords do not match"
+                      t("passwordsDoNotMatch")
                     )
                   );
                 },
@@ -246,7 +242,7 @@ const ResetPassword = () => {
           >
             <Input.Password
               prefix={<LockOutlined style={{ color: "#1890ff" }} />}
-              placeholder={t("confirmNewPassword") || "Confirm New Password"}
+              placeholder={t("confirmNewPassword")}
               size="large"
               autoComplete="new-password"
             />
@@ -270,14 +266,14 @@ const ResetPassword = () => {
               size="large"
               style={{ marginTop: 8, borderRadius: 8, fontWeight: 600 }}
             >
-              {t("resetPassword") || "Reset Password"}
+              {t("resetPassword")}
             </Button>
           </Form.Item>
         </Form>
 
         <div style={{ marginTop: 20, textAlign: "center" }}>
           <a href="/sign-in" style={{ color: "#1890ff", fontWeight: 500 }}>
-            {t("backToLogin") || "Back to Login"}
+            {t("backToLogin")}
           </a>
         </div>
       </Card>

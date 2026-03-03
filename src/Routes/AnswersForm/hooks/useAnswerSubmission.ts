@@ -149,8 +149,7 @@ export const useAnswerSubmission = (
           setFeedback({
             message:
               error.response?.data?.message ||
-              t("errorSubmittingAnswers") ||
-              "An error occurred while submitting",
+              t("errorSubmittingAnswers"),
             severity: "error",
             open: true,
           });
@@ -158,7 +157,7 @@ export const useAnswerSubmission = (
       } else {
         // Handle non-Axios errors
         setFeedback({
-          message: t("unexpectedError") || "An unexpected error occurred",
+          message: t("unexpectedError"),
           severity: "error",
           open: true,
         });

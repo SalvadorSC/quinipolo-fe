@@ -163,14 +163,13 @@ const OAuthCallbackHandler = ({ children }: Props) => {
             variant="h5"
             style={{ fontWeight: 700, marginTop: 8, marginBottom: 4 }}
           >
-            {t("completeGoogleSignup") || "Complete Google Signup"}
+            {t("completeGoogleSignup")}
           </Typography>
           <Typography
             variant="body2"
             style={{ color: "#666", fontSize: 14, marginBottom: 24 }}
           >
-            {t("completeProfileMessage") ||
-              "Please complete your profile to continue"}
+            {t("completeProfileMessage")}
           </Typography>
         </div>
 
@@ -221,14 +220,14 @@ const OAuthCallbackHandler = ({ children }: Props) => {
             name="birthday"
             label={
               <span>
-                {t("birthday") || "Birthday"}{" "}
+                {t("birthday")}{" "}
                 <span style={{ color: "#ff4d4f" }}>*</span>
               </span>
             }
             rules={[
               {
                 required: true,
-                message: (t("birthday") || "Birthday") + " " + t("isRequired"),
+                message: t("birthday") + " " + t("isRequired"),
               },
               {
                 validator: (_, value) => {
@@ -237,8 +236,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
                   if (age >= 18) return Promise.resolve();
                   return Promise.reject(
                     new Error(
-                      t("mustBe18OrOlder") ||
-                        "You must be 18 or older to sign up"
+                      t("mustBe18OrOlder")
                     )
                   );
                 },
@@ -248,7 +246,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
             <Input
               type="date"
               prefix={<IdcardOutlined style={{ color: "#1890ff" }} />}
-              placeholder={t("birthday") || "Birthday"}
+              placeholder={t("birthday")}
               size="large"
               max={new Date().toISOString().split("T")[0]}
               style={{ borderRadius: 8 }}
@@ -276,7 +274,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
                 color: "#666",
               }}
             >
-              {t("cancel") || "Cancel"}
+              {t("cancel")}
             </Button>
             <Button
               type="primary"
@@ -289,7 +287,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
                 fontWeight: 600,
               }}
             >
-              {t("complete") || "Complete"}
+              {t("complete")}
             </Button>
           </div>
         </Form>

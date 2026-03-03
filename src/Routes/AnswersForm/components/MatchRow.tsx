@@ -127,8 +127,7 @@ export const MatchRow: React.FC<MatchRowProps> = ({
         </Box>
         {isCancelled && (
           <Alert severity="info" sx={{ mb: 1, fontSize: "0.875rem" }}>
-            {t("matchCancelledMessage") ||
-              "This match is cancelled and will count as correct for everyone"}
+            {t("matchCancelledMessage")}
           </Alert>
         )}
         {!isCancelled && (

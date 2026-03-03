@@ -23,17 +23,14 @@ export const StatisticsToggleButton: React.FC<StatisticsToggleButtonProps> = ({
 
   const getTooltipTitle = () => {
     if (disabled && hasNoAnswers) {
-      return (
-        t("statisticsNoAnswers") ||
-        "Statistics unavailable: No one has answered this quinipolo yet"
-      );
+      return t("statisticsNoAnswers");
     }
     if (disabled) {
-      return t("loadingStatistics") || "Loading statistics...";
+      return t("loadingStatistics");
     }
     return showStatistics
-      ? t("hideStatistics") || "Hide Statistics"
-      : t("showStatistics") || "Show Statistics";
+      ? t("hideStatistics")
+      : t("showStatistics");
   };
 
   return (

@@ -123,7 +123,7 @@ export function ResultsAutoFillModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} sx={secondaryActionStyles}>
-          {t("resultsAutoFill.cancel") || "Cancel"}
+          {t("resultsAutoFill.cancel")}
         </Button>
         <Button
           variant="contained"
@@ -131,7 +131,7 @@ export function ResultsAutoFillModal({
           disabled={selectedMatches.length === 0 || !data}
           sx={primaryActionStyles}
         >
-          {t("resultsAutoFill.apply") || "Apply Selection"}
+          {t("resultsAutoFill.apply")}
         </Button>
       </DialogActions>
     </Dialog>

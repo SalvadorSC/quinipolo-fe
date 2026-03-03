@@ -46,8 +46,7 @@ export const ReorderingTooltip: React.FC = () => {
         icon={<DragIndicatorIcon />}
         sx={{ mb: 2 }}
       >
-        {t("reordering.tooltip") ||
-          "Tip: You can drag matches to reorder them. Use the drag handle (☰) on the left side of each match."}
+        {t("reordering.tooltip")}
       </Alert>
     </Collapse>
   );

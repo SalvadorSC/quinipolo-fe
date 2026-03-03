@@ -192,7 +192,7 @@ const Dashboard = () => {
                   onClick={() => navigate("/graphics")}
                   sx={{ width: "100%" }}
                 >
-                  {t("graphicsGenerator") || "Graphics Generator"}
+                  {t("graphicsGenerator")}
                 </Button>
               )}
               {/* Admin Link - Only visible to system admins */}

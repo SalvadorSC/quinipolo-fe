@@ -43,7 +43,7 @@ export const CancelMatchButton: React.FC<CancelMatchButtonProps> = ({
 
   return (
     <>
-      <Tooltip title={t("matchOptions") || "Match options"} arrow>
+      <Tooltip title={t("matchOptions")} arrow>
         <IconButton
           size="small"
           onClick={handleClick}
@@ -79,8 +79,8 @@ export const CancelMatchButton: React.FC<CancelMatchButtonProps> = ({
           </ListItemIcon>
           <ListItemText>
             {isCancelled
-              ? t("uncancelMatch") || "Uncancel match"
-              : t("cancelMatch") || "Cancel match"}
+              ? t("uncancelMatch")
+              : t("cancelMatch")}
           </ListItemText>
         </MenuItem>
       </Menu>
