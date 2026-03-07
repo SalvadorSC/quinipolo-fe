@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CircularProgress, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 import { apiPost } from "../../utils/apiUtils";
 
-/** All teams from teamNameToImage (one per unique logo) - for logo audit mock */
+/** All teams from teamNameToImage + teams_logos/teams_logos1 - for logo audit */
 const ALL_TEAMS_FOR_LOGO_AUDIT = [
   "A.E. Santa Eulàlia F",
   "C.C Ciudad de Alcorcon F",
@@ -46,6 +47,29 @@ const ALL_TEAMS_FOR_LOGO_AUDIT = [
   "CN Terrassa",
   "UE Horta",
   "C.N. Vallirana F",
+  "Olympiacos",
+  "Ferencvarosi",
+  "Pro Recco",
+  "Jadran HN",
+  "Barceloneta",
+  "Horta",
+  "Barcelona",
+  "Sabadell",
+  "Terrassa",
+  "Sant Feliu",
+  "Catalunya",
+  "Echeyde",
+  "Brescia",
+  "Marseille",
+  "APOEL",
+  "Banja Luka",
+  "Buducnost",
+  "Dinamo Tbilisi",
+  "Crvena Zvezda",
+  "Jug Dubrovnik",
+  "Greece",
+  "Serbia",
+  "Croatia",
 ];
 
 /** Scrambled scores for logo-audit mock (results don't matter) */
@@ -56,13 +80,13 @@ const SCRAMBLED_SCORES = [
 
 const LEAGUES = ["DHF", "DHF", "DHM", "DHM", "DHM", "DHM", "CLF", "DHF", "PDM", "PDM", "PDM", "PDF", "PDF", "PDF", "PLENO_15"];
 
-/** Build all-teams mock for templates 1 & 2 - detects which logos need manual modification */
+/** Build all-teams mock for templates 1 & 2 - uses diverse teams to audit logo resolution */
 function buildAllTeamsMockPayload(): typeof MOCK_PAYLOAD {
   const shuffled = [...ALL_TEAMS_FOR_LOGO_AUDIT].sort(() => Math.random() - 0.5);
   const quinipolo = Array.from({ length: 15 }, (_, i) => ({
     gameType: "waterpolo" as const,
-    homeTeam: shuffled[i * 2],
-    awayTeam: shuffled[i * 2 + 1],
+    homeTeam: shuffled[(i * 2) % shuffled.length],
+    awayTeam: shuffled[(i * 2 + 1) % shuffled.length],
     leagueId: LEAGUES[i],
     isGame15: i === 14,
   }));
@@ -74,6 +98,7 @@ function buildAllTeamsMockPayload(): typeof MOCK_PAYLOAD {
   }));
   return {
     ...MOCK_PAYLOAD,
+    _meta: { ...MOCK_PAYLOAD._meta, includeLogoAudit: true },
     rawBeResponses: {
       ...MOCK_PAYLOAD.rawBeResponses,
       correctionSee: { quinipolo, correct_answers },
@@ -81,7 +106,18 @@ function buildAllTeamsMockPayload(): typeof MOCK_PAYLOAD {
   };
 }
 
-const MOCK_PAYLOAD = {
+const MOCK_PAYLOAD: {
+  _meta: {
+    matchday: string;
+    quinipoloId: string;
+    leagueId: string;
+    includeLogoAudit?: boolean;
+  };
+  rawBeResponses: Record<string, unknown>;
+  image3_quinipoloRanking?: unknown;
+  image4_generalLeagueRanking?: unknown;
+  image5_statistics?: unknown;
+} = {
   _meta: {
     matchday: "J16",
     quinipoloId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
@@ -110,7 +146,7 @@ const MOCK_PAYLOAD = {
         { matchNumber: 1, chosenWinner: "CN Catalunya", goalsHomeTeam: "20", goalsAwayTeam: "11" },
         { matchNumber: 2, chosenWinner: "CN Sant Feliu", goalsHomeTeam: "12", goalsAwayTeam: "14" },
         { matchNumber: 3, chosenWinner: "CN Terrassa", goalsHomeTeam: "14", goalsAwayTeam: "18" },
-        { matchNumber: 4, chosenWinner: "CN Sabadell", goalsHomeTeam: "13", goalsAwayTeam: "11" },
+        { matchNumber: 4, chosenWinner: "CN Sabadell", goalsHomeTeam: "18", goalsAwayTeam: "17", regularGoalsHomeTeam: "14", regularGoalsAwayTeam: "14" },
         { matchNumber: 5, chosenWinner: "CN Catalunya", goalsHomeTeam: "13", goalsAwayTeam: "19" },
         { matchNumber: 6, chosenWinner: "empat", goalsHomeTeam: null, goalsAwayTeam: null, cancelled: true },
         { matchNumber: 7, chosenWinner: "UVSE Margitsziget", goalsHomeTeam: "16", goalsAwayTeam: "15" },
@@ -175,20 +211,33 @@ const MOCK_PAYLOAD = {
   },
 };
 
+type LogoAudit = {
+  resolved: Array<{
+    teamName: string;
+    logoFile: string;
+    bgColor?: string | null;
+    dimensions?: string | null;
+  }>;
+  missing: string[];
+};
+
 type GraphicsResponse = {
   matchday: string;
   images: Record<string, string>;
+  logoAudit?: LogoAudit;
 };
 
 const GraphicsGeneratorPage = () => {
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<Record<string, string>>({});
+  const [logoAudit, setLogoAudit] = useState<LogoAudit | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleGenerate = async (useAllTeamsMock = false) => {
     setLoading(true);
     setError(null);
     setImages({});
+    setLogoAudit(null);
     try {
       const payload = useAllTeamsMock ? buildAllTeamsMockPayload() : MOCK_PAYLOAD;
       const res = await apiPost<GraphicsResponse>(
@@ -196,6 +245,7 @@ const GraphicsGeneratorPage = () => {
         payload
       );
       setImages(res.images || {});
+      setLogoAudit(res.logoAudit || null);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to generate graphics");
     } finally {
@@ -212,63 +262,111 @@ const GraphicsGeneratorPage = () => {
 
   return (
     <Box sx={{ p: 3, maxWidth: 1200, mx: "auto" }}>
-      <Typography variant="h5" gutterBottom>
-        Graphics Generator
-      </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        All 5 graphics: Match results (1 & 2), Ranking (3 & 4), Statistics (5)
-      </Typography>
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h5" gutterBottom>
+            Graphics Generator
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            All 5 graphics: Match results (1 & 2), Ranking (3 & 4), Statistics (5)
+          </Typography>
 
-      <Box sx={{ display: "flex", gap: 2, mb: 3, flexWrap: "wrap" }}>
-        <Button
-          variant="contained"
-          onClick={() => handleGenerate(false)}
-          disabled={loading}
-        >
-          {loading ? <CircularProgress size={24} /> : "Generate with mock data"}
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={() => handleGenerate(true)}
-          disabled={loading}
-          title="Uses all teams from teamNameToImage to detect which logos need manual modification"
-        >
-          All-teams mock (templates 1 & 2)
-        </Button>
-      </Box>
-
-      {error && (
-        <Typography color="error" sx={{ mb: 2 }}>
-          {error}
-        </Typography>
-      )}
-
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
-        {Object.entries(images).map(([key, dataUrl]) => (
-          <Box key={key} sx={{ textAlign: "center" }}>
-            <Typography variant="caption" display="block" sx={{ mb: 1 }}>
-              {key}
-            </Typography>
-            <img
-              src={dataUrl}
-              alt={key}
-              style={{
-                maxWidth: 360,
-                maxHeight: 480,
-                border: "1px solid #ccc",
-                borderRadius: 8,
-              }}
-            />
+          <Box sx={{ display: "flex", gap: 2, mb: 3, flexWrap: "wrap" }}>
             <Button
-              size="small"
-              onClick={() => downloadImage(key, dataUrl)}
-              sx={{ mt: 1, display: "block", mx: "auto" }}
+              variant="contained"
+              onClick={() => handleGenerate(false)}
+              disabled={loading}
             >
-              Download
+              {loading ? <CircularProgress size={24} /> : "Generate with mock data"}
+            </Button>
+            <Button
+              onClick={() => handleGenerate(true)}
+              disabled={loading}
+              title="Uses all teams from teamNameToImage to detect which logos need manual modification"
+            >
+              All-teams mock (templates 1 & 2)
+            </Button>
+            <Button component={Link} to="/graphics/teams" size="small">
+              Teams audit (CSV)
+            </Button>
+            <Button component={Link} to="/teams-curator" size="small">
+              Teams Curator
             </Button>
           </Box>
-        ))}
-      </Box>
+
+          {error && (
+            <Typography color="error" sx={{ mb: 2 }}>
+              {error}
+            </Typography>
+          )}
+
+          {logoAudit && (
+            <Box sx={{ mb: 3, p: 2, bgcolor: "grey.100", borderRadius: 2 }}>
+              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                Logo audit ({logoAudit.resolved.length} resolved, {logoAudit.missing.length} missing)
+              </Typography>
+              <Box sx={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                <Box>
+                  <Typography variant="caption" color="success.main" fontWeight="bold">
+                    Resolved (team → logo file)
+                  </Typography>
+                  <Box component="ul" sx={{ m: 0, pl: 2.5, maxHeight: 200, overflow: "auto", fontSize: 12 }}>
+                    {logoAudit.resolved.map(({ teamName, logoFile, bgColor, dimensions }) => (
+                      <li key={teamName}>
+                        <strong>{teamName}</strong> → {logoFile}
+                        {(bgColor || dimensions) && (
+                          <Typography component="span" variant="caption" display="block" color="text.secondary">
+                            {[dimensions, bgColor].filter(Boolean).join(" · ")}
+                          </Typography>
+                        )}
+                      </li>
+                    ))}
+                  </Box>
+                </Box>
+                {logoAudit.missing.length > 0 && (
+                  <Box>
+                    <Typography variant="caption" color="error.main" fontWeight="bold">
+                      Missing logos
+                    </Typography>
+                    <Box component="ul" sx={{ m: 0, pl: 2.5, maxHeight: 200, overflow: "auto", fontSize: 12 }}>
+                      {logoAudit.missing.map((team) => (
+                        <li key={team}>{team}</li>
+                      ))}
+                    </Box>
+                  </Box>
+                )}
+              </Box>
+            </Box>
+          )}
+
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+            {Object.entries(images).map(([key, dataUrl]) => (
+              <Box key={key} sx={{ textAlign: "center" }}>
+                <Typography variant="caption" display="block" sx={{ mb: 1 }}>
+                  {key}
+                </Typography>
+                <img
+                  src={dataUrl}
+                  alt={key}
+                  style={{
+                    maxWidth: 360,
+                    maxHeight: 480,
+                    border: "1px solid #ccc",
+                    borderRadius: 8,
+                  }}
+                />
+                <Button
+                  size="small"
+                  onClick={() => downloadImage(key, dataUrl)}
+                  sx={{ mt: 1, display: "block", mx: "auto" }}
+                >
+                  Download
+                </Button>
+              </Box>
+            ))}
+          </Box>
+        </CardContent>
+      </Card>
     </Box>
   );
 };
