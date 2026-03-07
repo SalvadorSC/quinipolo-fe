@@ -10,21 +10,23 @@ import {
   Box,
 } from "@mui/material";
 import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
-import { SurveyData, TeamOption } from "../../types/quinipolo";
+import { SurveyData, TeamOption, GameType } from "../../types/quinipolo";
 import styles from "./MatchForm.module.scss";
 import { useTranslation } from "react-i18next";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
 import { leagues } from "../../services/scraper/config";
+import { FEATURE_FLAGS } from "../../config/featureFlags";
 
 interface MatchFormProps {
-  teamOptions: { waterpolo: TeamOption[]; football: TeamOption[] };
+  teamOptions: Partial<Record<GameType, TeamOption[]>>;
   selectedTeams: string[];
   index: number;
   setQuinipolo: Dispatch<SetStateAction<SurveyData[]>>;
   loading: boolean;
   allowRepeatedTeams?: boolean;
   onValidationChange?: (matchIndex: number, error: string | null) => void;
-  value?: SurveyData; // Optional controlled value from parent
+  value?: SurveyData;
+  headerActions?: React.ReactNode;
 }
 
 interface TeamAutocompleteOption {
@@ -43,6 +45,7 @@ const MatchForm = ({
   allowRepeatedTeams = false,
   onValidationChange,
   value,
+  headerActions,
 }: MatchFormProps) => {
   const { t } = useTranslation();
   const muiTheme = useMuiTheme();
@@ -54,7 +57,7 @@ const MatchForm = ({
     date: new Date(),
   };
   const [matchData, setMatchData] = useState<SurveyData>(
-    value || initialSurveyData
+    value || initialSurveyData,
   );
   const [genderError, setGenderError] = useState<string | null>(null);
   const isUpdatingFromParentRef = useRef(false);
@@ -72,18 +75,20 @@ const MatchForm = ({
         value.awayTeam !== lastValueRef.current.awayTeam ||
         value.gameType !== lastValueRef.current.gameType ||
         value.leagueId !== lastValueRef.current.leagueId ||
-        value.isGame15 !== lastValueRef.current.isGame15;
-      
+        value.isGame15 !== lastValueRef.current.isGame15 ||
+        value.goalsHomeTeam !== lastValueRef.current.goalsHomeTeam ||
+        value.goalsAwayTeam !== lastValueRef.current.goalsAwayTeam;
+
       if (valueChanged) {
         isUpdatingFromParentRef.current = true;
         setMatchData(value);
         lastValueRef.current = value;
-        
+
         // Clear any pending timeout
         if (updateTimeoutRef.current) {
           clearTimeout(updateTimeoutRef.current);
         }
-        
+
         // Reset flag after state update completes
         updateTimeoutRef.current = setTimeout(() => {
           isUpdatingFromParentRef.current = false;
@@ -91,7 +96,7 @@ const MatchForm = ({
         }, 0);
       }
     }
-    
+
     // Cleanup timeout on unmount
     return () => {
       if (updateTimeoutRef.current) {
@@ -100,10 +105,7 @@ const MatchForm = ({
     };
   }, [value]);
 
-  const normalizeTeamArray = () =>
-    (teamOptions &&
-      teamOptions[matchData.gameType as "waterpolo" | "football"]) ||
-    [];
+  const normalizeTeamArray = () => teamOptions?.[matchData.gameType] || [];
 
   const getTeams = (type: string) => {
     const teamsForSport = normalizeTeamArray();
@@ -120,7 +122,7 @@ const MatchForm = ({
       })
       .sort(
         (a: TeamOption, b: TeamOption) =>
-          -b.name.charAt(0).localeCompare(a.name.charAt(0))
+          -b.name.charAt(0).localeCompare(a.name.charAt(0)),
       );
   };
 
@@ -142,7 +144,7 @@ const MatchForm = ({
         label: alias,
         team,
         isAlias: true,
-      }))
+      })),
     );
 
     return [...canonicalOptions, ...aliasOptions];
@@ -154,7 +156,7 @@ const MatchForm = ({
     if (isUpdatingFromParentRef.current) {
       return;
     }
-    
+
     setQuinipolo((prevquinipolo) => {
       const currentMatch = prevquinipolo[index];
       // Only update if the data actually changed
@@ -162,11 +164,13 @@ const MatchForm = ({
         currentMatch?.homeTeam === matchData.homeTeam &&
         currentMatch?.awayTeam === matchData.awayTeam &&
         currentMatch?.gameType === matchData.gameType &&
-        currentMatch?.leagueId === matchData.leagueId
+        currentMatch?.leagueId === matchData.leagueId &&
+        currentMatch?.goalsHomeTeam === matchData.goalsHomeTeam &&
+        currentMatch?.goalsAwayTeam === matchData.goalsAwayTeam
       ) {
         return prevquinipolo;
       }
-      
+
       const updatedData = [...prevquinipolo];
       updatedData[index] = matchData;
       return updatedData;
@@ -176,25 +180,21 @@ const MatchForm = ({
 
   const handleTeamChange = (
     name: "homeTeam" | "awayTeam",
-    value: TeamAutocompleteOption | string | null
+    value: TeamAutocompleteOption | string | null,
   ) => {
     const normalizedValue =
-      typeof value === "string" ? value : value?.team.name ?? "";
+      typeof value === "string" ? value : (value?.team.name ?? "");
     setMatchData((prevData: SurveyData) => ({
       ...prevData,
       [name]: normalizedValue,
     }));
   };
 
-  let goalsText = t("none");
-
-  if (matchData.gameType) {
-    if (matchData.gameType === "waterpolo") {
-      goalsText = t("waterpoloGoalsText");
-    } else {
-      goalsText = t("footballGoalsText");
-    }
-  }
+  const goalsTextMap: Partial<Record<GameType, string>> = {
+    waterpolo: t("waterpoloGoalsText"),
+    football: t("footballGoalsText"),
+  };
+  const goalsText = goalsTextMap[matchData.gameType] ?? t("none");
 
   useEffect(() => {
     const homeTeam = findTeamByName(matchData.homeTeam);
@@ -218,10 +218,22 @@ const MatchForm = ({
 
   return (
     <>
-      <Typography className={styles.matchFormTitle}>
-        {t("matchNumber", { number: index + 1 })} <br />
-      </Typography>
-      <br />
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 0.5,
+          mt: 2.5,
+          mb: 1,
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography className={styles.matchFormTitle}>
+          {t("matchNumber", { number: index + 1 })}
+        </Typography>
+        {headerActions}
+      </Box>
+      {!headerActions && <br />}
       <Box
         className={styles.matchForm}
         key={`matchForm-${index}`}
@@ -251,20 +263,38 @@ const MatchForm = ({
                 name="gameType"
                 value={matchData.gameType}
                 onChange={(event) => {
+                  const newSport = event.target.value as GameType;
                   setMatchData({
                     ...matchData,
-                    gameType: event.target.value as "waterpolo" | "football",
+                    gameType: newSport,
                     homeTeam: "",
                     awayTeam: "",
                     leagueId:
-                      event.target.value === "waterpolo"
-                        ? matchData.leagueId
-                        : undefined,
+                      newSport === "waterpolo" ? matchData.leagueId : undefined,
                   });
                 }}
               >
                 <MenuItem value="waterpolo">{t("waterpolo")}</MenuItem>
                 <MenuItem value="football">{t("football")}</MenuItem>
+                {FEATURE_FLAGS.multiSport && [
+                  <MenuItem
+                    key="basketball"
+                    value="basketball"
+                    disabled={index === 14}
+                  >
+                    {t("basketball")}
+                  </MenuItem>,
+                  <MenuItem
+                    key="handball"
+                    value="handball"
+                    disabled={index === 14}
+                  >
+                    {t("handball")}
+                  </MenuItem>,
+                  <MenuItem key="tennis" value="tennis" disabled={index === 14}>
+                    {t("tennis")}
+                  </MenuItem>,
+                ]}
               </Select>
             </FormControl>
 
@@ -317,7 +347,7 @@ const MatchForm = ({
                 }
                 inputValue={matchData.homeTeam}
                 getOptionLabel={(option) =>
-                  typeof option === "string" ? option : option?.label ?? ""
+                  typeof option === "string" ? option : (option?.label ?? "")
                 }
                 isOptionEqualToValue={(option, value) =>
                   option.key === value?.key
@@ -374,7 +404,7 @@ const MatchForm = ({
                 }
                 inputValue={matchData.awayTeam}
                 getOptionLabel={(option) =>
-                  typeof option === "string" ? option : option?.label ?? ""
+                  typeof option === "string" ? option : (option?.label ?? "")
                 }
                 isOptionEqualToValue={(option, value) =>
                   option.key === value?.key
