@@ -9,7 +9,8 @@ export const useAnswerValidation = (
   seeUserAnswersModeOn: boolean,
   viewOnlyModeOn: boolean,
   hasAttemptedSubmit: boolean,
-  setMissingAnswerIndices: React.Dispatch<React.SetStateAction<number[]>>
+  setMissingAnswerIndices: React.Dispatch<React.SetStateAction<number[]>>,
+  requireGoalsForTieOnMatches1to14: boolean = false
 ) => {
   useEffect(() => {
     if (seeUserAnswersModeOn) return;
@@ -18,7 +19,10 @@ export const useAnswerValidation = (
     const matches = quinipolo?.quinipolo || [];
     if (!matches.length) return;
 
-    const missing = findMissingAnswers(answers);
+    const missing = findMissingAnswers(answers, {
+      requireGoalsForTieOnMatches1to14,
+      requireExactGoalsForMatch15: requireGoalsForTieOnMatches1to14,
+    });
     setMissingAnswerIndices(missing);
   }, [
     answers,
@@ -27,5 +31,6 @@ export const useAnswerValidation = (
     viewOnlyModeOn,
     hasAttemptedSubmit,
     setMissingAnswerIndices,
+    requireGoalsForTieOnMatches1to14,
   ]);
 };

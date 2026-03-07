@@ -10,7 +10,8 @@
   display: flex;
   flex-direction: row;
   margin-top: 16px;
-  justify-content: space-evenly;
+  justify-content: center;
+  gap: 16px;
 }
 
 .matchName,
@@ -47,10 +48,6 @@
   transition: all 0.2s ease;
   line-height: 1.2;
 
-  &:hover {
-    color: rgba(255, 255, 255, 0.7);
-    background: rgba(255, 255, 255, 0.12);
-  }
 }
 
 .nameInput {
