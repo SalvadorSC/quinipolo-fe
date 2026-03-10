@@ -13,20 +13,27 @@ type GraphicsPreviewProps = {
   answers: AnswersType[];
 };
 
+function nextMatchday(matchday: string | undefined): string | undefined {
+  if (!matchday) return undefined;
+  const m = matchday.match(/^J(\d+)$/i);
+  if (!m) return matchday;
+  return `J${parseInt(m[1], 10) + 1}`;
+}
+
 function buildCorrectionSeePayload(
   quinipolo: QuinipoloType,
-  answers: AnswersType[]
+  answers: AnswersType[],
 ) {
   const correctAnswers = prepareAnswersForSubmission(answers);
   const quinipoloItems = (quinipolo.quinipolo || []).map((item) => ({
     homeTeam: item.homeTeam,
     awayTeam: item.awayTeam,
-    leagueId: item.leagueId || quinipolo.league_id || "DHM",
+    leagueId: item.leagueId,
     isGame15: item.isGame15 ?? false,
   }));
 
   return {
-    _meta: { matchday: "J16" },
+    _meta: { matchday: nextMatchday(quinipolo.matchday) ?? quinipolo.matchday },
     correctionSee: {
       quinipolo: quinipoloItems,
       correct_answers: correctAnswers,
@@ -104,7 +111,7 @@ export const GraphicsPreview: React.FC<GraphicsPreviewProps> = ({
       });
     } catch {
       setFeedback({
-        message: t("errorCopyingMessage"),
+        message: t("errorCopyingImage"),
         severity: "error",
         open: true,
       });

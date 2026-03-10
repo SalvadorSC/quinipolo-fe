@@ -119,9 +119,7 @@ export function validateGoalsMatchWinner(
       if (homeRank !== null && awayRank !== null && homeRank !== awayRank) {
         return { valid: false, reason: "should_be_draw" };
       }
-      if (hasExactGoals && homeExactNum !== awayExactNum) {
-        return { valid: false, reason: "should_be_draw" };
-      }
+      // For tie that went to penalties, exact goals (penalty result) differ - that's correct
     } else {
       if (homeRank !== null && awayRank !== null) {
         if (isHomeWinner && homeRank <= awayRank) {

@@ -56,7 +56,11 @@ const AnswersForm = () => {
     quinipolo,
     answers,
     setAnswers,
-  } = useQuinipoloData(modes.editCorrectionModeOn, modes.seeUserAnswersModeOn);
+  } = useQuinipoloData(
+    modes.editCorrectionModeOn,
+    modes.seeUserAnswersModeOn,
+    modes.correctingModeOn
+  );
 
   const { handleChange, handleGame15Change, handleGoalsChange, handleCancelMatch } =
     useAnswerHandlers(
@@ -243,15 +247,23 @@ const AnswersForm = () => {
             })}
           </TableBody>
           {(modes.correctingModeOn || modes.editCorrectionModeOn) && (
-            <GraphicsPreview quinipolo={quinipolo} answers={answers} />
+            <TableRow>
+              <TableCell colSpan={1}>
+                <GraphicsPreview quinipolo={quinipolo} answers={answers} />
+              </TableCell>
+            </TableRow>
           )}
           {!modes.seeUserAnswersModeOn && !modes.viewOnlyModeOn && (
-            <SubmitButton
-              onClick={submitQuinipolo}
-              loading={loading}
-              editCorrectionModeOn={modes.editCorrectionModeOn}
-              isModerator={isModerator}
-            />
+            <TableRow>
+              <TableCell colSpan={1}>
+                <SubmitButton
+                  onClick={submitQuinipolo}
+                  loading={loading}
+                  editCorrectionModeOn={modes.editCorrectionModeOn}
+                  isModerator={isModerator}
+                />
+              </TableCell>
+            </TableRow>
           )}
         </Table>
       </TableContainer>

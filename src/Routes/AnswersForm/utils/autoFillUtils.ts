@@ -28,17 +28,8 @@ export const applyAutoFillResults = (
 
     let chosenWinner = "";
     const quinipoloMatch = quinipolo.quinipolo[matchIndex];
-    if (result.outcome === "Tie") {
+    if (result.outcome === "Tie" || result.outcome === "Tie (PEN)") {
       chosenWinner = "empat";
-    } else if (result.outcome === "Tie (PEN)") {
-      if (result.homeScore === result.awayScore) {
-        chosenWinner = "empat";
-      } else if (quinipoloMatch) {
-        chosenWinner =
-          result.homeScore > result.awayScore
-            ? quinipoloMatch.homeTeam
-            : quinipoloMatch.awayTeam;
-      }
     } else if (quinipoloMatch) {
       if (result.outcome === quinipoloMatch.homeTeam) {
         chosenWinner = quinipoloMatch.homeTeam;
@@ -80,23 +71,36 @@ export const applyAutoFillResults = (
     };
 
     if (matchIndex === 14) {
-      let homeScore = result.homeScore;
-      let awayScore = result.awayScore;
-
-      // If it was a tie and went to penalties, use regulation scores
-      if (
-        result.outcome === "Tie (PEN)" &&
+      const hasRegulation =
         result.homeRegulationScore !== undefined &&
-        result.awayRegulationScore !== undefined
-      ) {
-        homeScore = result.homeRegulationScore;
-        awayScore = result.awayRegulationScore;
+        result.awayRegulationScore !== undefined;
+      const isTiePen = result.outcome === "Tie (PEN)";
+
+      let rangeHome = result.homeScore;
+      let rangeAway = result.awayScore;
+      if (isTiePen && hasRegulation) {
+        rangeHome = result.homeRegulationScore!;
+        rangeAway = result.awayRegulationScore!;
+      }
+
+      const match15Update: Partial<AnswersType> = {
+        goalsHomeTeam: scoreToGoalRange(rangeHome),
+        goalsAwayTeam: scoreToGoalRange(rangeAway),
+        goalsHomeTeamExact: String(result.homeScore),
+        goalsAwayTeamExact: String(result.awayScore),
+      };
+
+      if (isTiePen && hasRegulation) {
+        match15Update.regularGoalsHomeTeam = String(result.homeRegulationScore);
+        match15Update.regularGoalsAwayTeam = String(result.awayRegulationScore);
+      } else if (result.outcome === "Tie") {
+        match15Update.regularGoalsHomeTeam = String(result.homeScore);
+        match15Update.regularGoalsAwayTeam = String(result.awayScore);
       }
 
       updatedAnswers[14] = {
         ...updatedAnswers[14],
-        goalsHomeTeam: scoreToGoalRange(homeScore),
-        goalsAwayTeam: scoreToGoalRange(awayScore),
+        ...match15Update,
       };
     }
   });

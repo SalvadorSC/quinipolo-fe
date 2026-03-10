@@ -66,6 +66,10 @@ export const prepareAnswersForSubmission = (
         baseAnswer.goalsHomeTeamExact = answer.goalsHomeTeamExact || "";
         baseAnswer.goalsAwayTeamExact = answer.goalsAwayTeamExact || "";
       }
+      if (answer.regularGoalsHomeTeam || answer.regularGoalsAwayTeam) {
+        baseAnswer.regularGoalsHomeTeam = answer.regularGoalsHomeTeam || "";
+        baseAnswer.regularGoalsAwayTeam = answer.regularGoalsAwayTeam || "";
+      }
     } else {
       const hasRegular =
         answer.regularGoalsHomeTeam || answer.regularGoalsAwayTeam;

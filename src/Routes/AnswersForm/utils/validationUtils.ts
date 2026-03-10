@@ -32,8 +32,10 @@ export const findMissingAnswers = (
       } else if (
         requireGoalsForTie &&
         ans.chosenWinner === "empat" &&
-        !(ans.goalsHomeTeam || ans.goalsAwayTeam) &&
-        !(ans.regularGoalsHomeTeam || ans.regularGoalsAwayTeam)
+        !(
+          (ans.goalsHomeTeam && ans.goalsAwayTeam) ||
+          (ans.regularGoalsHomeTeam && ans.regularGoalsAwayTeam)
+        )
       ) {
         missing.push(idx);
       }

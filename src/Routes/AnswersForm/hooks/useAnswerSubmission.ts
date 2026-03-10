@@ -19,6 +19,7 @@ import {
   findMissingAnswers,
   findGoalsMismatchIndicesForQuinipolo,
 } from "../utils/validationUtils";
+import { LEAGUES_WITH_IMAGE_SHARE_BETA } from "../../../config/leaguesWithImageShare";
 
 export const useAnswerSubmission = (
   answers: AnswersType[],
@@ -37,14 +38,16 @@ export const useAnswerSubmission = (
 
   const submitQuinipolo = async () => {
     const isCorrectionMode = correctingModeOn || editCorrectionModeOn;
+    const canEnterGoalsPerMatch =
+      isCorrectionMode &&
+      LEAGUES_WITH_IMAGE_SHARE_BETA.includes(quinipolo.league_id);
     const missing = findMissingAnswers(answers, {
-      requireGoalsForTieOnMatches1to14: isCorrectionMode,
-      requireExactGoalsForMatch15: isCorrectionMode,
+      requireGoalsForTieOnMatches1to14: canEnterGoalsPerMatch,
+      requireExactGoalsForMatch15: canEnterGoalsPerMatch,
     });
-    const goalsMismatches =
-      correctingModeOn || editCorrectionModeOn
-        ? findGoalsMismatchIndicesForQuinipolo(answers, quinipolo)
-        : [];
+    const goalsMismatches = canEnterGoalsPerMatch
+      ? findGoalsMismatchIndicesForQuinipolo(answers, quinipolo)
+      : [];
     const invalidIndices = Array.from(new Set([...missing, ...goalsMismatches]));
 
     if (invalidIndices.length > 0) {

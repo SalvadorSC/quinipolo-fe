@@ -99,6 +99,8 @@ export interface QuinipoloType {
   correct_answers?: CorrectAnswer[];
   answered?: boolean;
   answer_statistics?: AnswerStatistics;
+  /** Matchday (e.g. J14) from correction-see; used for graphics */
+  matchday?: string;
 }
 
 // API Response types
