@@ -43,6 +43,8 @@ const CorrectionSuccess = () => {
     | {
         matchNumber: number;
         failedPercentage: number;
+        wrongCount?: number;
+        totalCount?: number;
         homeTeam?: string;
         awayTeam?: string;
         correctWinner?: string;
@@ -79,6 +81,7 @@ const CorrectionSuccess = () => {
     image2?: string;
     image3: string;
     image4: string;
+    image5?: string;
   } | null>(null);
   const [shareImagesLoading, setShareImagesLoading] = useState(false);
   const { t } = useTranslation();
@@ -184,6 +187,29 @@ const CorrectionSuccess = () => {
         fullCorrectQuinipolos: p.fullCorrectQuinipolos,
       }));
 
+    const image5Payload =
+      averagePointsThisQuinipolo != null || mostFailed
+        ? {
+            image5_statistics: {
+              ...(matchday != null && { matchday }),
+              averagePoints: averagePointsThisQuinipolo ?? 0,
+              mostFailedMatch: mostFailed
+                ? {
+                    matchNumber: mostFailed.matchNumber,
+                    homeTeam: mostFailed.homeTeam,
+                    awayTeam: mostFailed.awayTeam,
+                    correctWinner: mostFailed.correctWinner,
+                    mostWrongWinner: mostFailed.mostWrongWinner,
+                    wrongCount: mostFailed.wrongCount,
+                    totalCount: mostFailed.totalCount,
+                    correctGuessesCount:
+                      (mostFailed.totalCount ?? 0) - (mostFailed.wrongCount ?? 0),
+                  }
+                : null,
+            },
+          }
+        : {};
+
     return {
       image3_quinipoloRanking: {
         ...(matchday != null && { matchday }),
@@ -196,6 +222,7 @@ const CorrectionSuccess = () => {
         leagueId,
         participantsLeaderboard: generalParticipants,
       },
+      ...image5Payload,
     };
   }, [
     results,
@@ -203,6 +230,8 @@ const CorrectionSuccess = () => {
     mergedLeaderboard,
     matchday,
     leagueId,
+    averagePointsThisQuinipolo,
+    mostFailed,
   ]);
 
   // Fetch share images (match results always; rankings only when someone answered)
@@ -265,14 +294,17 @@ const CorrectionSuccess = () => {
         const image2 = res.images?.image2;
         const image3 = res.images?.image3;
         const image4 = res.images?.image4;
+        const image5 = res.images?.image5;
         const hasMatchResults = image1 && image2;
         const hasRankings = image3 && image4;
-        if (hasMatchResults || hasRankings) {
+        const hasStatistics = !!image5;
+        if (hasMatchResults || hasRankings || hasStatistics) {
           setShareImages({
             image1,
             image2,
             image3: image3 ?? "",
             image4: image4 ?? "",
+            image5,
           });
         }
       })
@@ -343,8 +375,16 @@ const CorrectionSuccess = () => {
       month: "numeric",
       day: "numeric",
     });
+    let displayN: number | undefined = source[0]?.nQuinipolosParticipated;
+    if (matchday) {
+      const m = matchday.match(/^J(\d+)$/i);
+      if (m) displayN = parseInt(m[1], 10);
+    }
+    if (leagueId === "global" && typeof displayN === "number") {
+      displayN = Math.max(1, displayN - 2);
+    }
     let message = `*${t("resultsTitle", {
-      n: source[0]?.nQuinipolosParticipated,
+      n: displayN,
       date: formattedDate,
     })}*\n\n`;
 
@@ -377,9 +417,14 @@ const CorrectionSuccess = () => {
       let image2 = shareImages?.image2;
       let image3 = shareImages?.image3;
       let image4 = shareImages?.image4;
+      let image5 = shareImages?.image5;
       const hasMatchResults = image1 && image2;
       const hasRankings = image3 && image4;
-      const needsFetch = !hasMatchResults || (needsRankings && !hasRankings);
+      const hasStatistics = !!image5;
+      const needsFetch =
+        !hasMatchResults ||
+        (needsRankings && !hasRankings) ||
+        (results.length > 0 && !hasStatistics);
 
       if (needsFetch) {
         const rankingPayload = needsRankings ? getRankingPayload() : {};
@@ -428,12 +473,14 @@ const CorrectionSuccess = () => {
         image2 = res.images?.image2;
         image3 = res.images?.image3;
         image4 = res.images?.image4;
+        image5 = res.images?.image5;
         if (image1 && image2)
           setShareImages({
             image1,
             image2,
             image3: image3 ?? "",
             image4: image4 ?? "",
+            image5,
           });
       }
 
@@ -468,6 +515,10 @@ const CorrectionSuccess = () => {
           await dataUrlToFile(image4, "quinipolo-general-ranking.png"),
         );
       }
+      if (image5)
+        files.push(
+          await dataUrlToFile(image5, "quinipolo-statistics.png"),
+        );
 
       const shareData: ShareData = {
         files,
@@ -697,6 +748,29 @@ const CorrectionSuccess = () => {
                         size="small"
                         variant="outlined"
                         onClick={() => copyImageToClipboard(shareImages.image4)}
+                        sx={{ mt: 1, width: "100%" }}
+                      >
+                        {t("copyImage")}
+                      </Button>
+                    </Box>
+                  )}
+                  {shareImages.image5 && (
+                    <Box>
+                      <img
+                        src={shareImages.image5}
+                        alt={t("statisticsImageAlt")}
+                        style={{
+                          width: "100%",
+                          borderRadius: 8,
+                          display: "block",
+                        }}
+                      />
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() =>
+                          copyImageToClipboard(shareImages.image5!)
+                        }
                         sx={{ mt: 1, width: "100%" }}
                       >
                         {t("copyImage")}
