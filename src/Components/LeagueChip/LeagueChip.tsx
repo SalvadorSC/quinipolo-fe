@@ -13,7 +13,7 @@ export interface LeagueChipProps extends Omit<ChipProps, "label"> {
 
 /**
  * Reusable LeagueChip component for displaying league badges with consistent styling
- * 
+ *
  * @param leagueId - The league ID to determine the color scheme
  * @param label - Custom label (defaults to leagueId if not provided)
  * @param size - Size of the chip (default: "small")
@@ -37,7 +37,7 @@ export const LeagueChip: React.FC<LeagueChipProps> = ({
   const leagueStyle = getLeagueChipStyle(leagueId);
   const displayLabel = label ?? leagueId ?? "";
 
-  // Base styles
+  // Base styles with subtle hover for all chips
   const baseStyles = {
     background: leagueStyle.background,
     color: leagueStyle.color,
@@ -49,11 +49,12 @@ export const LeagueChip: React.FC<LeagueChipProps> = ({
     ? {
         cursor: "pointer",
         opacity: selected ? 1 : 0.6,
-        border: selected ? "0px solid transparent" : "2px solid rgba(0,0,0,0.2)",
+        border: selected
+          ? "0px solid transparent"
+          : "2px solid rgba(0,0,0,0.2)",
         background: selected ? leagueStyle.background : "rgba(0,0,0,0.1)",
         color: selected ? leagueStyle.color : "#666",
         "&:hover": {
-          opacity: 1,
           transform: "scale(1.05)",
           transition: "all 0.2s ease",
         },
@@ -75,4 +76,3 @@ export const LeagueChip: React.FC<LeagueChipProps> = ({
     />
   );
 };
-

@@ -186,14 +186,34 @@ const Dashboard = () => {
               }}
             >
               {config.isDevelopment && (
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => navigate("/graphics")}
-                  sx={{ width: "100%" }}
-                >
-                  {t("graphicsGenerator")}
-                </Button>
+                <>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => navigate("/graphics")}
+                    sx={{ width: "100%" }}
+                  >
+                    {t("graphicsGenerator")}
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() =>
+                      navigate("/quinipolo/correct?id=mock-correction&correct")
+                    }
+                    sx={{ width: "100%" }}
+                  >
+                    Correct fake quinipolo (dev)
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => navigate("/teams-curator")}
+                    sx={{ width: "100%" }}
+                  >
+                    Teams Curator
+                  </Button>
+                </>
               )}
               {/* Admin Link - Only visible to system admins */}
               {isSystemAdmin(userData.role) ? (

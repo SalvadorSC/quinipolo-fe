@@ -35,7 +35,7 @@ export const ReorderingTooltip: React.FC = () => {
         className={styles.tooltip}
         action={
           <IconButton
-            aria-label="close"
+            aria-label={t("reordering.closeAriaLabel")}
             color="inherit"
             size="small"
             onClick={handleClose}

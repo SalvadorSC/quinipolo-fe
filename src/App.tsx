@@ -47,6 +47,27 @@ const GraphicsGeneratorPage = lazy(
     }))
 );
 
+const GraphicsTeamsPage = lazy(
+  () =>
+    import("./Routes/GraphicsTeams/GraphicsTeamsPage").then((m) => ({
+      default: m.default,
+    }))
+);
+
+const TeamsCuratorPage = lazy(
+  () =>
+    import("./Routes/TeamsCurator/TeamsCuratorPage").then((m) => ({
+      default: m.default,
+    }))
+);
+
+const LogoMapperPage = lazy(
+  () =>
+    import("./Routes/LogoMapper/LogoMapperPage").then((m) => ({
+      default: m.default,
+    }))
+);
+
 // Custom hook to handle URL cleanup
 function useUrlCleanup() {
   useEffect(() => {
@@ -154,16 +175,48 @@ function App() {
                   )}
 
                   {config.isDevelopment && (
-                    <Route
-                      path="graphics"
-                      element={
-                        <ProtectedRoute fallbackPath="/">
-                          <Suspense fallback={null}>
-                            <GraphicsGeneratorPage />
-                          </Suspense>
-                        </ProtectedRoute>
-                      }
-                    />
+                    <>
+                      <Route
+                        path="graphics"
+                        element={
+                          <ProtectedRoute fallbackPath="/">
+                            <Suspense fallback={null}>
+                              <GraphicsGeneratorPage />
+                            </Suspense>
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="graphics/teams"
+                        element={
+                          <ProtectedRoute fallbackPath="/">
+                            <Suspense fallback={null}>
+                              <GraphicsTeamsPage />
+                            </Suspense>
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="teams-curator"
+                        element={
+                          <ProtectedRoute fallbackPath="/">
+                            <Suspense fallback={null}>
+                              <TeamsCuratorPage />
+                            </Suspense>
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="logo-mapper"
+                        element={
+                          <ProtectedRoute fallbackPath="/">
+                            <Suspense fallback={null}>
+                              <LogoMapperPage />
+                            </Suspense>
+                          </ProtectedRoute>
+                        }
+                      />
+                    </>
                   )}
                   <Route path="*" element={<Navigate to="/" />} />
                 </Route>

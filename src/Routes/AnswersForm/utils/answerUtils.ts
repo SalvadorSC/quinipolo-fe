@@ -14,6 +14,10 @@ export const mapCorrectAnswersToInitial = (
           chosenWinner: correctAnswer.chosenWinner || "",
           goalsHomeTeam: correctAnswer.goalsHomeTeam || "",
           goalsAwayTeam: correctAnswer.goalsAwayTeam || "",
+          goalsHomeTeamExact: correctAnswer.goalsHomeTeamExact || "",
+          goalsAwayTeamExact: correctAnswer.goalsAwayTeamExact || "",
+          regularGoalsHomeTeam: correctAnswer.regularGoalsHomeTeam || "",
+          regularGoalsAwayTeam: correctAnswer.regularGoalsAwayTeam || "",
           cancelled: correctAnswer.cancelled || false,
         }
       : defaultAnswer;
@@ -27,6 +31,10 @@ export const prepareAnswersForSubmission = (
   chosenWinner: string;
   goalsHomeTeam?: string;
   goalsAwayTeam?: string;
+  goalsHomeTeamExact?: string;
+  goalsAwayTeamExact?: string;
+  regularGoalsHomeTeam?: string;
+  regularGoalsAwayTeam?: string;
   cancelled?: boolean;
 }> => {
   return answers.map((answer, index) => {
@@ -35,21 +43,51 @@ export const prepareAnswersForSubmission = (
       chosenWinner: string;
       goalsHomeTeam?: string;
       goalsAwayTeam?: string;
+      goalsHomeTeamExact?: string;
+      goalsAwayTeamExact?: string;
+      regularGoalsHomeTeam?: string;
+      regularGoalsAwayTeam?: string;
       cancelled?: boolean;
     } = {
       matchNumber: index + 1,
       chosenWinner: answer.chosenWinner,
     };
 
-    // Include cancelled status if present
     if (answer.cancelled) {
       baseAnswer.cancelled = true;
     }
 
-    // Only include goals for match 15 (pleno al 15)
     if (index === 14) {
-      baseAnswer.goalsHomeTeam = answer.goalsHomeTeam;
-      baseAnswer.goalsAwayTeam = answer.goalsAwayTeam;
+      if (answer.goalsHomeTeam || answer.goalsAwayTeam) {
+        baseAnswer.goalsHomeTeam = answer.goalsHomeTeam || "";
+        baseAnswer.goalsAwayTeam = answer.goalsAwayTeam || "";
+      }
+      if (answer.goalsHomeTeamExact || answer.goalsAwayTeamExact) {
+        baseAnswer.goalsHomeTeamExact = answer.goalsHomeTeamExact || "";
+        baseAnswer.goalsAwayTeamExact = answer.goalsAwayTeamExact || "";
+      }
+      if (answer.regularGoalsHomeTeam || answer.regularGoalsAwayTeam) {
+        baseAnswer.regularGoalsHomeTeam = answer.regularGoalsHomeTeam || "";
+        baseAnswer.regularGoalsAwayTeam = answer.regularGoalsAwayTeam || "";
+      }
+    } else {
+      const hasRegular =
+        answer.regularGoalsHomeTeam || answer.regularGoalsAwayTeam;
+      const hasFinal = answer.goalsHomeTeam || answer.goalsAwayTeam;
+      const isEmpat = answer.chosenWinner === "empat";
+
+      if (hasFinal) {
+        baseAnswer.goalsHomeTeam = answer.goalsHomeTeam || "";
+        baseAnswer.goalsAwayTeam = answer.goalsAwayTeam || "";
+      } else if (isEmpat && hasRegular) {
+        baseAnswer.goalsHomeTeam = answer.regularGoalsHomeTeam || "";
+        baseAnswer.goalsAwayTeam = answer.regularGoalsAwayTeam || "";
+      }
+
+      if (hasRegular) {
+        baseAnswer.regularGoalsHomeTeam = answer.regularGoalsHomeTeam || "";
+        baseAnswer.regularGoalsAwayTeam = answer.regularGoalsAwayTeam || "";
+      }
     }
     return baseAnswer;
   });

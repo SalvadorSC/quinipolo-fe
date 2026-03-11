@@ -2,13 +2,14 @@ import React from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import style from "./AnswersForm.module.scss";
 import { GOAL_DISPLAY_CONFIG, DEFAULT_GOAL_DISPLAY } from "./goalDisplayConfig";
+import { GameType } from "../../types/quinipolo";
 
 interface GoalsToggleButtonGroupProps {
   teamType: "home" | "away";
   teamName: string;
   goals: string;
   correctGoals: string;
-  matchType: "waterpolo" | "football";
+  matchType: GameType;
   onChange: (event: React.MouseEvent<HTMLElement>, newValue: string) => void;
   seeUserAnswersModeOn: string | null;
   viewOnlyModeOn?: string | null;

@@ -1,11 +1,13 @@
 import React from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import style from "../AnswersForm.module.scss";
+import { NO_TIE_SPORTS, GameType } from "../../../types/quinipolo";
 
 interface MatchWinnerButtonsProps {
   match: {
     homeTeam: string;
     awayTeam: string;
+    gameType?: GameType;
   };
   matchIndex: number;
   currentAnswer: {
@@ -24,6 +26,8 @@ export const MatchWinnerButtons: React.FC<MatchWinnerButtonsProps> = ({
   onChange,
   matchOption,
 }) => {
+  const tieDisabled = match.gameType ? NO_TIE_SPORTS.includes(match.gameType) : false;
+
   return (
     <ToggleButtonGroup
       color="primary"
@@ -45,7 +49,10 @@ export const MatchWinnerButtons: React.FC<MatchWinnerButtonsProps> = ({
       >
         {matchOption(match.homeTeam, matchIndex)}
       </ToggleButton>
-      <ToggleButton value={`empat__${matchIndex}`} disabled={loading}>
+      <ToggleButton
+        value={`empat__${matchIndex}`}
+        disabled={loading || tieDisabled}
+      >
         {matchOption("empat", matchIndex)}
       </ToggleButton>
       <ToggleButton

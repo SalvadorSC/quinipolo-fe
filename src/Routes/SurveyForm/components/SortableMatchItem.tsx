@@ -21,7 +21,6 @@ interface SortableMatchItemProps {
   matchErrors: Record<number, string | null>;
   isMatch15Locked: boolean;
   setIsMatch15Locked: React.Dispatch<React.SetStateAction<boolean>>;
-  isReorderingEnabled: boolean;
 }
 
 export const SortableMatchItem: React.FC<SortableMatchItemProps> = ({
@@ -37,11 +36,10 @@ export const SortableMatchItem: React.FC<SortableMatchItemProps> = ({
   matchErrors,
   isMatch15Locked,
   setIsMatch15Locked,
-  isReorderingEnabled,
 }) => {
   const isLastMatch = index === 14;
   const isLocked = isLastMatch && isMatch15Locked;
-  const isDragDisabled = !isReorderingEnabled || isLocked;
+  const isDragDisabled = isLocked;
 
   const {
     attributes,
@@ -67,17 +65,18 @@ export const SortableMatchItem: React.FC<SortableMatchItemProps> = ({
       style={style}
       className={`${styles.sortableItem} ${isDragging ? styles.dragging : ""}`}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "flex-start",
-          gap: 1,
-          mb: 2,
-          position: "relative",
-        }}
-      >
-        <Box sx={{ pt: 2, display: "flex", flexDirection: "column", gap: 0.5, alignItems: "center" }}>
-          {isReorderingEnabled && (
+      <Box sx={{ mb: 2, position: "relative" }}>
+        <MatchForm
+          key={index}
+          teamOptions={teamOptions}
+          selectedTeams={selectedTeams}
+          index={index}
+          setQuinipolo={setQuinipolo}
+          loading={loading}
+          allowRepeatedTeams={allowRepeatedTeams}
+          onValidationChange={onValidationChange}
+          value={quinipolo[index]}
+          headerActions={
             <>
               <DragHandle
                 listeners={listeners}
@@ -92,22 +91,8 @@ export const SortableMatchItem: React.FC<SortableMatchItemProps> = ({
                 />
               )}
             </>
-          )}
-        </Box>
-
-        <Box sx={{ flex: 1 }}>
-          <MatchForm
-            key={index}
-            teamOptions={teamOptions}
-            selectedTeams={selectedTeams}
-            index={index}
-            setQuinipolo={setQuinipolo}
-            loading={loading}
-            allowRepeatedTeams={allowRepeatedTeams}
-            onValidationChange={onValidationChange}
-            value={quinipolo[index]}
-          />
-        </Box>
+          }
+        />
       </Box>
     </div>
   );

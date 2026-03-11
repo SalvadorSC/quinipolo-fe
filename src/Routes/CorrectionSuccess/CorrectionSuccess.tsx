@@ -43,6 +43,8 @@ const CorrectionSuccess = () => {
     | {
         matchNumber: number;
         failedPercentage: number;
+        wrongCount?: number;
+        totalCount?: number;
         homeTeam?: string;
         awayTeam?: string;
         correctWinner?: string;
@@ -55,6 +57,7 @@ const CorrectionSuccess = () => {
     [location.state?.results],
   );
   const matchday: string | undefined = location.state?.matchday;
+  const quinipoloId: string | undefined = location.state?.quinipoloId;
   const participantsLeaderboardRaw = useMemo(
     () => location.state?.participantsLeaderboard || [],
     [location.state?.participantsLeaderboard],
@@ -74,8 +77,11 @@ const CorrectionSuccess = () => {
   );
   const [sharingWithImages, setSharingWithImages] = useState(false);
   const [shareImages, setShareImages] = useState<{
+    image1?: string;
+    image2?: string;
     image3: string;
     image4: string;
+    image5?: string;
   } | null>(null);
   const [shareImagesLoading, setShareImagesLoading] = useState(false);
   const { t } = useTranslation();
@@ -137,7 +143,9 @@ const CorrectionSuccess = () => {
   }, [leagueId]);
 
   const canShareImages =
-    !!leagueId && LEAGUES_WITH_IMAGE_SHARE_BETA.includes(leagueId);
+    !!leagueId &&
+    !!matchday &&
+    LEAGUES_WITH_IMAGE_SHARE_BETA.includes(leagueId);
 
   const getRankingPayload = useCallback(() => {
     const quinipoloParticipants = results
@@ -179,6 +187,29 @@ const CorrectionSuccess = () => {
         fullCorrectQuinipolos: p.fullCorrectQuinipolos,
       }));
 
+    const image5Payload =
+      averagePointsThisQuinipolo != null || mostFailed
+        ? {
+            image5_statistics: {
+              ...(matchday != null && { matchday }),
+              averagePoints: averagePointsThisQuinipolo ?? 0,
+              mostFailedMatch: mostFailed
+                ? {
+                    matchNumber: mostFailed.matchNumber,
+                    homeTeam: mostFailed.homeTeam,
+                    awayTeam: mostFailed.awayTeam,
+                    correctWinner: mostFailed.correctWinner,
+                    mostWrongWinner: mostFailed.mostWrongWinner,
+                    wrongCount: mostFailed.wrongCount,
+                    totalCount: mostFailed.totalCount,
+                    correctGuessesCount:
+                      (mostFailed.totalCount ?? 0) - (mostFailed.wrongCount ?? 0),
+                  }
+                : null,
+            },
+          }
+        : {};
+
     return {
       image3_quinipoloRanking: {
         ...(matchday != null && { matchday }),
@@ -191,6 +222,7 @@ const CorrectionSuccess = () => {
         leagueId,
         participantsLeaderboard: generalParticipants,
       },
+      ...image5Payload,
     };
   }, [
     results,
@@ -198,28 +230,82 @@ const CorrectionSuccess = () => {
     mergedLeaderboard,
     matchday,
     leagueId,
+    averagePointsThisQuinipolo,
+    mostFailed,
   ]);
 
-  // Fetch share images only when merged leaderboard is ready to avoid incorrect rankings
+  // Fetch share images (match results always; rankings only when someone answered)
   useEffect(() => {
-    if (
-      !canShareImages ||
-      results.length === 0 ||
-      shareImages ||
-      mergedLeaderboard === null
-    )
-      return;
+    if (!canShareImages || shareImages) return;
+    const needsRankings = results.length > 0;
+    if (needsRankings && mergedLeaderboard === null) return;
+
+    const buildPayload = async () => {
+      const rankingPayload = needsRankings ? getRankingPayload() : {};
+      if (quinipoloId) {
+        try {
+          const correctionSee = await apiGet<{
+            quinipolo: Array<{
+              homeTeam: string;
+              awayTeam: string;
+              leagueId?: string;
+              isGame15?: boolean;
+            }>;
+            correct_answers: Array<{
+              matchNumber: number;
+              chosenWinner: string;
+              goalsHomeTeam: string;
+              goalsAwayTeam: string;
+              cancelled?: boolean;
+            }>;
+          }>(`/api/quinipolos/quinipolo/${quinipoloId}/correction-see`);
+          if (
+            correctionSee?.quinipolo?.length >= 15 &&
+            correctionSee?.correct_answers?.length
+          ) {
+            return {
+              _meta: { matchday: matchday },
+              correctionSee: {
+                quinipolo: correctionSee.quinipolo,
+                correct_answers: correctionSee.correct_answers,
+              },
+              ...rankingPayload,
+            };
+          }
+        } catch {
+          if (Object.keys(rankingPayload).length > 0) {
+            return { _meta: { matchday: matchday }, ...rankingPayload };
+          }
+        }
+      }
+      return { _meta: { matchday: matchday }, ...rankingPayload };
+    };
 
     setShareImagesLoading(true);
-    apiPost<{ matchday: string; images: Record<string, string> }>(
-      "/api/graphics/generate",
-      getRankingPayload(),
-    )
+    buildPayload()
+      .then((payload) =>
+        apiPost<{ matchday: string; images: Record<string, string> }>(
+          "/api/graphics/generate",
+          payload,
+        ),
+      )
       .then((res) => {
+        const image1 = res.images?.image1;
+        const image2 = res.images?.image2;
         const image3 = res.images?.image3;
         const image4 = res.images?.image4;
-        if (image3 && image4) {
-          setShareImages({ image3, image4 });
+        const image5 = res.images?.image5;
+        const hasMatchResults = image1 && image2;
+        const hasRankings = image3 && image4;
+        const hasStatistics = !!image5;
+        if (hasMatchResults || hasRankings || hasStatistics) {
+          setShareImages({
+            image1,
+            image2,
+            image3: image3 ?? "",
+            image4: image4 ?? "",
+            image5,
+          });
         }
       })
       .catch(() => {
@@ -237,6 +323,8 @@ const CorrectionSuccess = () => {
     mergedLeaderboard,
     participantsLeaderboardRaw.length,
     getRankingPayload,
+    quinipoloId,
+    matchday,
   ]);
 
   const sortedResults = useMemo(() => {
@@ -287,8 +375,16 @@ const CorrectionSuccess = () => {
       month: "numeric",
       day: "numeric",
     });
+    let displayN: number | undefined = source[0]?.nQuinipolosParticipated;
+    if (matchday) {
+      const m = matchday.match(/^J(\d+)$/i);
+      if (m) displayN = parseInt(m[1], 10);
+    }
+    if (leagueId === "global" && typeof displayN === "number") {
+      displayN = Math.max(1, displayN - 2);
+    }
     let message = `*${t("resultsTitle", {
-      n: source[0]?.nQuinipolosParticipated,
+      n: displayN,
       date: formattedDate,
     })}*\n\n`;
 
@@ -313,22 +409,84 @@ const CorrectionSuccess = () => {
   const messageToShare = generateMessageToShare();
 
   const shareWithImages = async () => {
-    if (!canShareImages || results.length === 0) return;
+    if (!canShareImages || !matchday) return;
+    const needsRankings = results.length > 0;
     setSharingWithImages(true);
     try {
+      let image1 = shareImages?.image1;
+      let image2 = shareImages?.image2;
       let image3 = shareImages?.image3;
       let image4 = shareImages?.image4;
-      if (!image3 || !image4) {
-        const payload = getRankingPayload();
+      let image5 = shareImages?.image5;
+      const hasMatchResults = image1 && image2;
+      const hasRankings = image3 && image4;
+      const hasStatistics = !!image5;
+      const needsFetch =
+        !hasMatchResults ||
+        (needsRankings && !hasRankings) ||
+        (results.length > 0 && !hasStatistics);
+
+      if (needsFetch) {
+        const rankingPayload = needsRankings ? getRankingPayload() : {};
+        let payload: Record<string, unknown> = {
+          _meta: { matchday: matchday },
+          ...rankingPayload,
+        };
+        if (quinipoloId) {
+          try {
+            const correctionSee = await apiGet<{
+              quinipolo: Array<{
+                homeTeam: string;
+                awayTeam: string;
+                leagueId?: string;
+                isGame15?: boolean;
+              }>;
+              correct_answers: Array<{
+                matchNumber: number;
+                chosenWinner: string;
+                goalsHomeTeam: string;
+                goalsAwayTeam: string;
+                cancelled?: boolean;
+              }>;
+            }>(`/api/quinipolos/quinipolo/${quinipoloId}/correction-see`);
+            if (
+              correctionSee?.quinipolo?.length >= 15 &&
+              correctionSee?.correct_answers?.length
+            ) {
+              payload = {
+                ...payload,
+                correctionSee: {
+                  quinipolo: correctionSee.quinipolo,
+                  correct_answers: correctionSee.correct_answers,
+                },
+              };
+            }
+          } catch {
+            // Use ranking-only payload
+          }
+        }
         const res = await apiPost<{
           matchday: string;
           images: Record<string, string>;
         }>("/api/graphics/generate", payload);
+        image1 = res.images?.image1;
+        image2 = res.images?.image2;
         image3 = res.images?.image3;
         image4 = res.images?.image4;
-        if (image3 && image4) setShareImages({ image3, image4 });
+        image5 = res.images?.image5;
+        if (image1 && image2)
+          setShareImages({
+            image1,
+            image2,
+            image3: image3 ?? "",
+            image4: image4 ?? "",
+            image5,
+          });
       }
-      if (!image3 || !image4) {
+
+      const hasMatchResultsAfterFetch = image1 && image2;
+      const hasRankingsAfterFetch = needsRankings ? image3 && image4 : true;
+      if (!hasMatchResultsAfterFetch || !hasRankingsAfterFetch) {
         setFeedback({
           message: t("errorGeneratingImages"),
           severity: "error",
@@ -346,13 +504,24 @@ const CorrectionSuccess = () => {
         return new File([blob], name, { type: "image/png" });
       };
 
-      const [file3, file4] = await Promise.all([
-        dataUrlToFile(image3, "quinipolo-ranking.png"),
-        dataUrlToFile(image4, "quinipolo-general-ranking.png"),
-      ]);
+      const files: File[] = [];
+      if (image1)
+        files.push(await dataUrlToFile(image1, "quinipolo-results-1.png"));
+      if (image2)
+        files.push(await dataUrlToFile(image2, "quinipolo-results-2.png"));
+      if (image3 && image4) {
+        files.push(await dataUrlToFile(image3, "quinipolo-ranking.png"));
+        files.push(
+          await dataUrlToFile(image4, "quinipolo-general-ranking.png"),
+        );
+      }
+      if (image5)
+        files.push(
+          await dataUrlToFile(image5, "quinipolo-statistics.png"),
+        );
 
       const shareData: ShareData = {
-        files: [file3, file4],
+        files,
         text: messageToShare,
         title: t("shareTitle"),
       };
@@ -415,7 +584,7 @@ const CorrectionSuccess = () => {
       });
     } catch {
       setFeedback({
-        message: t("errorCopyingMessage"),
+        message: t("errorCopyingImage"),
         severity: "error",
         open: true,
       });
@@ -482,56 +651,136 @@ const CorrectionSuccess = () => {
           </div>
         ) : null}
 
-        {results.length > 0 && canShareImages && (
-          <Box sx={{ mt: 2, width: "100%", maxWidth: 400 }}>
-            <p
-              className={style.copyCorrection}
-              style={{ fontWeight: "bold", marginBottom: 8 }}
-            >
-              {t("shareImagesTitle")}
-            </p>
-            {shareImagesLoading ? (
-              <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
-                <CircularProgress size={32} />
-              </Box>
-            ) : shareImages ? (
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <Box>
-                  <img
-                    src={shareImages.image3}
-                    alt={t("quinipoloRankingImageAlt")}
-                    style={{ width: "100%", borderRadius: 8, display: "block" }}
-                  />
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    onClick={() => copyImageToClipboard(shareImages.image3)}
-                    sx={{ mt: 1, width: "100%" }}
-                  >
-                    {t("copyImage")}
-                  </Button>
+        {canShareImages &&
+          (results.length > 0 || shareImagesLoading || shareImages) && (
+            <Box sx={{ mt: 2, width: "100%", maxWidth: 400 }}>
+              <p
+                className={style.copyCorrection}
+                style={{ fontWeight: "bold", marginBottom: 8 }}
+              >
+                {t("shareImagesTitle")}
+              </p>
+              {shareImagesLoading ? (
+                <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
+                  <CircularProgress size={32} />
                 </Box>
-                <Box>
-                  <img
-                    src={shareImages.image4}
-                    alt={
-                      t("generalRankingImageAlt")
-                    }
-                    style={{ width: "100%", borderRadius: 8, display: "block" }}
-                  />
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    onClick={() => copyImageToClipboard(shareImages.image4)}
-                    sx={{ mt: 1, width: "100%" }}
-                  >
-                    {t("copyImage")}
-                  </Button>
+              ) : shareImages ? (
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  {shareImages.image1 && (
+                    <Box>
+                      <img
+                        src={shareImages.image1}
+                        alt={t("matchResultsImageAlt1")}
+                        style={{
+                          width: "100%",
+                          borderRadius: 8,
+                          display: "block",
+                        }}
+                      />
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() =>
+                          copyImageToClipboard(shareImages.image1!)
+                        }
+                        sx={{ mt: 1, width: "100%" }}
+                      >
+                        {t("copyImage")}
+                      </Button>
+                    </Box>
+                  )}
+                  {shareImages.image2 && (
+                    <Box>
+                      <img
+                        src={shareImages.image2}
+                        alt={t("matchResultsImageAlt2")}
+                        style={{
+                          width: "100%",
+                          borderRadius: 8,
+                          display: "block",
+                        }}
+                      />
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() =>
+                          copyImageToClipboard(shareImages.image2!)
+                        }
+                        sx={{ mt: 1, width: "100%" }}
+                      >
+                        {t("copyImage")}
+                      </Button>
+                    </Box>
+                  )}
+                  {shareImages.image3 && (
+                    <Box>
+                      <img
+                        src={shareImages.image3}
+                        alt={t("quinipoloRankingImageAlt")}
+                        style={{
+                          width: "100%",
+                          borderRadius: 8,
+                          display: "block",
+                        }}
+                      />
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() => copyImageToClipboard(shareImages.image3)}
+                        sx={{ mt: 1, width: "100%" }}
+                      >
+                        {t("copyImage")}
+                      </Button>
+                    </Box>
+                  )}
+                  {shareImages.image4 && (
+                    <Box>
+                      <img
+                        src={shareImages.image4}
+                        alt={t("generalRankingImageAlt")}
+                        style={{
+                          width: "100%",
+                          borderRadius: 8,
+                          display: "block",
+                        }}
+                      />
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() => copyImageToClipboard(shareImages.image4)}
+                        sx={{ mt: 1, width: "100%" }}
+                      >
+                        {t("copyImage")}
+                      </Button>
+                    </Box>
+                  )}
+                  {shareImages.image5 && (
+                    <Box>
+                      <img
+                        src={shareImages.image5}
+                        alt={t("statisticsImageAlt")}
+                        style={{
+                          width: "100%",
+                          borderRadius: 8,
+                          display: "block",
+                        }}
+                      />
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() =>
+                          copyImageToClipboard(shareImages.image5!)
+                        }
+                        sx={{ mt: 1, width: "100%" }}
+                      >
+                        {t("copyImage")}
+                      </Button>
+                    </Box>
+                  )}
                 </Box>
-              </Box>
-            ) : null}
-          </Box>
-        )}
+              ) : null}
+            </Box>
+          )}
 
         <p className={style.reminder}>{t("dontForgetToShare")}</p>
         <Button
@@ -553,7 +802,7 @@ const CorrectionSuccess = () => {
         >
           {t("shareOnWhatsApp")}
         </Button>
-        {results.length > 0 && canShareImages && (
+        {canShareImages && (results.length > 0 || shareImages?.image1) && (
           <Button
             variant="contained"
             onClick={shareWithImages}
@@ -561,8 +810,8 @@ const CorrectionSuccess = () => {
             style={{ marginTop: 16 }}
             className="gradient-success"
           >
-            {sharingWithImages
-              ? "..."
+            {            sharingWithImages
+              ? t("shareLoading")
               : `${t("shareOnWhatsAppWithImages")} (beta)`}
           </Button>
         )}

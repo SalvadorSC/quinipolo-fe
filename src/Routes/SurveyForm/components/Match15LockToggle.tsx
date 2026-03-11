@@ -24,7 +24,7 @@ export const Match15LockToggle: React.FC<Match15LockToggleProps> = ({
       <IconButton
         onClick={onToggle}
         size="small"
-        aria-label={isLocked ? "Unlock Match 15" : "Lock Match 15"}
+        aria-label={isLocked ? t("match15.unlockAriaLabel") : t("match15.lockAriaLabel")}
         sx={{
           color: "white",
           backgroundColor: isLocked ? "#424242" : "#757575",
