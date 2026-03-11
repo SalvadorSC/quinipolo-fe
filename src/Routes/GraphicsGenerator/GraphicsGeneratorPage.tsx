@@ -211,6 +211,26 @@ const MOCK_PAYLOAD: {
   },
 };
 
+/** Special statistics image: J18, Puntuación media 10.83, Encinas vs Caballa with correct logo backgrounds */
+const STATISTICS_SPECIAL_PAYLOAD = {
+  _meta: { matchday: "J18" },
+  image5_statistics: {
+    matchday: "J18",
+    averagePoints: 10.83,
+    mostFailedMatch: {
+      matchNumber: 14,
+      homeTeam: "C. Las Encinas De Boadilla M",
+      awayTeam: "CN Caballa Ceuta",
+      correctWinner: "CN Caballa Ceuta",
+      mostWrongWinner: "C. Las Encinas De Boadilla M",
+      failedPercentage: 97.5,
+      wrongCount: 39,
+      totalCount: 40,
+      correctGuessesCount: 0,
+    },
+  },
+};
+
 type LogoAudit = {
   resolved: Array<{
     teamName: string;
@@ -233,13 +253,20 @@ const GraphicsGeneratorPage = () => {
   const [logoAudit, setLogoAudit] = useState<LogoAudit | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleGenerate = async (useAllTeamsMock = false) => {
+  const handleGenerate = async (
+    useAllTeamsMock = false,
+    statisticsOnly = false
+  ) => {
     setLoading(true);
     setError(null);
     setImages({});
     setLogoAudit(null);
     try {
-      const payload = useAllTeamsMock ? buildAllTeamsMockPayload() : MOCK_PAYLOAD;
+      const payload = statisticsOnly
+        ? STATISTICS_SPECIAL_PAYLOAD
+        : useAllTeamsMock
+          ? buildAllTeamsMockPayload()
+          : MOCK_PAYLOAD;
       const res = await apiPost<GraphicsResponse>(
         "/api/graphics/generate",
         payload
@@ -285,6 +312,13 @@ const GraphicsGeneratorPage = () => {
               title="Uses all teams from teamNameToImage to detect which logos need manual modification"
             >
               All-teams mock (templates 1 & 2)
+            </Button>
+            <Button
+              onClick={() => handleGenerate(false, true)}
+              disabled={loading}
+              title="J18 special: Puntuación media 10.83, Encinas vs Caballa with correct logo backgrounds"
+            >
+              Statistics only (J18 special)
             </Button>
             <Button component={Link} to="/graphics/teams" size="small">
               Teams audit (CSV)
