@@ -33,6 +33,7 @@ import {
   Admin,
   JoinLeague,
   Terms,
+  DeleteAccount,
 } from "./Routes";
 import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
@@ -40,32 +41,28 @@ import Layout from "./Components/Layout/Layout";
 import { config } from "./utils/config";
 import { trackPageView } from "./utils/analytics";
 
-const GraphicsGeneratorPage = lazy(
-  () =>
-    import("./Routes/GraphicsGenerator/GraphicsGeneratorPage").then((m) => ({
-      default: m.default,
-    }))
+const GraphicsGeneratorPage = lazy(() =>
+  import("./Routes/GraphicsGenerator/GraphicsGeneratorPage").then((m) => ({
+    default: m.default,
+  })),
 );
 
-const GraphicsTeamsPage = lazy(
-  () =>
-    import("./Routes/GraphicsTeams/GraphicsTeamsPage").then((m) => ({
-      default: m.default,
-    }))
+const GraphicsTeamsPage = lazy(() =>
+  import("./Routes/GraphicsTeams/GraphicsTeamsPage").then((m) => ({
+    default: m.default,
+  })),
 );
 
-const TeamsCuratorPage = lazy(
-  () =>
-    import("./Routes/TeamsCurator/TeamsCuratorPage").then((m) => ({
-      default: m.default,
-    }))
+const TeamsCuratorPage = lazy(() =>
+  import("./Routes/TeamsCurator/TeamsCuratorPage").then((m) => ({
+    default: m.default,
+  })),
 );
 
-const LogoMapperPage = lazy(
-  () =>
-    import("./Routes/LogoMapper/LogoMapperPage").then((m) => ({
-      default: m.default,
-    }))
+const LogoMapperPage = lazy(() =>
+  import("./Routes/LogoMapper/LogoMapperPage").then((m) => ({
+    default: m.default,
+  })),
 );
 
 // Custom hook to handle URL cleanup
@@ -77,7 +74,7 @@ function useUrlCleanup() {
       window.history.replaceState(
         null,
         "",
-        window.location.pathname + window.location.search
+        window.location.pathname + window.location.search,
       );
     }
   }, []);
