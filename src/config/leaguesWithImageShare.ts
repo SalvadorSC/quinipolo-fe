@@ -6,7 +6,6 @@
 
 const DEFAULT_LEAGUES_WITH_IMAGE_SHARE_BETA = [
   "351a1949-f6c5-4940-ac70-1c7dd08e8b1a", // Global
-  "4cae8d44-f3bd-42a5-a899-78e64fdb0181", // Sant Feliu
   "3cc750df-b2ee-4a1f-92e4-cc743b9d01c4", // TEST
 ];
 
