@@ -31,10 +31,14 @@ export const useAnswerHandlers = (
       const teamName = parts[0];
       const index = parseInt(parts[1]);
       const updatedData = [...prevAnswers];
+      const isEmpat = teamName === "empat";
       updatedData[index] = {
         ...updatedData[index],
         matchNumber: index + 1,
         chosenWinner: teamName,
+        ...(!isEmpat && index !== 14
+          ? { regularGoalsHomeTeam: "", regularGoalsAwayTeam: "" }
+          : {}),
       };
       return updatedData;
     });
@@ -76,6 +80,38 @@ export const useAnswerHandlers = (
     });
   };
 
+  const handleGoalsChange = (
+    matchIndex: number,
+    teamType: "home" | "away" | "regularHome" | "regularAway",
+    value: string
+  ) => {
+    if (seeUserAnswersModeOn || viewOnlyModeOn) return;
+    const num = value.replace(/\D/g, "");
+    if (num.length > 2) return;
+    setAnswers((prev) => {
+      const updated = [...prev];
+      let key: string;
+      if (teamType === "regularHome" || teamType === "regularAway") {
+        key = teamType === "regularHome" ? "regularGoalsHomeTeam" : "regularGoalsAwayTeam";
+      } else {
+        key =
+          matchIndex === 14
+            ? teamType === "home"
+              ? "goalsHomeTeamExact"
+              : "goalsAwayTeamExact"
+            : teamType === "home"
+              ? "goalsHomeTeam"
+              : "goalsAwayTeam";
+      }
+      updated[matchIndex] = {
+        ...updated[matchIndex],
+        matchNumber: matchIndex + 1,
+        [key]: num || "",
+      };
+      return updated;
+    });
+  };
+
   const handleCancelMatch = (matchIndex: number) => {
     if (seeUserAnswersModeOn || viewOnlyModeOn) return;
 
@@ -90,13 +126,14 @@ export const useAnswerHandlers = (
           cancelled: false,
         };
       } else {
-        // Cancel: mark as cancelled and clear answers
         updatedData[matchIndex] = {
           ...currentAnswer,
           cancelled: true,
           chosenWinner: "",
           goalsHomeTeam: "",
           goalsAwayTeam: "",
+          regularGoalsHomeTeam: "",
+          regularGoalsAwayTeam: "",
         };
       }
 
@@ -112,6 +149,7 @@ export const useAnswerHandlers = (
   return {
     handleChange,
     handleGame15Change,
+    handleGoalsChange,
     handleCancelMatch,
   };
 };

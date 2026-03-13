@@ -161,16 +161,16 @@ export function MatchAutoFillModal({
   const [lessThan15Dismissed, setLessThan15Dismissed] = useState(false);
 
   const presetLabels: Record<Exclude<DifficultyPreset, "custom">, string> = {
-    easy: t("autoFillModal.easyPreset") || "Easy",
-    moderate: t("autoFillModal.moderatePreset") || "Moderate",
-    hard: t("autoFillModal.hardPreset") || "Hard",
+    easy: t("autoFillModal.easyPreset"),
+    moderate: t("autoFillModal.moderatePreset"),
+    hard: t("autoFillModal.hardPreset"),
   };
 
   const difficultyLabels: Record<ScraperMatchV2["difficulty"], string> = {
-    easy: t("autoFillDifficulty.easy") || "Easy",
-    moderate: t("autoFillDifficulty.moderate") || "Moderate",
-    hard: t("autoFillDifficulty.hard") || "Hard",
-    unknown: t("autoFillDifficulty.unknown") || "Unknown",
+    easy: t("autoFillDifficulty.easy"),
+    moderate: t("autoFillDifficulty.moderate"),
+    hard: t("autoFillDifficulty.hard"),
+    unknown: t("autoFillDifficulty.unknown"),
   };
 
   useEffect(() => {
@@ -197,8 +197,7 @@ export function MatchAutoFillModal({
         console.error(err);
         setError(
           err?.message ??
-            t("autoFillModal.fetchError") ??
-            "Unable to fetch matches. Please try again in a few moments."
+            t("autoFillModal.fetchError")
         );
       })
       .finally(() => {
@@ -271,7 +270,7 @@ export function MatchAutoFillModal({
       }
       if (prev.length >= MAX_SELECTION) {
         setSelectionWarning(
-          t("autoFillModal.limitWarning") || "You can select up to 15 matches."
+          t("autoFillModal.limitWarning")
         );
         return prev;
       }
@@ -282,8 +281,7 @@ export function MatchAutoFillModal({
   const handleNext = () => {
     if (selectedIds.length === 0) {
       setSelectionWarning(
-        t("autoFillModal.noMatchesSelected") ||
-          "Please select at least one match to continue."
+        t("autoFillModal.noMatchesSelected")
       );
       return;
     }
@@ -304,8 +302,7 @@ export function MatchAutoFillModal({
     const selection = selectedMatches;
     if (selection.length === 0) {
       setSelectionWarning(
-        t("autoFillModal.noMatchesSelected") ||
-          "Please select at least one match to continue."
+        t("autoFillModal.noMatchesSelected")
       );
       return;
     }
@@ -379,7 +376,7 @@ export function MatchAutoFillModal({
           {t("autoFillModal.selectedCount", {
             count: selectedIds.length,
             max: MAX_SELECTION,
-          }) || `Selected ${selectedIds.length} / ${MAX_SELECTION}`}
+          })}
         </Typography>
         <Stack
           direction="row"
@@ -441,14 +438,14 @@ export function MatchAutoFillModal({
               />
             }
             label={
-              t("autoFillModal.showUnselected") || "Show unselected matches"
+              t("autoFillModal.showUnselected")
             }
           />
         )}
         {/* Sort by difficulty dropdown 
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography variant="body2">
-            {t("autoFillModal.sortDifficulty") || "Sort by difficulty"}
+            {t("autoFillModal.sortDifficulty")}
           </Typography>
           <Select
             size="small"
@@ -458,13 +455,13 @@ export function MatchAutoFillModal({
             }
           >
             <MenuItem value="none">
-              {t("autoFillModal.sortDifficultyNone") || "None"}
+              {t("autoFillModal.sortDifficultyNone")}
             </MenuItem>
             <MenuItem value="asc">
-              {t("autoFillModal.sortDifficultyAsc") || "Easier first"}
+              {t("autoFillModal.sortDifficultyAsc")}
             </MenuItem>
             <MenuItem value="desc">
-              {t("autoFillModal.sortDifficultyDesc") || "Harder first"}
+              {t("autoFillModal.sortDifficultyDesc")}
             </MenuItem>
           </Select>
         </Stack>
@@ -477,8 +474,7 @@ export function MatchAutoFillModal({
       )}
       {isLessThanMaxSelection && !lessThan15Dismissed && (
         <Typography variant="body2" color="text.secondary">
-          {t("autoFillModal.lessThan15Warning") ||
-            "Selecting fewer than 15 matches means the deadline will not be set automatically."}
+          {t("autoFillModal.lessThan15Warning")}
         </Typography>
       )}
       {isMaxSelection && (
@@ -490,18 +486,14 @@ export function MatchAutoFillModal({
             px: 0.5,
           }}
         >
-          {t("autoFillModal.autoDeadlineInfo") ||
-            "Deadline will auto-set to the earliest kickoff. You can adjust it before submitting."}
+          {t("autoFillModal.autoDeadlineInfo")}
         </Typography>
       )}
       {championsCount > 0 && (
         <Alert severity="info">
           {t("autoFillModal.championsInfo", {
             count: championsCount,
-          }) ||
-            (championsCount === 1
-              ? "1 Champions League match selected."
-              : `${championsCount} Champions League matches selected.`)}
+          })}
         </Alert>
       )}
       <Box sx={{ overflowX: "auto" }}>
@@ -512,11 +504,11 @@ export function MatchAutoFillModal({
                 {/* {t("autoFillModal.table.select") || "Select"} */}
               </TableCell>
               {/* <TableCell>
-                {t("autoFillModal.table.league") || "League"}
+                {t("autoFillModal.table.league")}
               </TableCell> */}
               {/* <TableCell>{t("autoFillModal.table.date") || "Date"}</TableCell> */}
-              <TableCell>{t("autoFillModal.table.match") || "Match"}</TableCell>
-              <TableCell>{t("autoFillModal.table.info") || "Info"}</TableCell>
+              <TableCell>{t("autoFillModal.table.match")}</TableCell>
+              <TableCell>{t("autoFillModal.table.info")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -600,8 +592,7 @@ export function MatchAutoFillModal({
   const renderPlenoStep = () => (
     <Stack spacing={2}>
       <Typography>
-        {t("autoFillModal.plenoInstructions") ||
-          "Choose which of the selected matches will be the Pleno al 15 (it will be placed last)."}
+        {t("autoFillModal.plenoInstructions")}
       </Typography>
       {selectionWarning && <Alert severity="warning">{selectionWarning}</Alert>}
       <Box sx={{ overflowX: "auto" }}>
@@ -609,8 +600,8 @@ export function MatchAutoFillModal({
           <TableHead>
             <TableRow>
               <TableCell padding="checkbox" sx={{ px: 1.5 }}></TableCell>
-              <TableCell>{t("autoFillModal.table.match") || "Match"}</TableCell>
-              <TableCell>{t("autoFillModal.table.info") || "Info"}</TableCell>
+              <TableCell>{t("autoFillModal.table.match")}</TableCell>
+              <TableCell>{t("autoFillModal.table.info")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -686,8 +677,8 @@ export function MatchAutoFillModal({
 
   const title =
     currentStep === "selection"
-      ? t("autoFillModal.stepSelectionTitle") || "Select Matches to Auto-fill"
-      : t("autoFillModal.stepPlenoTitle") || "Choose Pleno al 15";
+      ? t("autoFillModal.stepSelectionTitle")
+      : t("autoFillModal.stepPlenoTitle");
 
   return (
     <Dialog
@@ -730,8 +721,7 @@ export function MatchAutoFillModal({
         </Typography>
         <Tooltip
           title={
-            t("autoFillModal.helperText") ||
-            "Choose up to 15 matches. Selecting 15 will auto-set the Quinipolo deadline (you can edit it later)."
+            t("autoFillModal.helperText")
           }
         >
           <IconButton size="small" sx={{ color: "#3e2723" }}>
@@ -754,9 +744,7 @@ export function MatchAutoFillModal({
           >
             <CircularProgress />
             <Typography variant="body2">
-              {t("autoFillModal.loadingMatches") ||
-                t("loading") ||
-                "Loading matches..."}
+              {t("autoFillModal.loadingMatches")}
             </Typography>
           </Box>
         )}
@@ -771,7 +759,7 @@ export function MatchAutoFillModal({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} sx={secondaryActionStyles}>
-          {t("autoFillModal.cancel") || "Cancel"}
+          {t("autoFillModal.cancel")}
         </Button>
         {currentStep === "selection" && (
           <Button
@@ -780,7 +768,7 @@ export function MatchAutoFillModal({
             disabled={selectedIds.length === 0 || !data}
             sx={primaryActionStyles}
           >
-            {t("autoFillModal.next") || "Next"}
+            {t("autoFillModal.next")}
           </Button>
         )}
         {currentStep === "pleno" && (
@@ -789,14 +777,14 @@ export function MatchAutoFillModal({
               onClick={() => setCurrentStep("selection")}
               sx={secondaryActionStyles}
             >
-              {t("autoFillModal.back") || "Back"}
+              {t("autoFillModal.back")}
             </Button>
             <Button
               variant="contained"
               onClick={handleConfirm}
               sx={primaryActionStyles}
             >
-              {t("autoFillModal.apply") || "Apply Selection"}
+              {t("autoFillModal.apply")}
             </Button>
           </>
         )}

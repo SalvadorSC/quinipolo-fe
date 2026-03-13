@@ -8,7 +8,9 @@
   "creatingQuinipolo": "正在创建 Quinipolo...",
   "autoFillSurvey": "自动填写问卷",
   "autoFilling": "Auto-filling...",
-  "autoFillSuccess": "Survey form filled successfully!",
+  "autoFillSuccess": "问卷填写成功！",
+  "orderByLeague": "按联赛排序",
+  "orderByLeagueSuccess": "已按联赛排序。",
   "autoFillError": "Failed to auto-fill survey. Please try again.",
   "autoFillModal": {
     "title": "选择要自动填充的比赛",
@@ -99,7 +101,7 @@
   "success": "成功！",
   "error": "错误",
   "loading": "加载中...",
-  "league": "联盟",
+  "league": "联赛",
   "leagues": "联盟",
   "points": "积分",
   "participants": "参与者",
@@ -388,7 +390,22 @@
   "noWinner": "没有获胜者。",
   "thanksForParticipating": "感谢参与 Quinipolo。不要错过下一轮！",
   "messageCopied": "消息已复制到剪贴板！",
+  "shareSuccess": "分享成功！",
+  "copyImage": "复制图片",
+  "imageCopied": "图片已复制到剪贴板",
+  "shareImagesTitle": "分享图片",
+  "shareNotSupported": "此设备不支持分享图片。",
+  "shareTitle": "Quinipolo 结果",
+  "quinipoloRankingImageAlt": "Quinipolo 排名",
+  "generalRankingImageAlt": "联赛总排名",
+  "statisticsImageAlt": "Quinipolo统计",
+  "matchResultsImageAlt1": "比赛结果（比赛1-7）",
+  "matchResultsImageAlt2": "比赛结果（比赛8-15）",
+  "graphicsGenerator": "图形生成器",
+  "errorGeneratingImages": "无法生成图片",
+  "previewGraphics": "预览图形",
   "errorCopyingMessage": "复制消息到剪贴板时出错！",
+  "errorCopyingImage": "复制图片到剪贴板时出错！",
   "quinipoloCorrectedSuccess": "Quinipolo 更正成功！",
   "resultsTableInfo": "以下是用户结果表。",
   "noOneAnswered": "糟糕！看起来没有人回答这个 Quinipolo！",
@@ -396,21 +413,37 @@
   "dontForgetToShare": "别忘了分享结果！",
   "copyMessage": "复制消息",
   "shareOnWhatsApp": "在 WhatsApp 上分享",
+  "shareOnWhatsAppWithImages": "带图片分享",
+  "shareLoading": "分享中...",
   "returnToMainMenu": "返回主菜单",
   "inviteToQuinipolo": "嗨！我邀请你参加本周的 Quinipolo。输入你对比赛的预测，与其他参与者竞争。祝你好运！🏆",
   "deadlineToAnswer": "回答这个 Quinipolo 的截止时间是：",
   "shareQuinipoloWithFriends": "要与朋友分享你的 Quinipolo，请使用以下方法之一：",
   "none": "无",
   "waterpoloGoalsText": "少于11个，11或12个，多于12个。",
-  "footballGoalsText": "少于11个，11或12个，多于12个",
+  "footballGoalsText": "0个进球，1或2个进球，多于2个进球",
   "matchNumber": "比赛 {{number}}：",
   "sport": "运动",
-  "league": "联赛",
   "waterpolo": "水球",
   "football": "足球",
+  "basketball": "篮球",
+  "handball": "手球",
+  "tennis": "网球",
   "homeTeam": "主队",
   "awayTeam": "客队",
   "numberOfGoals": "进球数",
+  "goalsInputsDescription": "进球",
+  "matchEndedInTiePenaltyShootout": "平局（点球大战）",
+  "goalsInTie": "平局时的进球",
+  "goalsAfterPenalties": "点球大战后的进球",
+  "regularTimeScore": "常规时间（平局）",
+  "regularTimeScoreMustBeTie": "常规时间比分必须为平局（两队相同分数）",
+  "goalsAfterPenaltiesCannotBeLower": "点球后的进球数不能低于常规时间比分",
+  "goalsMustShowHomeWinning": "进球必须显示主队获胜",
+  "goalsMustShowAwayWinning": "进球必须显示客队获胜",
+  "goalsMustBeEqualForDraw": "平局时进球必须相等",
+  "goalsMustMatchRanges": "精确进球必须与所选范围匹配",
+  "goalsMustMatchWinnerForMatches": "比赛 {{matches}} 的进球必须与获胜者一致",
   "subscriptionCreatedSuccess": "订阅创建成功",
   "fillAllRequiredFields": "请填写所有必填字段。",
   "leagueCreatedSuccess": "联盟创建成功",
@@ -483,6 +516,7 @@
   "viewQuinipoloResults": "以下是 Quinipolo 的结果",
   "invalid_credentials": "凭证无效",
   "allowRepeatTeams": "允许重复选择球队",
+  "enableMatchReordering": "启用比赛重新排序",
   "draw": "平局",
   "missingAnswersForMatches": "以下比赛缺少答案：{{matches}}",
   "game15": "第15场比赛",
@@ -566,6 +600,153 @@
   "iconColor": "图标颜色",
   "selectLeagueIcon": "选择联赛图标",
   "searchByUsername": "按用户名搜索",
+  "match15": {
+    "lockTooltip": "锁定最后一场比赛在第15位。解锁后，您可以自由重新排序，列表中的最后一场比赛将成为第15场比赛。",
+    "unlockTooltip": "第15场比赛已解锁。您可以自由重新排序。列表中的最后一场比赛将成为第15场比赛。",
+    "lockedWarning": "第15场比赛已锁定。解锁以重新排序。",
+    "lockAriaLabel": "锁定第15场比赛",
+    "unlockAriaLabel": "解锁第15场比赛"
+  },
+  "reordering": {
+    "tooltip": "提示：您可以拖动比赛来重新排序。使用每场比赛左侧的拖动手柄（☰）。",
+    "dragging": "正在重新排序比赛...",
+    "closeAriaLabel": "关闭提示"
+  },
+  "common": {
+    "back": "返回"
+  },
+  "terms": {
+    "title": "Quinipolo 应用程序使用条款和条件",
+    "sections": [
+      {
+        "title": "1. 应用程序目的",
+        "paragraphs": [
+          "Quinipolo 应用程序为用户提供娱乐服务，包括对水球比赛或其他体育赛事进行预测、与朋友参与私人联赛以及查看排行榜和名次。Quinipolo 不是博彩公司或受监管的赌博游戏，而是基于用户体育知识和预测能力的技能竞赛。",
+          "Quinipolo 应用程序可通过 www.quinipolo.com 访问，可供任何具有互联网连接和兼容设备的用户使用。但是，该服务在法律上面向居住在西班牙以及欧盟/欧洲经济区的用户，适用西班牙和欧盟法律。Quinipolo 可能会引入新功能、改进或移除其他特性，这不构成对服务的重大修改。"
+        ]
+      },
+      {
+        "title": "2. 访问和使用条件",
+        "paragraphs": [
+          "应用程序的使用仅限于 18 岁或以上的用户。",
+          "用户同意合法、道德和善意地使用应用程序。",
+          "禁止欺诈使用、为操纵目的创建多个账户、自动访问、数据抓取或逆向工程。",
+          "Quinipolo 保留暂停或取消违反这些条件的账户的权利。",
+          "任何操纵结果、为优势创建多个账户、使用机器人、进行未经授权的抓取或故意利用技术错误的尝试将导致立即永久暂停账户。"
+        ]
+      },
+      {
+        "title": "3. 用户注册",
+        "paragraphs": [
+          "注册时收集基本数据，如姓名、电子邮件和访问凭据（或通过 Google/Apple 等 OAuth 提供商）。",
+          "用户负责其数据的准确性和更新。",
+          "用户必须保护其凭据并通知任何未经授权的访问。",
+          "用户可从应用程序（未来）请求删除其账户，或通过发送邮件至 info@quinipolo.com。删除将在最多 30 天内处理，法律义务要求保留的情况除外。"
+        ]
+      },
+      {
+        "title": "4. 游戏/竞赛运作",
+        "paragraphs": [
+          "预测必须在 Quinipolo 中包含的较早开始的比赛开始前的规定时间内进行。",
+          "评分系统对每次正确预测奖励 1 分。如果排名并列，将采取措施选择第一名，例如（但不限于）进行另一场 Quinipolo。",
+          "结果来自官方外部来源。如有错误，Quinipolo 可能会更正。",
+          "Quinipolo 的基本使用是免费的。"
+        ]
+      },
+      {
+        "title": "5. 联赛和社区",
+        "paragraphs": [
+          "用户可以创建和加入私人联赛。",
+          "联赛版主有权接受/驱逐参与者并确保遵守共存规则。",
+          "用户对其生成的内容（联赛名称、头像、消息）负责，授予 Quinipolo 在应用程序中显示此类内容的非独家许可。",
+          "用户授予 Quinipolo 在账户存续期间及关闭后 12 个月内，在全球范围内、免版税、可再许可的许可，以复制、传播和使用用户生成的内容（联赛名称、别名、头像），用于 Quinipolo 的运营、推广和传播目的，不影响形象和数据保护权。"
+        ]
+      },
+      {
+        "title": "6. 订阅和支付",
+        "paragraphs": [
+          "Quinipolo 通过安全的 Stripe 网关管理使用计划。",
+          "价格、模式和取消条件在应用程序中注明。",
+          "支付由第三方（Stripe）处理；Quinipolo 不存储银行数据。",
+          "退款政策符合消费者法规。",
+          "所有价格均含适用税费。"
+        ]
+      },
+      {
+        "title": "7. 奖品",
+        "paragraphs": [
+          "如有奖品或激励，将受其特定法律基础约束，如有分歧则以该法律基础为准。Quinipolo 可能出于正当理由进行修改。"
+        ]
+      },
+      {
+        "title": "8. 知识产权",
+        "paragraphs": [
+          "名称、徽标、设计、代码和 Quinipolo 的其他元素为所有者的专有财产。",
+          "用户被授予使用应用程序的有限、非独家、可撤销且不可转让的许可。",
+          "禁止未经授权的复制、分发或大规模数据提取。",
+          "提交的任何建议或反馈可能被 Quinipolo 使用，无需补偿义务，也不意味着转让用户既有权利。"
+        ]
+      },
+      {
+        "title": "9. 可用性和维护",
+        "paragraphs": [
+          "Quinipolo 不保证应用程序的持续可用性或无技术错误。",
+          "可能在不另行通知的情况下进行维护或更新。",
+          "不构成保证，Quinipolo 追求 99.5% 的月度可用性目标。相关事件将通过应用程序中指定的状态渠道通报。"
+        ]
+      },
+      {
+        "title": "10. 责任排除和限制",
+        "paragraphs": [
+          "Quinipolo 对用户滥用应用程序不承担责任。",
+          "不保证第三方提供的体育结果的准确性。",
+          "Quinipolo 对技术中断、数据丢失或外部故障不承担责任。",
+          "明确声明 Quinipolo 不是博彩服务或受监管的赌博提供商。"
+        ]
+      },
+      {
+        "title": "11. 所有者身份",
+        "paragraphs": [
+          "根据 2002 年 7 月 11 日关于信息社会服务和电子商务的法律 (LSSI-CE)，提供所有者详情：",
+          "所有者：Salvador Sánchez i Campos",
+          "税号：49284364X",
+          "地址：Calle General Castaños 40, 1.ª 4.ª Es B, Molins de Rei, Barcelona, Spain",
+          "联系邮箱：info@quinipolo.com"
+        ]
+      },
+      {
+        "title": "12. 数据保护和 Cookie",
+        "paragraphs": [
+          "个人数据的处理受隐私政策和 Cookie 政策的约束，可从应用程序访问。目的：用户注册、预测管理、结果通报和发送通知。用户可通过写信至 info@quinipolo.com 行使其访问、更正、删除、限制、反对和可携带权。Cookie 和分析工具的使用受 Cookie 政策约束。隐私政策和 Cookie 政策构成这些条款的组成部分，可在应用程序中获取。用户可在同意面板中管理其 Cookie 偏好。"
+        ]
+      },
+      {
+        "title": "13. 通信",
+        "paragraphs": [
+          "Quinipolo 可能发送交易电子邮件（注册、密码恢复、结果通知）。",
+          "对于商业通信，将事先征求同意，用户可随时退订。"
+        ]
+      },
+      {
+        "title": "14. 条件修改",
+        "paragraphs": [
+          "所有者保留修改这些条款和条件的权利，并合理通知用户变更。"
+        ]
+      },
+      {
+        "title": "15. 适用法律和管辖",
+        "paragraphs": [
+          "这些条款和条件受西班牙法律管辖。如有冲突，双方将提交巴塞罗那法院和法庭。"
+        ]
+      },
+      {
+        "title": "16. 联系和支持",
+        "paragraphs": [
+          "如有任何咨询、问题或索赔，用户可联系：📧 info@quinipolo.com"
+        ]
+      }
+    ]
+  },
   "privacy": {
     "title": "Quinipolo 隐私政策",
     "lastUpdatedLabel": "最后更新",
@@ -772,5 +953,6 @@
       "税务法规要求的付款和发票记录"
     ],
     "retention": "有关保留期限和数据处理的更多详情，请参阅我们的隐私政策。"
-  }
+  },
+  "uploadImage": "上传图片"
 }

@@ -21,7 +21,7 @@ export function LeagueLegend({
   return (
     <Box sx={{ mb: 2 }}>
       <Typography variant="body2" fontWeight="bold" sx={{ mb: 1 }}>
-        {t("resultsAutoFill.leagueLegend") || "Filter by League:"}
+        {t("resultsAutoFill.leagueLegend")}
       </Typography>
       <Stack
         direction="row"

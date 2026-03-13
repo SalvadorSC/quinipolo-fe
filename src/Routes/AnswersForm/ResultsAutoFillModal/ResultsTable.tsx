@@ -43,12 +43,12 @@ export function ResultsTable({
         <TableHead>
           <TableRow>
             <TableCell padding="checkbox" sx={{ px: 1.5 }}></TableCell>
-            <TableCell>{t("resultsAutoFill.table.match") || "Match"}</TableCell>
+            <TableCell>{t("resultsAutoFill.table.match")}</TableCell>
             <TableCell>
-              {t("resultsAutoFill.table.result") || "Result"}
+              {t("resultsAutoFill.table.result")}
             </TableCell>
             <TableCell>
-              {t("resultsAutoFill.table.confidence") || "Confidence"}
+              {t("resultsAutoFill.table.confidence")}
             </TableCell>
           </TableRow>
         </TableHead>
@@ -171,8 +171,7 @@ export function ResultsTable({
                   {isLowConfidence && (
                     <Tooltip
                       title={
-                        t("resultsAutoFill.lowConfidenceTooltip") ||
-                        "Low confidence match - please verify online"
+                        t("resultsAutoFill.lowConfidenceTooltip")
                       }
                     >
                       <WarningAmberIcon

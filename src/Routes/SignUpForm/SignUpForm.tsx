@@ -92,13 +92,13 @@ const SignUpForm = () => {
               <Form.Item
                 className={stylesSignUpForm.formItem}
                 name="confirmPassword"
-                label={t("confirmPassword") || "Confirm password"}
+                label={t("confirmPassword")}
                 dependencies={["password"]}
                 rules={[
                   {
                     required: true,
                     message:
-                      (t("confirmPassword") || "Confirm password") +
+                      t("confirmPassword") +
                       " " +
                       t("isRequired"),
                   },
@@ -109,7 +109,7 @@ const SignUpForm = () => {
                       }
                       return Promise.reject(
                         new Error(
-                          t("passwordsDoNotMatch") || "Passwords do not match"
+                          t("passwordsDoNotMatch")
                         )
                       );
                     },
@@ -118,7 +118,7 @@ const SignUpForm = () => {
               >
                 <Input.Password
                   prefix={<LockOutlined style={{ color: "#1890ff" }} />}
-                  placeholder={t("confirmPassword") || "Confirm password"}
+                  placeholder={t("confirmPassword")}
                   size="large"
                   autoComplete="new-password"
                 />
@@ -164,12 +164,12 @@ const SignUpForm = () => {
               <Form.Item
                 className={stylesSignUpForm.formItem}
                 name="birthday"
-                label={t("birthday") || "Birthday"}
+                label={t("birthday")}
                 rules={[
                   {
                     required: true,
                     message:
-                      (t("birthday") || "Birthday") + " " + t("isRequired"),
+                      t("birthday") + " " + t("isRequired"),
                   },
                   {
                     validator: (_, value) => {
@@ -180,8 +180,7 @@ const SignUpForm = () => {
                       if (age >= 18) return Promise.resolve();
                       return Promise.reject(
                         new Error(
-                          t("mustBe18OrOlder") ||
-                            "You must be 18 or older to sign up"
+                          t("mustBe18OrOlder")
                         )
                       );
                     },
@@ -191,7 +190,7 @@ const SignUpForm = () => {
                 <Input
                   type="date"
                   prefix={<IdcardOutlined style={{ color: "#1890ff" }} />}
-                  placeholder={t("birthday") || "Birthday"}
+                  placeholder={t("birthday")}
                   size="large"
                   max={new Date().toISOString().split("T")[0]}
                 />
@@ -240,8 +239,7 @@ const SignUpForm = () => {
         </Form>
         <div className={stylesSignUpForm.signinLink}>
           <a href="/sign-in" className={stylesSignUpForm.signinAnchor}>
-            {t("alreadyHaveAccountLogin") ||
-              "Already have an account? Log in here."}
+            {t("alreadyHaveAccountLogin")}
           </a>
         </div>
       </Card>

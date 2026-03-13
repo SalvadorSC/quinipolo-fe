@@ -14,6 +14,7 @@ import LeagueIconBadge from "../../Components/LeagueIconBadge/LeagueIconBadge";
 import { useTranslation } from "react-i18next";
 import { apiGet } from "../../utils/apiUtils";
 import { isSystemAdmin } from "../../utils/moderatorUtils";
+import { config } from "../../utils/config";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -184,6 +185,36 @@ const Dashboard = () => {
                 gap: 2,
               }}
             >
+              {config.isDevelopment && (
+                <>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => navigate("/graphics")}
+                    sx={{ width: "100%" }}
+                  >
+                    {t("graphicsGenerator")}
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() =>
+                      navigate("/quinipolo/correct?id=mock-correction&correct")
+                    }
+                    sx={{ width: "100%" }}
+                  >
+                    Correct fake quinipolo (dev)
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => navigate("/teams-curator")}
+                    sx={{ width: "100%" }}
+                  >
+                    Teams Curator
+                  </Button>
+                </>
+              )}
               {/* Admin Link - Only visible to system admins */}
               {isSystemAdmin(userData.role) ? (
                 <LoadingButton

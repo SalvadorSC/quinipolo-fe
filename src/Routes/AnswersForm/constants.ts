@@ -16,5 +16,7 @@ export const createInitialAnswers = (): AnswersType[] => [
     isGame15: true,
     goalsHomeTeam: "",
     goalsAwayTeam: "",
+    goalsHomeTeamExact: "",
+    goalsAwayTeamExact: "",
   },
 ];

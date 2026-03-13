@@ -18,17 +18,17 @@ export function getConfidenceLabel(
   t: (key: string) => string
 ): string {
   if (confidence >= CONFIDENCE_THRESHOLD_HIGH) {
-    return t("resultsAutoFill.confidenceHigh") || "High";
+    return t("resultsAutoFill.confidenceHigh");
   }
   if (confidence >= CONFIDENCE_THRESHOLD_LOW) {
-    return t("resultsAutoFill.confidenceMedium") || "Medium";
+    return t("resultsAutoFill.confidenceMedium");
   }
-  return t("resultsAutoFill.confidenceLow") || "Low";
+  return t("resultsAutoFill.confidenceLow");
 }
 
 export function getOutcomeLabel(outcome: string, t: (key: string) => string): string {
   if (outcome === "Tie" || outcome === "Tie (PEN)") {
-    return t("resultsAutoFill.outcome.tie") || "Tie";
+    return t("resultsAutoFill.outcome.tie");
   }
   return outcome;
 }

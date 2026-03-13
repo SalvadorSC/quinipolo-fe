@@ -23,6 +23,7 @@ import { ResultsAutoFillModal } from "./ResultsAutoFillModal/index";
 import { MatchRow } from "./components/MatchRow";
 import { AutoFillButton } from "./components/AutoFillButton/AutoFillButton";
 import { SubmitButton } from "./components/SubmitButton";
+import { GraphicsPreview } from "./components/GraphicsPreview";
 import { StatisticsToggleButton } from "./components/StatisticsToggleButton/StatisticsToggleButton";
 import { useAnswersFormModes } from "./hooks/useAnswersFormModes";
 import { useQuinipoloData } from "./hooks/useQuinipoloData";
@@ -55,9 +56,13 @@ const AnswersForm = () => {
     quinipolo,
     answers,
     setAnswers,
-  } = useQuinipoloData(modes.editCorrectionModeOn, modes.seeUserAnswersModeOn);
+  } = useQuinipoloData(
+    modes.editCorrectionModeOn,
+    modes.seeUserAnswersModeOn,
+    modes.correctingModeOn
+  );
 
-  const { handleChange, handleGame15Change, handleCancelMatch } =
+  const { handleChange, handleGame15Change, handleGoalsChange, handleCancelMatch } =
     useAnswerHandlers(
       answers,
       setAnswers,
@@ -77,13 +82,16 @@ const AnswersForm = () => {
     rowRefs
   );
 
+  const isCorrectionMode =
+    modes.correctingModeOn || modes.editCorrectionModeOn;
   useAnswerValidation(
     answers,
     quinipolo,
     modes.seeUserAnswersModeOn,
     modes.viewOnlyModeOn,
     hasAttemptedSubmit,
-    setMissingAnswerIndices
+    setMissingAnswerIndices,
+    isCorrectionMode
   );
 
   // Show statistics if deadline passed and user is viewing (not answering)
@@ -113,7 +121,7 @@ const AnswersForm = () => {
     setAnswers(updatedAnswers);
     setFeedback({
       message:
-        t("resultsAutoFill.success") || "Correction form filled successfully!",
+        t("resultsAutoFill.success"),
       severity: "success",
       open: true,
     });
@@ -129,7 +137,7 @@ const AnswersForm = () => {
 
   if (!quinipolo.quinipolo) {
     setFeedback({
-      message: t("errorLoadingQuinipolo") || "Error loading Quinipolo",
+      message: t("errorLoadingQuinipolo"),
       severity: "error",
       open: true,
     });
@@ -199,6 +207,8 @@ const AnswersForm = () => {
                 isGame15: index === 14,
                 goalsHomeTeam: "",
                 goalsAwayTeam: "",
+                goalsHomeTeamExact: "",
+                goalsAwayTeamExact: "",
               };
 
               // Get statistics for this specific match
@@ -225,6 +235,7 @@ const AnswersForm = () => {
                   rowRef={(el) => (rowRefs.current[index] = el)}
                   onChange={handleChange}
                   handleGame15Change={handleGame15Change}
+                  handleGoalsChange={handleGoalsChange}
                   handleCancelMatch={handleCancelMatch}
                   matchOption={matchOption}
                   matchStatistics={matchStatistics}
@@ -235,13 +246,24 @@ const AnswersForm = () => {
               );
             })}
           </TableBody>
+          {(modes.correctingModeOn || modes.editCorrectionModeOn) && (
+            <TableRow>
+              <TableCell colSpan={1}>
+                <GraphicsPreview quinipolo={quinipolo} answers={answers} />
+              </TableCell>
+            </TableRow>
+          )}
           {!modes.seeUserAnswersModeOn && !modes.viewOnlyModeOn && (
-            <SubmitButton
-              onClick={submitQuinipolo}
-              loading={loading}
-              editCorrectionModeOn={modes.editCorrectionModeOn}
-              isModerator={isModerator}
-            />
+            <TableRow>
+              <TableCell colSpan={1}>
+                <SubmitButton
+                  onClick={submitQuinipolo}
+                  loading={loading}
+                  editCorrectionModeOn={modes.editCorrectionModeOn}
+                  isModerator={isModerator}
+                />
+              </TableCell>
+            </TableRow>
           )}
         </Table>
       </TableContainer>

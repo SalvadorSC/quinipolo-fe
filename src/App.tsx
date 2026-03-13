@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { lazy, Suspense, useEffect, useRef } from "react";
 import "./App.css";
 import {
   BrowserRouter,
@@ -12,6 +12,7 @@ import { FeedbackProvider } from "./Context/FeedbackContext/FeedbackContext";
 import { ThemeProvider } from "./Context/ThemeContext/ThemeContext";
 import MenuBar from "./Components/MenuBar/MenuBar";
 import {
+  About,
   AnswersForm,
   CorrectionSuccess,
   CreateLeague,
@@ -24,21 +25,48 @@ import {
   LoginForm,
   NewLeague,
   QuinipoloSuccess,
+  Privacy,
   ResetPassword,
   SignUpForm,
   EmailConfirmation,
   SurveyForm,
   Admin,
   JoinLeague,
+  Terms,
 } from "./Routes";
-import { About } from "./Routes";
-import { Terms } from "./Routes";
-import { Privacy } from "./Routes";
-import { DeleteAccount } from "./Routes";
 import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
-import { trackPageView } from "./utils/analytics";
 import Layout from "./Components/Layout/Layout";
+import { config } from "./utils/config";
+import { trackPageView } from "./utils/analytics";
+
+const GraphicsGeneratorPage = lazy(
+  () =>
+    import("./Routes/GraphicsGenerator/GraphicsGeneratorPage").then((m) => ({
+      default: m.default,
+    }))
+);
+
+const GraphicsTeamsPage = lazy(
+  () =>
+    import("./Routes/GraphicsTeams/GraphicsTeamsPage").then((m) => ({
+      default: m.default,
+    }))
+);
+
+const TeamsCuratorPage = lazy(
+  () =>
+    import("./Routes/TeamsCurator/TeamsCuratorPage").then((m) => ({
+      default: m.default,
+    }))
+);
+
+const LogoMapperPage = lazy(
+  () =>
+    import("./Routes/LogoMapper/LogoMapperPage").then((m) => ({
+      default: m.default,
+    }))
+);
 
 // Custom hook to handle URL cleanup
 function useUrlCleanup() {
@@ -147,6 +175,50 @@ function App() {
                     <Route path="/" element={<Landing />} />
                   )}
 
+                  {config.isDevelopment && (
+                    <>
+                      <Route
+                        path="graphics"
+                        element={
+                          <ProtectedRoute fallbackPath="/">
+                            <Suspense fallback={null}>
+                              <GraphicsGeneratorPage />
+                            </Suspense>
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="graphics/teams"
+                        element={
+                          <ProtectedRoute fallbackPath="/">
+                            <Suspense fallback={null}>
+                              <GraphicsTeamsPage />
+                            </Suspense>
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="teams-curator"
+                        element={
+                          <ProtectedRoute fallbackPath="/">
+                            <Suspense fallback={null}>
+                              <TeamsCuratorPage />
+                            </Suspense>
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="logo-mapper"
+                        element={
+                          <ProtectedRoute fallbackPath="/">
+                            <Suspense fallback={null}>
+                              <LogoMapperPage />
+                            </Suspense>
+                          </ProtectedRoute>
+                        }
+                      />
+                    </>
+                  )}
                   <Route path="*" element={<Navigate to="/" />} />
                 </Route>
 

@@ -1,15 +1,13 @@
 // SurveyForm.tsx
 import React, { useState, FormEvent, useEffect } from "react";
+import { Button, Typography, Box, Paper } from "@mui/material";
 import {
-  Button,
-  Typography,
-  Box,
-  FormControlLabel,
-  Switch,
-  Paper,
-} from "@mui/material";
-import { SurveyData, TeamOptionsBySport } from "../../types/quinipolo";
+  SurveyData,
+  TeamOptionsBySport,
+  GameType,
+} from "../../types/quinipolo";
 import MatchForm from "../../Components/MatchForm/MatchForm";
+import { ReorderableMatchList } from "./components/ReorderableMatchList";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import locale from "antd/es/date-picker/locale/es_ES";
 import { DatePicker } from "antd";
@@ -25,24 +23,44 @@ import { MatchAutoFillModal } from "./MatchAutoFillModal";
 import { ScraperMatchV2 } from "../../services/scraper/types";
 import { useUser } from "../../Context/UserContext/UserContext";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import ScienceIcon from "@mui/icons-material/Science";
+import SortIcon from "@mui/icons-material/Sort";
+import { sortMatchesByLeague } from "./utils/leagueOrder";
+
+const isDev = process.env.NODE_ENV === "development";
 
 const SurveyForm = () => {
   const navigate = useNavigate();
   const { setFeedback } = useFeedback();
   const { userData } = useUser();
-  const [quinipolo, setQuinipolo] = useState<SurveyData[]>([]);
+
+  // Initialize quinipolo with 15 empty matches
+  const [quinipolo, setQuinipolo] = useState<SurveyData[]>(
+    new Array(15).fill(null).map((_, index) => ({
+      gameType: "waterpolo",
+      homeTeam: "",
+      awayTeam: "",
+      date: null,
+      isGame15: index === 14,
+    })),
+  );
+
   const [loading, setLoading] = useState<boolean>(false);
   const [autoFillModalOpen, setAutoFillModalOpen] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [teamOptions, setTeamOptions] = useState<TeamOptionsBySport>({
     waterpolo: [],
     football: [],
+    basketball: [],
+    handball: [],
+    tennis: [],
   });
   const [helpModalOpen, setHelpModalOpen] = useState<boolean>(false);
-  const [allowRepeatedTeams, setAllowRepeatedTeams] = useState<boolean>(false);
+  const [allowRepeatedTeams, setAllowRepeatedTeams] = useState<boolean>(true);
   const [matchErrors, setMatchErrors] = useState<Record<number, string | null>>(
-    {}
+    {},
   );
+  const [isMatch15Locked, setIsMatch15Locked] = useState<boolean>(true);
 
   // Check if this is for all leagues
   const isForAllLeagues =
@@ -60,7 +78,7 @@ const SurveyForm = () => {
 
   const handleDateChange: (
     date: Dayjs | null,
-    dateString: string | string[]
+    dateString: string | string[],
   ) => void = (date) => {
     setSelectedDate(date);
   };
@@ -106,6 +124,19 @@ const SurveyForm = () => {
       // Set loading state to prevent multiple submissions
       setLoading(true);
 
+      // Build correct_answers for match 15 if goals were entered
+      const match15 = quinipolo[14];
+      const hasMatch15Goals = match15?.goalsHomeTeam && match15?.goalsAwayTeam;
+      const correctAnswers = hasMatch15Goals
+        ? Array.from({ length: 15 }, (_, i) => ({
+            matchNumber: i + 1,
+            chosenWinner: i === 14 ? match15.homeTeam : "",
+            goalsHomeTeam: i === 14 ? match15.goalsHomeTeam : "",
+            goalsAwayTeam: i === 14 ? match15.goalsAwayTeam : "",
+            isGame15: i === 14,
+          }))
+        : [];
+
       // Determine the API endpoint based on the type of creation
       let endpoint = "/api/quinipolos";
       let requestBody: any = {
@@ -113,6 +144,7 @@ const SurveyForm = () => {
         quinipolo,
         end_date: selectedDate.toDate(),
         creation_date: new Date(),
+        ...(correctAnswers.length > 0 && { correct_answers: correctAnswers }),
       };
 
       if (isForAllLeagues) {
@@ -121,6 +153,7 @@ const SurveyForm = () => {
           quinipolo,
           end_date: selectedDate.toDate(),
           creation_date: new Date(),
+          ...(correctAnswers.length > 0 && { correct_answers: correctAnswers }),
         };
       } else if (isForManagedLeagues) {
         endpoint = "/api/quinipolos/managed-leagues";
@@ -128,6 +161,7 @@ const SurveyForm = () => {
           quinipolo,
           end_date: selectedDate.toDate(),
           creation_date: new Date(),
+          ...(correctAnswers.length > 0 && { correct_answers: correctAnswers }),
         };
       }
 
@@ -173,38 +207,33 @@ const SurveyForm = () => {
       try {
         // Use only the backend API since Supabase teams calls are failing
         const response = await fetch(
-          `${process.env.REACT_APP_API_BASE_URL}/api/teams/all`
+          `${process.env.REACT_APP_API_BASE_URL}/api/teams/all`,
         );
         if (!response.ok) {
           throw new Error(`Backend API failed: ${response.status}`);
         }
         const backendTeams = await response.json();
         const normalizedTeams: TeamOptionsBySport = {
-          waterpolo: Array.isArray(backendTeams?.waterpolo)
-            ? backendTeams.waterpolo.map((team: any) => ({
-                name: typeof team === "string" ? team : team.name,
-                sport: "waterpolo" as const,
-                gender: team?.gender ?? null,
-                aliases: Array.isArray(team?.alias)
-                  ? team.alias
-                  : Array.isArray(team?.aliases)
-                  ? team.aliases
-                  : [],
-              }))
-            : [],
-          football: Array.isArray(backendTeams?.football)
-            ? backendTeams.football.map((team: any) => ({
-                name: typeof team === "string" ? team : team.name,
-                sport: "football" as const,
-                gender: team?.gender ?? null,
-                aliases: Array.isArray(team?.alias)
-                  ? team.alias
-                  : Array.isArray(team?.aliases)
-                  ? team.aliases
-                  : [],
-              }))
-            : [],
+          waterpolo: [],
+          football: [],
+          basketball: [],
+          handball: [],
+          tennis: [],
         };
+        for (const sport of Object.keys(backendTeams) as GameType[]) {
+          normalizedTeams[sport] = Array.isArray(backendTeams[sport])
+            ? backendTeams[sport].map((team: any) => ({
+                name: typeof team === "string" ? team : team.name,
+                sport,
+                gender: team?.gender ?? null,
+                aliases: Array.isArray(team?.alias)
+                  ? team.alias
+                  : Array.isArray(team?.aliases)
+                    ? team.aliases
+                    : [],
+              }))
+            : [];
+        }
         setTeamOptions(normalizedTeams);
       } catch (error) {
         console.error("Error fetching teams:", error);
@@ -225,13 +254,40 @@ const SurveyForm = () => {
 
   const handleMatchValidationChange = (
     matchIndex: number,
-    error: string | null
+    error: string | null,
   ) => {
     setMatchErrors((prev) => {
       if (prev[matchIndex] === error) {
         return prev;
       }
       return { ...prev, [matchIndex]: error };
+    });
+  };
+
+  const handleFillMockData = async () => {
+    const { MOCK_SURVEY_DATA } = await import("./SurveyForm.dev");
+    setQuinipolo(MOCK_SURVEY_DATA);
+    setMatchErrors({});
+    setSelectedDate(dayjs().add(1, "day").hour(23).minute(59).second(0));
+    setFeedback({
+      message: t("autoFillSuccess"),
+      severity: "success",
+      open: true,
+    });
+  };
+
+  const handleOrderByLeague = () => {
+    const sorted = sortMatchesByLeague(quinipolo);
+    setQuinipolo(
+      sorted.map((match, idx) => ({
+        ...match,
+        isGame15: idx === 14,
+      })),
+    );
+    setFeedback({
+      message: t("orderByLeagueSuccess"),
+      severity: "success",
+      open: true,
     });
   };
 
@@ -243,7 +299,11 @@ const SurveyForm = () => {
     plenoMatchId: string | null;
   }) => {
     const converted = buildSurveyDataFromSelection(matches, plenoMatchId);
-    setQuinipolo(converted);
+    const ordered = sortMatchesByLeague(converted).map((match, idx) => ({
+      ...match,
+      isGame15: idx === 14,
+    }));
+    setQuinipolo(ordered);
     setMatchErrors({});
 
     if (matches.length === 15) {
@@ -256,7 +316,7 @@ const SurveyForm = () => {
     }
 
     setFeedback({
-      message: t("autoFillSuccess") || "Survey form filled successfully!",
+      message: t("autoFillSuccess"),
       severity: "success",
       open: true,
     });
@@ -284,14 +344,36 @@ const SurveyForm = () => {
           style={{ cursor: "pointer" }}
         />
       </div>
-      {hasScraperAccess && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginBottom: 20,
-          }}
-        >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          gap: 8,
+          marginBottom: 20,
+        }}
+      >
+        {isDev && (
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<ScienceIcon />}
+            onClick={handleFillMockData}
+            disabled={loading}
+            sx={{
+              width: { xs: "100%", sm: "auto" },
+              borderColor: "rgba(255,255,255,0.5)",
+              color: "rgba(255,255,255,0.9)",
+              "&:hover": {
+                borderColor: "rgba(255,255,255,0.8)",
+                backgroundColor: "rgba(255,255,255,0.08)",
+              },
+            }}
+          >
+            Fill mock (dev)
+          </Button>
+        )}
+
+        {hasScraperAccess && (
           <Button
             variant="contained"
             startIcon={<AutoAwesomeIcon />}
@@ -315,10 +397,10 @@ const SurveyForm = () => {
               },
             }}
           >
-            {t("autoFillSurvey") || "Auto-fill Survey"}
+            {t("autoFillSurvey")}
           </Button>
-        </div>
-      )}
+        )}
+      </div>
       <p className={styles.dateTimeDisclaimer}>{t("dateTimeDisclaimer")}</p>
       <div className={styles.datePickerContainer}>
         <DatePicker
@@ -334,30 +416,47 @@ const SurveyForm = () => {
         />
       </div>
 
-      <FormControlLabel
-        control={
-          <Switch
-            checked={allowRepeatedTeams}
-            onChange={(e) => setAllowRepeatedTeams(e.target.checked)}
-            color="primary"
-          />
-        }
-        style={{ color: "white", marginLeft: 2, marginTop: 16 }}
-        label={t("allowRepeatTeams")}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: 16,
+          marginBottom: 8,
+          gap: 8,
+        }}
+      >
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<SortIcon />}
+          onClick={handleOrderByLeague}
+          disabled={loading}
+          sx={{
+            width: { xs: "100%", sm: "auto" },
+            borderColor: "rgba(255,255,255,0.5)",
+            color: "rgba(255,255,255,0.9)",
+            "&:hover": {
+              borderColor: "rgba(255,255,255,0.8)",
+              backgroundColor: "rgba(255,255,255,0.08)",
+            },
+          }}
+        >
+          {t("orderByLeague")}
+        </Button>
+      </div>
+      <ReorderableMatchList
+        quinipolo={quinipolo}
+        setQuinipolo={setQuinipolo}
+        teamOptions={teamOptions}
+        selectedTeams={allowRepeatedTeams ? [] : selectedTeams}
+        loading={loading}
+        allowRepeatedTeams={allowRepeatedTeams}
+        isMatch15Locked={isMatch15Locked}
+        setIsMatch15Locked={setIsMatch15Locked}
+        onValidationChange={handleMatchValidationChange}
+        matchErrors={matchErrors}
       />
-      {matchArray.map((_, index) => (
-        <MatchForm
-          key={index}
-          teamOptions={teamOptions}
-          selectedTeams={allowRepeatedTeams ? [] : selectedTeams}
-          index={index}
-          setQuinipolo={setQuinipolo}
-          loading={loading}
-          allowRepeatedTeams={allowRepeatedTeams}
-          onValidationChange={handleMatchValidationChange}
-          value={quinipolo[index]}
-        />
-      ))}
 
       <div className={styles.submitButton}>
         <Button
@@ -391,7 +490,7 @@ export default SurveyForm;
 
 function buildSurveyDataFromSelection(
   matches: ScraperMatchV2[],
-  plenoMatchId: string | null
+  plenoMatchId: string | null,
 ): SurveyData[] {
   if (!matches.length) {
     return new Array(15).fill(null).map((_, index) => ({
@@ -404,12 +503,12 @@ function buildSurveyDataFromSelection(
   }
 
   const sorted = [...matches].sort(
-    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
   );
 
   if (plenoMatchId) {
     const plenoIndex = sorted.findIndex(
-      (match) => match.matchId === plenoMatchId
+      (match) => match.matchId === plenoMatchId,
     );
     if (plenoIndex > -1) {
       const [plenoMatch] = sorted.splice(plenoIndex, 1);

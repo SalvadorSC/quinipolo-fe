@@ -405,7 +405,6 @@
   "footballGoalsText": "Menos que 11, 11 ou 12, mais que 12",
   "matchNumber": "Partida {{number}}:",
   "sport": "Esporte",
-  "league": "Liga",
   "waterpolo": "Polo Aquático",
   "football": "Futebol",
   "homeTeam": "Time da casa",
@@ -421,7 +420,6 @@
   "joinedLeague": "Você entrou na liga",
   "errorJoiningLeague": "Erro ao entrar na liga",
   "createNewLeague": "Criar Nova Liga",
-  "leagueName": "Nome da Liga",
   "privateLeague": "Liga Privada",
   "alreadyHaveAccountLogin": "Já tem uma conta? Entre aqui.",
   "noAccountSignUpHere": "Não tem conta? Registre-se aqui.",
@@ -773,5 +771,188 @@
       "Registos de pagamentos e faturação conforme exigido pelas regulamentações fiscais"
     ],
     "retention": "Para mais detalhes sobre períodos de retenção e tratamento de dados, consulte a nossa Política de Privacidade."
-  }
+  },
+  "basketball": "Basketball",
+  "common": {
+    "back": "Back"
+  },
+  "copyImage": "Copy image",
+  "enableMatchReordering": "Allow match reordering",
+  "errorCopyingImage": "Error copying the image to clipboard!",
+  "errorGeneratingImages": "Could not generate images",
+  "generalRankingImageAlt": "General league ranking",
+  "goalsAfterPenalties": "Goals after penalties",
+  "goalsAfterPenaltiesCannotBeLower": "Goals after penalties cannot be lower than regular time score",
+  "goalsInTie": "Goals in tie",
+  "goalsInputsDescription": "Goals",
+  "goalsMustBeEqualForDraw": "Goals must be equal for a draw",
+  "goalsMustMatchRanges": "Exact goals must match the selected ranges",
+  "goalsMustMatchWinnerForMatches": "Goals must match the winner for matches {{matches}}",
+  "goalsMustShowAwayWinning": "Goals must show away team winning",
+  "goalsMustShowHomeWinning": "Goals must show home team winning",
+  "graphicsGenerator": "Graphics Generator",
+  "handball": "Handball",
+  "imageCopied": "Image copied to clipboard",
+  "match15": {
+    "lockAriaLabel": "Lock Match 15",
+    "lockTooltip": "Lock the last match in position 15. When unlocked, you can reorder it freely, and the last match in the list will become Match 15.",
+    "lockedWarning": "Match 15 is locked. Unlock it to reorder.",
+    "unlockAriaLabel": "Unlock Match 15",
+    "unlockTooltip": "Match 15 is unlocked. You can reorder it freely. The last match in the list will become Match 15."
+  },
+  "matchEndedInTiePenaltyShootout": "Match ended in tie (penalty shootout)",
+  "matchResultsImageAlt1": "Match results (matches 1-7)",
+  "matchResultsImageAlt2": "Match results (matches 8-15)",
+  "orderByLeague": "Order by league",
+  "orderByLeagueSuccess": "Matches ordered by league.",
+  "previewGraphics": "Preview graphics",
+  "quinipoloRankingImageAlt": "Quinipolo ranking",
+  "regularTimeScore": "Regular time (tie)",
+  "regularTimeScoreMustBeTie": "Regular time score must be a tie (same value for both teams)",
+  "reordering": {
+    "closeAriaLabel": "Close tooltip",
+    "dragging": "Reordering match...",
+    "tooltip": "Tip: You can drag matches to reorder them. Use the drag handle (☰) on the left side of each match."
+  },
+  "shareImagesTitle": "Share images",
+  "shareLoading": "Sharing...",
+  "shareNotSupported": "Sharing with images is not supported on this device.",
+  "shareOnWhatsAppWithImages": "Share with images",
+  "shareSuccess": "Shared successfully!",
+  "shareTitle": "Quinipolo Results",
+  "statisticsImageAlt": "Quinipolo statistics",
+  "tennis": "Tennis",
+  "terms": {
+    "sections": [
+      {
+        "title": "1. Purpose of the application",
+        "paragraphs": [
+          "The Quinipolo application offers users a recreational service consisting of making predictions about water polo matches or other sports, participating in private leagues with friends, and consulting leaderboards and rankings. Quinipolo is not a betting house nor a regulated game of chance, but a skill-based contest relying on users' sports knowledge and predictive ability.",
+          "The Quinipolo application, accessible at www.quinipolo.com, is available to any user with an Internet connection and compatible device. However, the service is legally directed to users residing in Spain and, in general, in the European Union/EEA, with Spanish and EU legislation applying. Quinipolo may introduce new features, improve, or remove other characteristics without this constituting an essential modification of the service."
+        ]
+      },
+      {
+        "title": "2. Conditions of access and use",
+        "paragraphs": [
+          "Use of the application is limited to users aged 18 or older.",
+          "Users agree to use the application lawfully, ethically, and in good faith.",
+          "Fraudulent use, creation of multiple accounts for manipulation, automated access, data scraping, or reverse engineering are prohibited.",
+          "Quinipolo reserves the right to suspend or cancel accounts that violate these conditions.",
+          "Any attempt to manipulate results, create multiple accounts for advantage, use bots, perform unauthorized scraping, or deliberately exploit technical errors will result in immediate and permanent account suspension."
+        ]
+      },
+      {
+        "title": "3. User registration",
+        "paragraphs": [
+          "To register, basic data is collected such as name, email, and access credentials (or via OAuth providers like Google/Apple).",
+          "The user is responsible for the accuracy and updating of their data.",
+          "The user must safeguard their credentials and notify any unauthorized access.",
+          "The user may request deletion of their account from the App (future) or, alternatively, by emailing info@quinipolo.com. Deletion will be processed within a maximum of 30 days, except where there are legal obligations to retain data."
+        ]
+      },
+      {
+        "title": "4. Game/contest operation",
+        "paragraphs": [
+          "Predictions must be made within the established time before the start of the match that begins earlier than those included in the Quinipolo.",
+          "The scoring system awards 1 point for each correct prediction. In case of a tie in the rankings, measures will be applied to choose a first winner, for example (but not exclusively), running another Quinipolo.",
+          "Results come from official external sources. In case of error, Quinipolo may correct them.",
+          "Basic use of Quinipolo is free."
+        ]
+      },
+      {
+        "title": "5. Leagues and community",
+        "paragraphs": [
+          "Users can create and join private leagues.",
+          "League moderators have the authority to accept/expel participants and ensure compliance with coexistence rules.",
+          "Users are responsible for the content they generate (league names, avatars, messages), granting Quinipolo a non-exclusive license to display such content in the app.",
+          "The user grants Quinipolo a non-exclusive, worldwide, royalty-free, sublicensable license to reproduce, communicate, and use user-generated content (league names, aliases, avatars) for the purposes of operating, promoting, and disseminating Quinipolo during the life of the account and for 12 months after its closure, without prejudice to image and data protection rights."
+        ]
+      },
+      {
+        "title": "6. Subscriptions and payments",
+        "paragraphs": [
+          "Quinipolo offers usage plans managed through the secure Stripe gateway.",
+          "Prices, modalities, and cancellation conditions are indicated in the application itself.",
+          "Payment is processed by a third party (Stripe); Quinipolo does not store banking data.",
+          "The refund policy complies with consumer regulations.",
+          "All prices include applicable taxes."
+        ]
+      },
+      {
+        "title": "7. Prizes",
+        "paragraphs": [
+          "If prizes or incentives exist, they will be governed by their specific Legal Bases, which will prevail in case of discrepancy. Quinipolo may modify them for justified reasons."
+        ]
+      },
+      {
+        "title": "8. Intellectual and industrial property",
+        "paragraphs": [
+          "The name, logo, design, code, and other Quinipolo elements are the exclusive property of the owner.",
+          "Users are granted a limited, non-exclusive, revocable, and non-transferable license to use the application.",
+          "Reproduction, distribution, or mass data extraction without authorization is prohibited.",
+          "Any suggestions or feedback submitted may be used by Quinipolo without obligation to compensate, without implying assignment of the user's pre-existing rights."
+        ]
+      },
+      {
+        "title": "9. Availability and maintenance",
+        "paragraphs": [
+          "Quinipolo does not guarantee continuous availability of the application nor the absence of technical errors.",
+          "Maintenance or updates may be carried out without prior notice.",
+          "Without constituting a guarantee, Quinipolo pursues a monthly availability target of 99.5%. Relevant incidents will be communicated through the status channel indicated in the App."
+        ]
+      },
+      {
+        "title": "10. Exclusion and limitation of liability",
+        "paragraphs": [
+          "Quinipolo is not responsible for misuse of the application by users.",
+          "The accuracy of sports results provided by third parties is not guaranteed.",
+          "Quinipolo is not responsible for technical interruptions, data loss, or external failures.",
+          "It is expressly declared that Quinipolo is not a betting service nor a regulated gambling provider."
+        ]
+      },
+      {
+        "title": "11. Identification of the owner",
+        "paragraphs": [
+          "In compliance with Law 34/2002 of July 11, on Information Society Services and Electronic Commerce (LSSI-CE), the owner's details are provided:",
+          "Owner: Salvador Sánchez i Campos",
+          "Tax ID: 49284364X",
+          "Address: Calle General Castaños 40, 1.ª 4.ª Es B, Molins de Rei, Barcelona, Spain",
+          "Contact email: info@quinipolo.com"
+        ]
+      },
+      {
+        "title": "12. Data protection and cookies",
+        "paragraphs": [
+          "The processing of personal data is governed by the Privacy Policy and the Cookie Policy, accessible from the application. Purposes: user registration, prediction management, communication of results, and sending notifications. Users may exercise their rights of access, rectification, erasure, restriction, objection, and portability by writing to info@quinipolo.com. The use of cookies and analytics tools is governed by the Cookie Policy. The Privacy Policy and the Cookie Policy form an integral part of these Terms and are available in the App. Users may manage their cookie preferences in the consent panel."
+        ]
+      },
+      {
+        "title": "13. Communications",
+        "paragraphs": [
+          "Quinipolo may send transactional emails (registration, password recovery, result notifications).",
+          "For commercial communications, prior consent will be requested, and users may unsubscribe at any time."
+        ]
+      },
+      {
+        "title": "14. Modification of conditions",
+        "paragraphs": [
+          "The owner reserves the right to modify these Terms and Conditions, informing users of changes with reasonable notice."
+        ]
+      },
+      {
+        "title": "15. Applicable law and jurisdiction",
+        "paragraphs": [
+          "These Terms and Conditions are governed by Spanish law. In case of conflict, the parties will submit to the Courts and Tribunals of Barcelona."
+        ]
+      },
+      {
+        "title": "16. Contact and support",
+        "paragraphs": [
+          "For any inquiries, issues, or claims, users can contact: 📧 info@quinipolo.com"
+        ]
+      }
+    ],
+    "title": "Terms and Conditions of Use of the Quinipolo application"
+  },
+  "uploadImage": "Upload Image"
 }

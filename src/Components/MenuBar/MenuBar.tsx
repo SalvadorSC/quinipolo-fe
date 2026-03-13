@@ -175,7 +175,7 @@ export const MenuBar = ({ isSignedIn }: { isSignedIn?: boolean }) => {
                     onClick={() => navigate("/profile")}
                     sx={{ ml: 2 }}
                   >
-                    {t("profile") || "Profile"}
+                    {t("profile")}
                   </Button>
                   <Button
                     variant="outlined"
@@ -253,7 +253,7 @@ export const MenuBar = ({ isSignedIn }: { isSignedIn?: boolean }) => {
                         sx={{ borderRadius: 2 }}
                       >
                         <DashboardOutlinedIcon sx={{ mr: 1 }} />
-                        <ListItemText primary={t("dashboard") || "Dashboard"} />
+                        <ListItemText primary={t("dashboard")} />
                       </ListItem>
                       <ListItem
                         button
@@ -264,7 +264,7 @@ export const MenuBar = ({ isSignedIn }: { isSignedIn?: boolean }) => {
                         sx={{ borderRadius: 2 }}
                       >
                         <GroupsOutlinedIcon sx={{ mr: 1 }} />
-                        <ListItemText primary={t("leagues") || "Leagues"} />
+                        <ListItemText primary={t("leagues")} />
                       </ListItem>
                       <ListItem
                         button
@@ -275,7 +275,7 @@ export const MenuBar = ({ isSignedIn }: { isSignedIn?: boolean }) => {
                         sx={{ borderRadius: 2 }}
                       >
                         <AccountCircleOutlinedIcon sx={{ mr: 1 }} />
-                        <ListItemText primary={t("profile") || "Profile"} />
+                        <ListItemText primary={t("profile")} />
                       </ListItem>
                     </List>
                   </div>

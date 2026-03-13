@@ -10,7 +10,8 @@ import { useUser } from "../../../Context/UserContext/UserContext";
 
 export const useQuinipoloData = (
   editCorrectionModeOn: boolean,
-  seeUserAnswersModeOn: boolean
+  seeUserAnswersModeOn: boolean,
+  correctingModeOn: boolean
 ) => {
   const { setFeedback } = useFeedback();
   const { t } = useTranslation();
@@ -42,14 +43,12 @@ export const useQuinipoloData = (
         return;
       }
 
-      if (editCorrectionModeOn) {
-        // will show a quinipolo, the corrections selected and give option to edit them.
+      if (editCorrectionModeOn || correctingModeOn) {
         response = await apiGet<QuinipoloType>(
           `/api/quinipolos/quinipolo/${id}/correction-see`
         );
 
-        // Transform correct_answers to match the expected structure
-        if (response.correct_answers && response.correct_answers.length > 0) {
+        if (editCorrectionModeOn && response.correct_answers?.length) {
           setAnswers(
             mapCorrectAnswersToInitial(
               response.correct_answers,

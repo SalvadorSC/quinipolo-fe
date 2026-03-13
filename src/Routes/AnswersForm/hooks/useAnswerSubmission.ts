@@ -15,7 +15,11 @@ import {
 } from "../types";
 import { QuinipoloType } from "../../../types/quinipolo";
 import { prepareAnswersForSubmission } from "../utils/answerUtils";
-import { findMissingAnswers } from "../utils/validationUtils";
+import {
+  findMissingAnswers,
+  findGoalsMismatchIndicesForQuinipolo,
+} from "../utils/validationUtils";
+import { LEAGUES_WITH_IMAGE_SHARE_BETA } from "../../../config/leaguesWithImageShare";
 
 export const useAnswerSubmission = (
   answers: AnswersType[],
@@ -33,21 +37,38 @@ export const useAnswerSubmission = (
   const [loading, setLoading] = useState<boolean>(false);
 
   const submitQuinipolo = async () => {
-    const missing = findMissingAnswers(answers);
+    const isCorrectionMode = correctingModeOn || editCorrectionModeOn;
+    const canEnterGoalsPerMatch =
+      isCorrectionMode &&
+      LEAGUES_WITH_IMAGE_SHARE_BETA.includes(quinipolo.league_id);
+    const missing = findMissingAnswers(answers, {
+      requireGoalsForTieOnMatches1to14: canEnterGoalsPerMatch,
+      requireExactGoalsForMatch15: canEnterGoalsPerMatch,
+    });
+    const goalsMismatches = canEnterGoalsPerMatch
+      ? findGoalsMismatchIndicesForQuinipolo(answers, quinipolo)
+      : [];
+    const invalidIndices = Array.from(new Set([...missing, ...goalsMismatches]));
 
-    if (missing.length > 0) {
+    if (invalidIndices.length > 0) {
       setHasAttemptedSubmit(true);
-      setMissingAnswerIndices(missing);
+      setMissingAnswerIndices(invalidIndices);
+      const message =
+        goalsMismatches.length > 0
+          ? t("goalsMustMatchWinnerForMatches", {
+              matches: invalidIndices.map((i) => i + 1).join(", "),
+            })
+          : t("missingAnswersForMatches", {
+              matches: invalidIndices.map((i) => i + 1).join(", "),
+            });
       setFeedback({
-        message: t("missingAnswersForMatches", {
-          matches: missing.map((i) => i + 1).join(", "),
-        }),
+        message,
         severity: "warning",
         open: true,
       });
 
-      // Scroll to first missing row
-      const firstMissing = missing[0];
+      // Scroll to first invalid row
+      const firstMissing = invalidIndices[0];
       const rowEl = rowRefs.current[firstMissing];
       if (rowEl && typeof rowEl.scrollIntoView === "function") {
         rowEl.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -63,13 +84,14 @@ export const useAnswerSubmission = (
 
     setLoading(true);
 
+    const isMockCorrection = quinipolo.id === "mock-correction";
+    const canCorrect =
+      isMockCorrection ||
+      (isUserModerator(user.userData.userLeagues, quinipolo.league_id) ||
+        isSystemModerator(user.userData.role));
+
     try {
-      if (
-        correctingModeOn &&
-        quinipolo.league_id &&
-        (isUserModerator(user.userData.userLeagues, quinipolo.league_id) ||
-          isSystemModerator(user.userData.role))
-      ) {
+      if (correctingModeOn && quinipolo.league_id && canCorrect) {
         const response = await apiPost<CorrectionResponseType>(
           `/api/quinipolos/quinipolo/${quinipolo.id}/submit-correction`,
           answerToSubmit
@@ -83,6 +105,8 @@ export const useAnswerSubmission = (
               response.participantsLeaderboard || undefined,
             averagePointsThisQuinipolo: response.averagePointsThisQuinipolo,
             mostFailed: response.mostFailed,
+            quinipoloId: quinipolo.id,
+            matchday: response.matchday,
           },
         });
         setFeedback({
@@ -90,12 +114,7 @@ export const useAnswerSubmission = (
           severity: "success",
           open: true,
         });
-      } else if (
-        editCorrectionModeOn &&
-        quinipolo.league_id &&
-        (isUserModerator(user.userData.userLeagues, quinipolo.league_id) ||
-          isSystemModerator(user.userData.role))
-      ) {
+      } else if (editCorrectionModeOn && quinipolo.league_id && canCorrect) {
         const response = await apiPost<CorrectionResponseType>(
           `/api/quinipolos/quinipolo/${quinipolo.id}/submit-correction-edit`,
           answerToSubmit
@@ -109,6 +128,8 @@ export const useAnswerSubmission = (
               response.participantsLeaderboard || undefined,
             averagePointsThisQuinipolo: response.averagePointsThisQuinipolo,
             mostFailed: response.mostFailed,
+            quinipoloId: quinipolo.id,
+            matchday: response.matchday,
           },
         });
         setFeedback({
@@ -145,8 +166,7 @@ export const useAnswerSubmission = (
           setFeedback({
             message:
               error.response?.data?.message ||
-              t("errorSubmittingAnswers") ||
-              "An error occurred while submitting",
+              t("errorSubmittingAnswers"),
             severity: "error",
             open: true,
           });
@@ -154,7 +174,7 @@ export const useAnswerSubmission = (
       } else {
         // Handle non-Axios errors
         setFeedback({
-          message: t("unexpectedError") || "An unexpected error occurred",
+          message: t("unexpectedError"),
           severity: "error",
           open: true,
         });

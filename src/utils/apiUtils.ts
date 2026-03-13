@@ -89,7 +89,7 @@ export const isApiCacheEnabled = () => API_CACHE_ENABLED;
  * Adds lightweight GET caching + in-flight deduplication.
  */
 const apiCall = async <T>(
-  method: "get" | "post" | "put" | "patch",
+  method: "get" | "post" | "put" | "patch" | "delete",
   url: string,
   data: any = null,
   config: RequestConfig = {}
@@ -255,6 +255,11 @@ export const apiPatch = async <T>(
   data: any,
   config: AxiosRequestConfig = {}
 ): Promise<T> => apiCall<T>("patch", url, data, config);
+
+export const apiDelete = async <T>(
+  url: string,
+  config: AxiosRequestConfig = {}
+): Promise<T> => apiCall<T>("delete", url, null, config);
 
 export const handleGoogleSignUp = async (user: GoogleUser) => {
   try {

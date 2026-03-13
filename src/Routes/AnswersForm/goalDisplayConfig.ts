@@ -1,19 +1,13 @@
-export type SupportedSport = "waterpolo" | "football" | (string & {});
+import { GameType } from "../../types/quinipolo";
 
 export interface SportGoalDisplayConfig {
-  leftLabel: string; // display label for '<' option
-  centerLabel: string; // display label for mid-range option
-  rightLabel: string; // display label for '>' option
-  centerPayload: string; // payload value for the mid-range option (e.g., '11/12')
+  leftLabel: string;
+  centerLabel: string;
+  rightLabel: string;
+  centerPayload: string;
 }
 
-// Central registry for sport-specific goal display rules.
-// To add a new sport, add an entry here and ensure backend expects the
-// appropriate centerPayload for game 15 goals.
-export const GOAL_DISPLAY_CONFIG: Record<
-  SupportedSport,
-  SportGoalDisplayConfig
-> = {
+export const GOAL_DISPLAY_CONFIG: Partial<Record<GameType, SportGoalDisplayConfig>> = {
   waterpolo: {
     leftLabel: "<11",
     centerLabel: "11-12",
@@ -28,6 +22,5 @@ export const GOAL_DISPLAY_CONFIG: Record<
   },
 };
 
-// Sensible default if an unknown sport is received. Falls back to waterpolo.
 export const DEFAULT_GOAL_DISPLAY: SportGoalDisplayConfig =
-  GOAL_DISPLAY_CONFIG["waterpolo"];
+  GOAL_DISPLAY_CONFIG["waterpolo"]!;

@@ -1,8 +1,8 @@
 import React from "react";
-import { TableRow, TableCell, Alert, Box } from "@mui/material";
+import { TableRow, TableCell, Alert, Box, FormHelperText } from "@mui/material";
 import { AnimatePresence } from "motion/react";
 import { useTranslation } from "react-i18next";
-import { QuinipoloType } from "../../../types/quinipolo";
+import { QuinipoloType, GameType } from "../../../types/quinipolo";
 import { AnswersType } from "../types";
 import { MatchHeader } from "./MatchHeader";
 import { MatchWinnerButtons } from "./MatchWinnerButtons";
@@ -10,13 +10,19 @@ import { AnswerStatistics } from "./AnswerStatistics";
 import { AnswerStatisticsSkeleton } from "./AnswerStatisticsSkeleton";
 import { CancelMatchButton } from "./CancelMatchButton";
 import GoalsToggleButtonGroup from "../GoalsToggleButtonGroup";
+import { GoalsInputs } from "./GoalsInputs";
+import {
+  validateGoalsMatchWinner,
+  getGoalsValidationMessage,
+} from "../utils/goalsValidationUtils";
+import { LEAGUES_WITH_IMAGE_SHARE_BETA } from "../../../config/leaguesWithImageShare";
 import style from "../AnswersForm.module.scss";
 
 interface MatchRowProps {
   match: {
     homeTeam: string;
     awayTeam: string;
-    gameType: "waterpolo" | "football";
+    gameType: GameType;
     leagueId?: string;
     leagueName?: string;
   };
@@ -36,7 +42,12 @@ interface MatchRowProps {
   onChange: (event: React.MouseEvent<HTMLElement>, newValue: string) => void;
   handleGame15Change: (
     event: React.MouseEvent<HTMLElement>,
-    newValue: string
+    newValue: string,
+  ) => void;
+  handleGoalsChange?: (
+    matchIndex: number,
+    teamType: "home" | "away" | "regularHome" | "regularAway",
+    value: string,
   ) => void;
   handleCancelMatch: (matchIndex: number) => void;
   matchOption: (value: string, index: number) => React.ReactNode;
@@ -69,6 +80,7 @@ export const MatchRow: React.FC<MatchRowProps> = ({
   rowRef,
   onChange,
   handleGame15Change,
+  handleGoalsChange,
   handleCancelMatch,
   matchOption,
   matchStatistics,
@@ -91,6 +103,9 @@ export const MatchRow: React.FC<MatchRowProps> = ({
     ? correctAnswers[matchIndex]?.goalsAwayTeam || ""
     : "";
   const quinipoloHasBeenCorrected = quinipolo.has_been_corrected;
+  const canEnterGoalsPerMatch =
+    quinipolo.league_id &&
+    LEAGUES_WITH_IMAGE_SHARE_BETA.includes(quinipolo.league_id);
   const { t } = useTranslation();
 
   return (
@@ -127,8 +142,7 @@ export const MatchRow: React.FC<MatchRowProps> = ({
         </Box>
         {isCancelled && (
           <Alert severity="info" sx={{ mb: 1, fontSize: "0.875rem" }}>
-            {t("matchCancelledMessage") ||
-              "This match is cancelled and will count as correct for everyone"}
+            {t("matchCancelledMessage")}
           </Alert>
         )}
         {!isCancelled && (
@@ -141,6 +155,28 @@ export const MatchRow: React.FC<MatchRowProps> = ({
               onChange={onChange}
               matchOption={matchOption}
             />
+            {isCorrectionMode && canEnterGoalsPerMatch && handleGoalsChange && (
+              <GoalsInputs
+                matchIndex={matchIndex}
+                chosenWinner={currentAnswer.chosenWinner ?? ""}
+                goalsHomeTeam={
+                  isGame15
+                    ? (currentAnswer.goalsHomeTeamExact ?? "")
+                    : (currentAnswer.goalsHomeTeam ?? "")
+                }
+                goalsAwayTeam={
+                  isGame15
+                    ? (currentAnswer.goalsAwayTeamExact ?? "")
+                    : (currentAnswer.goalsAwayTeam ?? "")
+                }
+                regularGoalsHomeTeam={currentAnswer.regularGoalsHomeTeam ?? ""}
+                regularGoalsAwayTeam={currentAnswer.regularGoalsAwayTeam ?? ""}
+                homeTeam={match.homeTeam}
+                awayTeam={match.awayTeam}
+                onGoalsChange={handleGoalsChange}
+                disabled={loading || isCancelled}
+              />
+            )}
             {!answerModeOn && showStatistics && (
               <AnimatePresence mode="wait">
                 {statisticsLoading ? (
@@ -158,42 +194,67 @@ export const MatchRow: React.FC<MatchRowProps> = ({
               </AnimatePresence>
             )}
             {isGame15 && (
-              <div className={style.goalsContainer}>
-                <GoalsToggleButtonGroup
-                  teamType="home"
-                  teamName={quinipolo.quinipolo[14].homeTeam}
-                  goals={currentAnswer.goalsHomeTeam}
-                  correctGoals={homeTeamGoals}
-                  matchType={match.gameType}
-                  onChange={handleGame15Change}
-                  seeUserAnswersModeOn={seeUserAnswersModeOn ? "true" : null}
-                  viewOnlyModeOn={viewOnlyModeOn ? "true" : null}
-                  quinipoloHasBeenCorrected={quinipoloHasBeenCorrected}
-                  disabled={loading || isCancelled}
-                  isMissing={
-                    hasAttemptedSubmit &&
-                    !!answers[14]?.chosenWinner &&
-                    !currentAnswer.goalsHomeTeam
-                  }
-                />
-                <GoalsToggleButtonGroup
-                  teamType="away"
-                  teamName={quinipolo.quinipolo[14].awayTeam}
-                  goals={currentAnswer.goalsAwayTeam}
-                  correctGoals={awayTeamGoals}
-                  matchType={match.gameType}
-                  onChange={handleGame15Change}
-                  seeUserAnswersModeOn={seeUserAnswersModeOn ? "true" : null}
-                  viewOnlyModeOn={viewOnlyModeOn ? "true" : null}
-                  quinipoloHasBeenCorrected={quinipoloHasBeenCorrected}
-                  disabled={loading || isCancelled}
-                  isMissing={
-                    hasAttemptedSubmit &&
-                    !!answers[14]?.chosenWinner &&
-                    !currentAnswer.goalsAwayTeam
-                  }
-                />
-              </div>
+              <Box>
+                <div className={style.goalsContainer}>
+                  <GoalsToggleButtonGroup
+                    teamType="home"
+                    teamName={quinipolo.quinipolo[14].homeTeam}
+                    goals={currentAnswer.goalsHomeTeam}
+                    correctGoals={homeTeamGoals}
+                    matchType={match.gameType}
+                    onChange={handleGame15Change}
+                    seeUserAnswersModeOn={seeUserAnswersModeOn ? "true" : null}
+                    viewOnlyModeOn={viewOnlyModeOn ? "true" : null}
+                    quinipoloHasBeenCorrected={quinipoloHasBeenCorrected}
+                    disabled={loading || isCancelled}
+                    isMissing={
+                      hasAttemptedSubmit &&
+                      !!answers[14]?.chosenWinner &&
+                      !currentAnswer.goalsHomeTeam
+                    }
+                  />
+                  <GoalsToggleButtonGroup
+                    teamType="away"
+                    teamName={quinipolo.quinipolo[14].awayTeam}
+                    goals={currentAnswer.goalsAwayTeam}
+                    correctGoals={awayTeamGoals}
+                    matchType={match.gameType}
+                    onChange={handleGame15Change}
+                    seeUserAnswersModeOn={seeUserAnswersModeOn ? "true" : null}
+                    viewOnlyModeOn={viewOnlyModeOn ? "true" : null}
+                    quinipoloHasBeenCorrected={quinipoloHasBeenCorrected}
+                    disabled={loading || isCancelled}
+                    isMissing={
+                      hasAttemptedSubmit &&
+                      !!answers[14]?.chosenWinner &&
+                      !currentAnswer.goalsAwayTeam
+                    }
+                  />
+                </div>
+                {isCorrectionMode &&
+                  (() => {
+                    const game15Validation = validateGoalsMatchWinner(
+                      currentAnswer.chosenWinner ?? "",
+                      currentAnswer.goalsHomeTeam,
+                      currentAnswer.goalsAwayTeam,
+                      match.homeTeam,
+                      match.awayTeam,
+                      match.gameType,
+                      true,
+                      currentAnswer.goalsHomeTeamExact,
+                      currentAnswer.goalsAwayTeamExact
+                    );
+                    const game15Error = getGoalsValidationMessage(
+                      game15Validation,
+                      t
+                    );
+                    return game15Error ? (
+                      <FormHelperText error sx={{ m: 0, mt: 0.5, textAlign: "center" }}>
+                        {game15Error}
+                      </FormHelperText>
+                    ) : null;
+                  })()}
+              </Box>
             )}
           </>
         )}
