@@ -566,5 +566,212 @@
   "accentColor": "Akzentfarbe",
   "iconColor": "Symbolfarbe",
   "selectLeagueIcon": "Liga‑Symbol auswählen",
-  "searchByUsername": "Nach Benutzername suchen"
+  "searchByUsername": "Nach Benutzername suchen",
+  "privacy": {
+    "title": "Quinipolo Datenschutzerklärung",
+    "lastUpdatedLabel": "Zuletzt aktualisiert",
+    "lastUpdated": "30.09.2025",
+    "intro": "In Übereinstimmung mit der Verordnung (EU) 2016/679 (DSGVO), dem spanischen Organgesetz 3/2018 (LOPDGDD) und anderen anwendbaren Datenschutzvorschriften werden die Nutzer der Quinipolo-Anwendung über die Verarbeitung ihrer personenbezogenen Daten informiert.",
+    "sections": [
+      {
+        "title": "1. Geltungsbereich und Definitionen",
+        "paragraphs": [
+          "Diese Richtlinie gilt für alle Nutzer der Quinipolo-Anwendung, in ihren Web- und PWA-Versionen, sowohl Besucher als auch registrierte Nutzer.",
+          "Wesentliche Definitionen:",
+          "Personenbezogene Daten: Informationen, die eine natürliche Person identifizieren oder identifizierbar machen.",
+          "Verarbeitung: jede Operation mit personenbezogenen Daten (Erhebung, Speicherung, Nutzung, Übermittlung, Löschung).",
+          "Verantwortlicher: die Stelle, die über die Datenverarbeitung entscheidet (Quinipolo).",
+          "Auftragsverarbeiter: Dritte, die Daten im Auftrag von Quinipolo verarbeiten (z. B. technische Anbieter).",
+          "Cookies: Informationsdateien, die auf dem Gerät des Nutzers gespeichert werden."
+        ]
+      },
+      {
+        "title": "2. Erhobene Daten",
+        "paragraphs": [
+          "Konto und Registrierung: Name oder Alias, E-Mail, Passwort (Hash) oder OAuth-Identifikatoren (Google, Apple usw.).",
+          "OAuth: Name, E-Mail, Avatar gemäß gewährten Berechtigungen.",
+          "Nutzung und Analyse: besuchte Seiten, Klicks, Leistung, Referrer (siehe utils/analytics.ts).",
+          "Präferenzen/Einwilligung: Cookies und Analyse (siehe utils/consent.ts).",
+          "Spiel und Community: Vorhersagen, Punktzahlen, Ranglisten, Ligen, Moderatorrollen.",
+          "Technische Daten: IP, Browser, Betriebssystem, Gerät, Push-Identifikatoren.",
+          "Zahlungen und Abonnements: Plan, Status, Methode (letzte 4 Ziffern der Karte, Marke) über Stripe.",
+          "Support-Kommunikation: E-Mails, Formulare, Feedback.",
+          "Protokolle und Sicherheit: Zugriffe, Blockierungen, verdächtige Versuche."
+        ]
+      },
+      {
+        "title": "3. Datenquellen",
+        "paragraphs": [
+          "Direkt vom Nutzer (Registrierung, Formulare, Vorhersagen).",
+          "Externe Anbieter: OAuth (Google/Apple), Zahlungen (Stripe), Analyse.",
+          "Abgeleitete Daten: aggregierte Statistiken, Ranglisten, Nutzungsmetriken."
+        ]
+      },
+      {
+        "title": "4. Zwecke der Verarbeitung",
+        "paragraphs": [
+          "Benutzerkonten erstellen und verwalten.",
+          "Spielbetrieb ermöglichen: Vorhersagen, Ligen, Ranglisten, Profile.",
+          "Abonnements und Zahlungen verwalten.",
+          "Community moderieren und Betrug oder Cheating verhindern.",
+          "Produkt durch Analyse verbessern (mit Einwilligung wo erforderlich).",
+          "Transaktionale Kommunikation senden (Bestätigung, Wiederherstellung, Ergebnisse).",
+          "Kommerzielle Kommunikation mit Einwilligung und Opt-out-Option senden.",
+          "Rechtliche Compliance und Verteidigung möglicher Ansprüche."
+        ]
+      },
+      {
+        "title": "5. Rechtsgrundlagen (DSGVO)",
+        "paragraphs": [
+          "Vertrag: Benutzerregistrierung, Spielteilnahme, Abonnements.",
+          "Berechtigtes Interesse: Sicherheit, Missbrauchsprävention, minimale technische Metriken.",
+          "Einwilligung: Analyse-/Marketing-Cookies, Push-Benachrichtigungen, Marketing-E-Mails.",
+          "Gesetzliche Verpflichtung: Rechnungsstellung und Buchhaltungsunterlagen."
+        ]
+      },
+      {
+        "title": "6. Cookies und ähnliche Technologien",
+        "paragraphs": [
+          "Die App verwendet Cookies und gleichwertige Technologien auf Mobilgeräten/PWA.",
+          "Typen:",
+          "Essenziell (Grundfunktion).",
+          "Präferenzen.",
+          "Analyse (Messung, Leistung).",
+          "Marketing (falls künftig verwendet).",
+          "Nutzer können Präferenzen im Einwilligungspanel oder ihrem Browser verwalten."
+        ]
+      },
+      {
+        "title": "7. Zahlungen und Abonnements",
+        "paragraphs": [
+          "Zahlungen werden über Stripe abgewickelt, der je nach Fall als Auftragsverarbeiter oder unabhängig agiert. Quinipolo speichert keine vollständigen Kartendaten.",
+          "Von Stripe bereitgestellte Tokens werden für Abrechnung und Verlängerungen verwendet."
+        ]
+      },
+      {
+        "title": "8. Analyse und Dritte",
+        "paragraphs": [
+          "Die App kann Analyse- und Crash-Reporting-Tools verwenden. Nutzungs- und Leistungsmetriken werden erhoben.",
+          "Nutzer können die Einwilligung jederzeit widerrufen."
+        ]
+      },
+      {
+        "title": "9. Nutzergenerierte Inhalte",
+        "paragraphs": [
+          "Aliase, Punktzahlen und Ranglisten können in öffentlichen Bestenlisten oder privaten Ligen sichtbar sein.",
+          "Nutzer können ihren Alias und Datenschutzoptionen ändern.",
+          "Daten werden nur im Quinipolo-Kontext wiederverwendet."
+        ]
+      },
+      {
+        "title": "10. Identifikation des Verantwortlichen",
+        "paragraphs": [
+          "Verantwortlicher: Salvador Sánchez i Campos",
+          "Steuernummer: 49284364X",
+          "Adresse: Carrer General Castaños 40, Molins de Rei, Barcelona, Spanien",
+          "Kontakt-E-Mail: info@quinipolo.com"
+        ]
+      },
+      {
+        "title": "11. Datenempfänger",
+        "paragraphs": [
+          "Hosting- und Datenbankanbieter (Supabase, EU/EWR).",
+          "Zahlungsabwickler (Stripe).",
+          "Analyse- und Push-Benachrichtigungsanbieter (falls aktiviert).",
+          "Behörden, bei gesetzlicher Verpflichtung."
+        ]
+      },
+      {
+        "title": "12. Internationale Übermittlungen",
+        "paragraphs": [
+          "Bei Übermittlungen außerhalb des EWR/Vereinigtes Königreich gelten angemessene Garantien wie Standardvertragsklauseln (SCC) oder Angemessenheitsbeschlüsse."
+        ]
+      },
+      {
+        "title": "13. Aufbewahrungsfristen",
+        "paragraphs": [
+          "Konten: während der Aktivität + 2 Jahre nach Löschung für Protokolle.",
+          "Spielaufzeichnungen: anonymisiert oder für Statistiken aufbewahrt.",
+          "Zahlungen und Rechnungsstellung: von Stripe gemäß Steuervorschriften verwaltet.",
+          "Analyse: gemäß Anbieterkonfiguration."
+        ]
+      },
+      {
+        "title": "14. Sicherheit",
+        "paragraphs": [
+          "Verschlüsselung bei Übertragung und Speicherung, Zugriffskontrollen, Mindestprivilegien.",
+          "Nutzer müssen ihre Anmeldedaten und Geräte schützen.",
+          "Verpflichtung zur Meldung von Sicherheitsvorfällen gemäß DSGVO."
+        ]
+      },
+      {
+        "title": "15. Automatisierte Entscheidungen",
+        "paragraphs": [
+          "Ranglisten und Punktzahlen werden automatisch berechnet.",
+          "Es gibt keine automatisierten Entscheidungen mit rechtlichen oder ähnlich bedeutsamen Auswirkungen auf den Nutzer."
+        ]
+      },
+      {
+        "title": "16. Minderjährige",
+        "paragraphs": [
+          "Die App richtet sich nicht an Minderjährige unter 18 Jahren. Bei Erkennung einer Registrierung eines Minderjährigen wird das Konto gelöscht."
+        ]
+      },
+      {
+        "title": "17. Rechte der Nutzer",
+        "paragraphs": [
+          "Nutzer können ihre Rechte auf Zugang, Berichtigung, Löschung, Widerspruch, Einschränkung, Übertragbarkeit ausüben.",
+          "Einwilligung jederzeit widerrufen.",
+          "Beschwerde bei der spanischen Datenschutzbehörde (AEPD): www.aepd.es.",
+          "Anfrage: per E-Mail an info@quinipolo.com mit ausreichender Identifikation."
+        ]
+      },
+      {
+        "title": "18. Kontolöschung",
+        "paragraphs": [
+          "Nutzer können die Löschung ihres Kontos per E-Mail an info@quinipolo.com anfordern.",
+          "Einige Informationen (z. B. Ligateilnahme) können anonymisiert bleiben.",
+          "Detaillierte Anweisungen zur Anforderung der Kontolöschung oder teilweisen Datenlöschung finden Sie auf unserer [Kontolöschungsseite](/delete-account)."
+        ]
+      },
+      {
+        "title": "19. Änderungen der Richtlinie",
+        "paragraphs": [
+          "Wir behalten uns das Recht vor, diese Datenschutzerklärung zu ändern. Änderungen werden den Nutzern mitgeteilt und treten zum angegebenen Datum in Kraft."
+        ]
+      },
+      {
+        "title": "20. Kontakt",
+        "paragraphs": [
+          "Bei Fragen oder Ausübung von Rechten: 📧 info@quinipolo.com"
+        ]
+      }
+    ]
+  },
+  "deleteAccount": {
+    "title": "Konto- und Datenlöschung - Quinipolo",
+    "intro": "Wenn Sie Ihr Quinipolo-Konto löschen oder eine teilweise Datenlöschung anfordern möchten, können Sie dies wie folgt tun.",
+    "stepsTitle": "So fordern Sie die Konto- oder teilweise Datenlöschung an",
+    "steps": [
+      "Senden Sie eine E-Mail an info@quinipolo.com von der mit Ihrem Quinipolo-Konto verknüpften E-Mail-Adresse.",
+      "Geben Sie Ihre Anfrage an: vollständige Kontolöschung oder spezifizieren Sie, welche Daten gelöscht werden sollen (teilweise Löschung).",
+      "Wir bearbeiten Ihre Anfrage innerhalb von maximal 30 Tagen, sofern keine gesetzlichen Aufbewahrungspflichten bestehen."
+    ],
+    "emailInstruction": "Kontaktieren Sie uns unter:",
+    "dataDeletedTitle": "Daten, die gelöscht werden",
+    "dataDeleted": [
+      "Konto- und Registrierungsdaten (Name, E-Mail, Zugangsdaten)",
+      "OAuth-Identifikatoren",
+      "Vorhersagen und Punktzahlen",
+      "Liga-Mitgliedschaften und Teilnahme",
+      "Profil und Einstellungen"
+    ],
+    "dataKeptTitle": "Daten, die möglicherweise aufbewahrt werden",
+    "dataKept": [
+      "Protokolle und Sicherheitsaufzeichnungen bis zu 2 Jahre nach der Löschung (gesetzliche Verpflichtungen)",
+      "Anonymisierte oder aggregierte Daten für Statistiken (z. B. Liga-Teilnahmehistorie ohne personenbezogene Identifikatoren)",
+      "Zahlungs- und Rechnungsaufzeichnungen gemäß steuerlichen Vorschriften"
+    ],
+    "retention": "Weitere Details zu Aufbewahrungsfristen und Datenverarbeitung finden Sie in unserer Datenschutzerklärung."
+  }
 }

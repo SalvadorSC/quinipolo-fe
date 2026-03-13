@@ -22,3 +22,4 @@ export { default as JoinLeague } from "./JoinLeague/JoinLeague";
 export { default as About } from "./About/About";
 export { default as Terms } from "./Terms/Terms";
 export { default as Privacy } from "./Privacy/Privacy";
+export { default as DeleteAccount } from "./DeleteAccount/DeleteAccount";

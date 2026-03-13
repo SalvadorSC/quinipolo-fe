@@ -851,7 +851,8 @@
         "title": "18. Eliminazione dell'account",
         "paragraphs": [
           "L'utente può richiedere la cancellazione del proprio account inviando un'email a info@quinipolo.com.",
-          "Alcune informazioni (es. partecipazione a leghe) potranno rimanere anonimizzate."
+          "Alcune informazioni (es. partecipazione a leghe) potranno rimanere anonimizzate.",
+          "Per istruzioni dettagliate su come richiedere l'eliminazione dell'account o dei dati parziali, consulta la nostra [pagina di eliminazione account](/delete-account)."
         ]
       },
       {
@@ -867,5 +868,31 @@
         ]
       }
     ]
+  },
+  "deleteAccount": {
+    "title": "Eliminazione account e dati - Quinipolo",
+    "intro": "Se desideri eliminare il tuo account Quinipolo o richiedere l'eliminazione parziale dei dati, puoi farlo seguendo i passaggi indicati di seguito.",
+    "stepsTitle": "Come richiedere l'eliminazione dell'account o dei dati parziali",
+    "steps": [
+      "Invia un'email a info@quinipolo.com dall'indirizzo associato al tuo account Quinipolo.",
+      "Indica la tua richiesta: eliminazione completa dell'account o specifica quali dati desideri eliminare (eliminazione parziale).",
+      "Elaboreremo la tua richiesta entro un massimo di 30 giorni, salvo obblighi legali di conservazione."
+    ],
+    "emailInstruction": "Contattaci a:",
+    "dataDeletedTitle": "Dati che verranno eliminati",
+    "dataDeleted": [
+      "Dati di account e registrazione (nome, email, credenziali)",
+      "Identificatori OAuth",
+      "Pronostici e punteggi",
+      "Iscrizioni a leghe e partecipazione",
+      "Profilo e preferenze"
+    ],
+    "dataKeptTitle": "Dati che potrebbero essere conservati",
+    "dataKept": [
+      "Log e registri di sicurezza fino a 2 anni dopo l'eliminazione (obblighi legali)",
+      "Dati anonimizzati o aggregati per statistiche (es. cronologia partecipazione leghe senza identificatori personali)",
+      "Registri di pagamenti e fatturazione secondo le normative fiscali"
+    ],
+    "retention": "Per maggiori dettagli sui periodi di conservazione e il trattamento dei dati, consulta la nostra Informativa sulla Privacy."
   }
 }

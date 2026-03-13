@@ -864,7 +864,8 @@
         "title": "18. Eliminació del compte",
         "paragraphs": [
           "L'usuari pot sol·licitar la supressió del seu compte enviant un correu a info@quinipolo.com.",
-          "Part de la informació (p. ex. participació en lligues) podrà romandre anonimitzada."
+          "Part de la informació (p. ex. participació en lligues) podrà romandre anonimitzada.",
+          "Per instruccions detallades sobre com sol·licitar l'eliminació del compte o de dades parcials, consulta la nostra [pàgina d'eliminació de compte](/delete-account)."
         ]
       },
       {
@@ -880,5 +881,31 @@
         ]
       }
     ]
+  },
+  "deleteAccount": {
+    "title": "Eliminació de compte i dades - Quinipolo",
+    "intro": "Si vols eliminar el teu compte de Quinipolo o sol·licitar l'eliminació parcial de dades, pots fer-ho seguint els passos següents.",
+    "stepsTitle": "Com sol·licitar l'eliminació del compte o de dades parcials",
+    "steps": [
+      "Envia un correu electrònic a info@quinipolo.com des de l'adreça de correu associada al teu compte de Quinipolo.",
+      "Indica la teva sol·licitud: eliminació total del compte o especifica quines dades vols eliminar (eliminació parcial).",
+      "Processarem la teva sol·licitud en un màxim de 30 dies, excepte quan obligacions legals requereixin la retenció."
+    ],
+    "emailInstruction": "Contacta'ns a:",
+    "dataDeletedTitle": "Dades que s'eliminaran",
+    "dataDeleted": [
+      "Dades del compte i registre (nom, correu, credencials)",
+      "Identificadors OAuth",
+      "Pronòstics i puntuacions",
+      "Membres de lligues i participació",
+      "Perfil i preferències"
+    ],
+    "dataKeptTitle": "Dades que poden ser retingudes",
+    "dataKept": [
+      "Registres i logs de seguretat fins a 2 anys després de l'eliminació (obligacions legals)",
+      "Dades anonimitzades o agregades per estadístiques (p. ex. historial de participació en lligues sense identificadors personals)",
+      "Registres de pagaments i facturació segons requereixen les normatives fiscals"
+    ],
+    "retention": "Per més detalls sobre períodes de retenció i tractament de dades, consulta la nostra Política de Privacitat."
   }
 }

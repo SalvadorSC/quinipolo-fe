@@ -34,6 +34,7 @@ import {
 import { About } from "./Routes";
 import { Terms } from "./Routes";
 import { Privacy } from "./Routes";
+import { DeleteAccount } from "./Routes";
 import OAuthCallbackHandler from "./Components/OAuthCallbackHandler/OAuthCallbackHandler";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import { trackPageView } from "./utils/analytics";
@@ -103,6 +104,7 @@ function App() {
                   <Route path="/about" element={<About />} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/delete-account" element={<DeleteAccount />} />
 
                   {/* Authenticated pages */}
                   {shouldShowAuthed ? (

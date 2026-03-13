@@ -566,5 +566,212 @@
   "accentColor": "Cor de destaque",
   "iconColor": "Cor do ícone",
   "selectLeagueIcon": "Selecionar ícone da liga",
-  "searchByUsername": "Pesquisar por usuário"
+  "searchByUsername": "Pesquisar por usuário",
+  "privacy": {
+    "title": "Política de Privacidade Quinipolo",
+    "lastUpdatedLabel": "Última atualização",
+    "lastUpdated": "30/09/2025",
+    "intro": "Em conformidade com o Regulamento (UE) 2016/679 (RGPD), a Lei Orgânica 3/2018 (LOPDGDD) e demais regulamentações aplicáveis em matéria de proteção de dados, os utilizadores da aplicação Quinipolo são informados sobre o tratamento dos seus dados pessoais.",
+    "sections": [
+      {
+        "title": "1. Âmbito e definições",
+        "paragraphs": [
+          "Esta política aplica-se a todos os utilizadores da aplicação Quinipolo, nas versões web e PWA, tanto visitantes como utilizadores registados.",
+          "Definições principais:",
+          "Dados pessoais: informação que identifica ou pode identificar uma pessoa física.",
+          "Tratamento: qualquer operação sobre dados pessoais (recolha, armazenamento, uso, transmissão, eliminação).",
+          "Responsável: a entidade que decide sobre o tratamento de dados (Quinipolo).",
+          "Subcontratado: terceiros que tratam dados em nome do Quinipolo (ex. fornecedores técnicos).",
+          "Cookies: ficheiros de informação armazenados no dispositivo do utilizador."
+        ]
+      },
+      {
+        "title": "2. Dados recolhidos",
+        "paragraphs": [
+          "Conta e registo: nome ou pseudónimo, email, palavra-passe (hash) ou identificadores OAuth (Google, Apple, etc.).",
+          "OAuth: nome, email, avatar conforme permissões concedidas.",
+          "Uso e analítica: páginas visitadas, cliques, desempenho, referência (ver utils/analytics.ts).",
+          "Preferências/consentimento: cookies e analítica (ver utils/consent.ts).",
+          "Jogo e comunidade: previsões, pontuações, classificações, ligas, funções de moderador.",
+          "Dados técnicos: IP, navegador, sistema operativo, dispositivo, identificadores de push.",
+          "Pagamentos e subscrições: plano, estado, método (últimos 4 dígitos do cartão, marca) via Stripe.",
+          "Comunicações de suporte: emails, formulários, feedback.",
+          "Logs e segurança: acessos, bloqueios, tentativas suspeitas."
+        ]
+      },
+      {
+        "title": "3. Fontes de dados",
+        "paragraphs": [
+          "Diretamente do utilizador (registo, formulários, previsões).",
+          "Fornecedores externos: OAuth (Google/Apple), pagamentos (Stripe), analítica.",
+          "Dados derivados: estatísticas agregadas, classificações, métricas de uso."
+        ]
+      },
+      {
+        "title": "4. Finalidades do tratamento",
+        "paragraphs": [
+          "Criar e gerir contas de utilizador.",
+          "Permitir o funcionamento do jogo: previsões, ligas, classificações, perfis.",
+          "Gerir subscrições e pagamentos.",
+          "Moderar a comunidade e prevenir fraudes ou batota.",
+          "Melhorar o produto através de analítica (com consentimento quando exigido).",
+          "Enviar comunicações transacionais (confirmação, recuperação, resultados).",
+          "Enviar comunicações comerciais com consentimento e opção de opt-out.",
+          "Cumprimento legal e defesa de eventuais reclamações."
+        ]
+      },
+      {
+        "title": "5. Bases jurídicas (RGPD)",
+        "paragraphs": [
+          "Contrato: registo de utilizador, participação no jogo, subscrições.",
+          "Interesse legítimo: segurança, prevenção de abusos, métricas técnicas mínimas.",
+          "Consentimento: cookies analíticos/marketing, notificações push, emails comerciais.",
+          "Obrigação legal: faturação e registos contabilísticos."
+        ]
+      },
+      {
+        "title": "6. Cookies e tecnologias similares",
+        "paragraphs": [
+          "A app utiliza cookies e tecnologias equivalentes em mobile/PWA.",
+          "Tipos:",
+          "Essenciais (funcionamento básico).",
+          "Preferências.",
+          "Analíticos (medição, desempenho).",
+          "Marketing (se utilizados no futuro).",
+          "O utilizador pode gerir preferências no painel de consentimento ou no navegador."
+        ]
+      },
+      {
+        "title": "7. Pagamentos e subscrições",
+        "paragraphs": [
+          "Os pagamentos são processados através do Stripe, atuando como subcontratado/independente consoante o caso. O Quinipolo não armazena dados completos de cartões.",
+          "Os tokens fornecidos pelo Stripe são utilizados para faturação e renovações."
+        ]
+      },
+      {
+        "title": "8. Analítica e terceiros",
+        "paragraphs": [
+          "A app pode utilizar ferramentas de analítica e relatórios de crash. São recolhidas métricas de uso e desempenho.",
+          "O utilizador pode retirar o consentimento a qualquer momento."
+        ]
+      },
+      {
+        "title": "9. Conteúdo gerado por utilizadores",
+        "paragraphs": [
+          "Pseudónimos, pontuações e classificações podem ser visíveis em rankings públicos ou ligas privadas.",
+          "Os utilizadores podem modificar o pseudónimo e opções de privacidade.",
+          "Os dados são reutilizados apenas no contexto do Quinipolo."
+        ]
+      },
+      {
+        "title": "10. Identificação do Responsável pelo tratamento",
+        "paragraphs": [
+          "Responsável: Salvador Sánchez i Campos",
+          "NIF: 49284364X",
+          "Morada: Carrer General Castaños 40, Molins de Rei, Barcelona, Espanha",
+          "Email de contacto: info@quinipolo.com"
+        ]
+      },
+      {
+        "title": "11. Destinatários dos dados",
+        "paragraphs": [
+          "Fornecedor de alojamento e base de dados (Supabase, UE/EEE).",
+          "Processador de pagamentos (Stripe).",
+          "Fornecedores de analítica e notificações push (se ativados).",
+          "Autoridades públicas, quando existir obrigação legal."
+        ]
+      },
+      {
+        "title": "12. Transferências internacionais",
+        "paragraphs": [
+          "Em caso de transferências para fora do EEE/Reino Unido, aplicar-se-ão garantias adequadas como cláusulas contratuais-tipo (SCCs) ou decisões de adequação."
+        ]
+      },
+      {
+        "title": "13. Prazos de conservação",
+        "paragraphs": [
+          "Contas: enquanto ativas + 2 anos após eliminação para logs.",
+          "Registos de jogo: anonimizados ou conservados para estatísticas.",
+          "Pagamentos e faturação: geridos pelo Stripe, conforme regulamentação fiscal.",
+          "Analítica: conforme configuração do fornecedor."
+        ]
+      },
+      {
+        "title": "14. Segurança",
+        "paragraphs": [
+          "Encriptação em trânsito e em repouso, controlos de acesso, privilégio mínimo.",
+          "O utilizador deve proteger as suas credenciais e dispositivos.",
+          "Compromisso de notificar incidentes de segurança conforme previsto no RGPD."
+        ]
+      },
+      {
+        "title": "15. Decisões automatizadas",
+        "paragraphs": [
+          "Classificações e pontuações são calculadas automaticamente.",
+          "Não existem decisões automatizadas com efeitos legais ou similares sobre o utilizador."
+        ]
+      },
+      {
+        "title": "16. Menores",
+        "paragraphs": [
+          "A app não se destina a menores de 18 anos. Se for detetado o registo de um menor, a conta será eliminada."
+        ]
+      },
+      {
+        "title": "17. Direitos dos utilizadores",
+        "paragraphs": [
+          "Os utilizadores podem exercer os direitos de acesso, retificação, apagamento, oposição, limitação, portabilidade.",
+          "Retirar o consentimento a qualquer momento.",
+          "Reclamar junto da Agência Espanhola de Proteção de Dados (AEPD): www.aepd.es.",
+          "Pedido: escrevendo para info@quinipolo.com, com identificação suficiente."
+        ]
+      },
+      {
+        "title": "18. Eliminação de conta",
+        "paragraphs": [
+          "O utilizador pode solicitar a eliminação da sua conta enviando um email para info@quinipolo.com.",
+          "Parte da informação (ex. participação em ligas) pode permanecer anonimizada.",
+          "Para instruções detalhadas sobre como solicitar a eliminação da conta ou de dados parciais, consulte a nossa [página de eliminação de conta](/delete-account)."
+        ]
+      },
+      {
+        "title": "19. Alterações à Política",
+        "paragraphs": [
+          "Reservamo-nos o direito de modificar esta Política de Privacidade. As alterações serão comunicadas aos utilizadores e entrarão em vigor na data indicada."
+        ]
+      },
+      {
+        "title": "20. Contacto",
+        "paragraphs": [
+          "Para dúvidas ou exercício de direitos: 📧 info@quinipolo.com"
+        ]
+      }
+    ]
+  },
+  "deleteAccount": {
+    "title": "Eliminação de conta e dados - Quinipolo",
+    "intro": "Se deseja eliminar a sua conta Quinipolo ou solicitar a eliminação parcial de dados, pode fazê-lo seguindo os passos abaixo.",
+    "stepsTitle": "Como solicitar a eliminação da conta ou de dados parciais",
+    "steps": [
+      "Envie um e-mail para info@quinipolo.com a partir do endereço associado à sua conta Quinipolo.",
+      "Indique o seu pedido: eliminação total da conta ou especifique quais dados deseja eliminar (eliminação parcial).",
+      "Processaremos o seu pedido no prazo máximo de 30 dias, exceto quando obrigações legais exigirem a retenção."
+    ],
+    "emailInstruction": "Contacte-nos em:",
+    "dataDeletedTitle": "Dados que serão eliminados",
+    "dataDeleted": [
+      "Dados de conta e registo (nome, e-mail, credenciais)",
+      "Identificadores OAuth",
+      "Previsões e pontuações",
+      "Membros de ligas e participação",
+      "Perfil e preferências"
+    ],
+    "dataKeptTitle": "Dados que podem ser retidos",
+    "dataKept": [
+      "Registos e logs de segurança até 2 anos após a eliminação (obrigações legais)",
+      "Dados anonimizados ou agregados para estatísticas (ex.: histórico de participação em ligas sem identificadores pessoais)",
+      "Registos de pagamentos e faturação conforme exigido pelas regulamentações fiscais"
+    ],
+    "retention": "Para mais detalhes sobre períodos de retenção e tratamento de dados, consulte a nossa Política de Privacidade."
+  }
 }

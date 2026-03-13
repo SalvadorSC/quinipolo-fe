@@ -865,7 +865,8 @@
         "title": "18. Eliminación de la cuenta",
         "paragraphs": [
           "El usuario puede solicitar la supresión de su cuenta enviando un correo a info@quinipolo.com.",
-          "Parte de la información (ej. participación en ligas) podrá permanecer anonimizada."
+          "Parte de la información (ej. participación en ligas) podrá permanecer anonimizada.",
+          "Para instrucciones detalladas sobre cómo solicitar la eliminación de la cuenta o de datos parciales, consulta nuestra [página de eliminación de cuenta](/delete-account)."
         ]
       },
       {
@@ -881,5 +882,31 @@
         ]
       }
     ]
+  },
+  "deleteAccount": {
+    "title": "Eliminación de cuenta y datos - Quinipolo",
+    "intro": "Si deseas eliminar tu cuenta de Quinipolo o solicitar la eliminación parcial de datos, puedes hacerlo siguiendo los pasos siguientes.",
+    "stepsTitle": "Cómo solicitar la eliminación de la cuenta o de datos parciales",
+    "steps": [
+      "Envía un correo electrónico a info@quinipolo.com desde la dirección asociada a tu cuenta de Quinipolo.",
+      "Indica tu solicitud: eliminación total de la cuenta o especifica qué datos deseas eliminar (eliminación parcial).",
+      "Procesaremos tu solicitud en un máximo de 30 días, excepto cuando obligaciones legales requieran la retención."
+    ],
+    "emailInstruction": "Contáctanos en:",
+    "dataDeletedTitle": "Datos que se eliminarán",
+    "dataDeleted": [
+      "Datos de cuenta y registro (nombre, correo, credenciales)",
+      "Identificadores OAuth",
+      "Pronósticos y puntuaciones",
+      "Membresías de ligas y participación",
+      "Perfil y preferencias"
+    ],
+    "dataKeptTitle": "Datos que pueden ser retenidos",
+    "dataKept": [
+      "Registros y logs de seguridad hasta 2 años después de la eliminación (obligaciones legales)",
+      "Datos anonimizados o agregados para estadísticas (ej. historial de participación en ligas sin identificadores personales)",
+      "Registros de pagos y facturación según requieren las normativas fiscales"
+    ],
+    "retention": "Para más detalles sobre períodos de retención y tratamiento de datos, consulta nuestra Política de Privacidad."
   }
 }

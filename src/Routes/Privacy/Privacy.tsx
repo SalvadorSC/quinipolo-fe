@@ -1,8 +1,46 @@
 import React from "react";
-import { Container, Stack, Typography, Paper, Button } from "@mui/material";
+import {
+  Container,
+  Stack,
+  Typography,
+  Paper,
+  Button,
+  Link as MuiLink,
+} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+
+function renderParagraphWithLinks(text: string) {
+  const linkRegex = /\[([^\]]+)\]\(\/([^)]+)\)/g;
+  const parts: (string | { text: string; to: string })[] = [];
+  let lastIndex = 0;
+  let match;
+  while ((match = linkRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    parts.push({ text: match[1], to: `/${match[2]}` });
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  if (parts.length === 1 && typeof parts[0] === "string") {
+    return <Typography>{parts[0]}</Typography>;
+  }
+  return (
+    <Typography>
+      {parts.map((part, i) =>
+        typeof part === "string" ? (
+          part
+        ) : (
+          <MuiLink key={i} component={Link} to={part.to}>
+            {part.text}
+          </MuiLink>
+        )
+      )}
+    </Typography>
+  );
+}
 
 function Privacy() {
   const navigate = useNavigate();
@@ -56,7 +94,9 @@ function Privacy() {
                 {section.title}
               </Typography>
               {(section.paragraphs || []).map((p: string, pIdx: number) => (
-                <Typography key={pIdx}>{p}</Typography>
+                <React.Fragment key={pIdx}>
+                  {renderParagraphWithLinks(p)}
+                </React.Fragment>
               ))}
             </React.Fragment>
           ))}

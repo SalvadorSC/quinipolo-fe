@@ -864,7 +864,8 @@
         "title": "18. Account deletion",
         "paragraphs": [
           "Users can request deletion of their account by emailing info@quinipolo.com.",
-          "Some information (e.g., league participation) may remain anonymized."
+          "Some information (e.g., league participation) may remain anonymized.",
+          "For detailed instructions on how to request account or partial data deletion, see our [Delete Account page](/delete-account)."
         ]
       },
       {
@@ -880,5 +881,31 @@
         ]
       }
     ]
+  },
+  "deleteAccount": {
+    "title": "Account and Data Deletion - Quinipolo",
+    "intro": "If you wish to delete your Quinipolo account or request partial data deletion, you can do so by following the steps below.",
+    "stepsTitle": "How to request account or partial data deletion",
+    "steps": [
+      "Send an email to info@quinipolo.com from the email address associated with your Quinipolo account.",
+      "Include your request: full account deletion or specify which data you want deleted (partial deletion).",
+      "We will process your request within a maximum of 30 days, except where legal obligations require retention."
+    ],
+    "emailInstruction": "Contact us at:",
+    "dataDeletedTitle": "Data that will be deleted",
+    "dataDeleted": [
+      "Account and registration data (name, email, credentials)",
+      "OAuth identifiers",
+      "Predictions and scores",
+      "League memberships and participation",
+      "Profile and preferences"
+    ],
+    "dataKeptTitle": "Data that may be retained",
+    "dataKept": [
+      "Logs and security records for up to 2 years after deletion (legal obligations)",
+      "Anonymized or aggregated data for statistics (e.g., league participation history without personal identifiers)",
+      "Payment and invoicing records as required by tax regulations"
+    ],
+    "retention": "For more details on retention periods and data processing, see our Privacy Policy."
   }
 }
