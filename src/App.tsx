@@ -10,7 +10,6 @@ import {
 import { UserProvider, useUser } from "./Context/UserContext/UserContext";
 import { FeedbackProvider } from "./Context/FeedbackContext/FeedbackContext";
 import { ThemeProvider } from "./Context/ThemeContext/ThemeContext";
-import MenuBar from "./Components/MenuBar/MenuBar";
 import {
   About,
   AnswersForm,

@@ -122,10 +122,12 @@ export function validateGoalsMatchWinner(
       // For tie that went to penalties, exact goals (penalty result) differ - that's correct
     } else {
       if (homeRank !== null && awayRank !== null) {
-        if (isHomeWinner && homeRank <= awayRank) {
+        // Same bucket (e.g. both 11–12) yields equal ranks; winner is resolved by
+        // exact goals below, not by range ordering.
+        if (isHomeWinner && homeRank < awayRank) {
           return { valid: false, reason: "home_should_win" };
         }
-        if (isAwayWinner && awayRank <= homeRank) {
+        if (isAwayWinner && awayRank < homeRank) {
           return { valid: false, reason: "away_should_win" };
         }
       }

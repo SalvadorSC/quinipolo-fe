@@ -404,6 +404,7 @@
   "mostAnsweredWrong": "most answered wrong",
   "andMoreDidntParticipate": "and {{count}} more didn’t participate",
   "leaderboardTitle": "Leaderboard:",
+  "leaderboardResultsHidden": "Leaderboard results are not shown for this league.",
   "quinipoloWinners": "Quinipolo winners",
   "noWinner": "No winner.",
   "thanksForParticipating": "Thanks for participating in Quinipolo. Don't miss the next one!",

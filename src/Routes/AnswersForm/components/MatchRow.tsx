@@ -49,6 +49,7 @@ interface MatchRowProps {
     teamType: "home" | "away" | "regularHome" | "regularAway",
     value: string,
   ) => void;
+  handleNoPenaltiesChange?: (matchIndex: number, noPenalties: boolean) => void;
   handleCancelMatch: (matchIndex: number) => void;
   matchOption: (value: string, index: number) => React.ReactNode;
   matchStatistics?: {
@@ -81,6 +82,7 @@ export const MatchRow: React.FC<MatchRowProps> = ({
   onChange,
   handleGame15Change,
   handleGoalsChange,
+  handleNoPenaltiesChange,
   handleCancelMatch,
   matchOption,
   matchStatistics,
@@ -174,6 +176,8 @@ export const MatchRow: React.FC<MatchRowProps> = ({
                 homeTeam={match.homeTeam}
                 awayTeam={match.awayTeam}
                 onGoalsChange={handleGoalsChange}
+                noPenalties={currentAnswer.noPenalties ?? false}
+                onNoPenaltiesChange={handleNoPenaltiesChange}
                 disabled={loading || isCancelled}
               />
             )}

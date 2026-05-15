@@ -62,7 +62,7 @@ const AnswersForm = () => {
     modes.correctingModeOn
   );
 
-  const { handleChange, handleGame15Change, handleGoalsChange, handleCancelMatch } =
+  const { handleChange, handleGame15Change, handleGoalsChange, handleNoPenaltiesChange, handleCancelMatch } =
     useAnswerHandlers(
       answers,
       setAnswers,
@@ -236,6 +236,7 @@ const AnswersForm = () => {
                   onChange={handleChange}
                   handleGame15Change={handleGame15Change}
                   handleGoalsChange={handleGoalsChange}
+                  handleNoPenaltiesChange={handleNoPenaltiesChange}
                   handleCancelMatch={handleCancelMatch}
                   matchOption={matchOption}
                   matchStatistics={matchStatistics}

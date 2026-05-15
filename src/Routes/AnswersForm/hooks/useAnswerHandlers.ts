@@ -112,6 +112,19 @@ export const useAnswerHandlers = (
     });
   };
 
+  const handleNoPenaltiesChange = (matchIndex: number, noPenalties: boolean) => {
+    if (seeUserAnswersModeOn || viewOnlyModeOn) return;
+    setAnswers((prev) => {
+      const updated = [...prev];
+      updated[matchIndex] = {
+        ...updated[matchIndex],
+        noPenalties,
+        ...(noPenalties ? { regularGoalsHomeTeam: "", regularGoalsAwayTeam: "" } : {}),
+      };
+      return updated;
+    });
+  };
+
   const handleCancelMatch = (matchIndex: number) => {
     if (seeUserAnswersModeOn || viewOnlyModeOn) return;
 
@@ -150,6 +163,7 @@ export const useAnswerHandlers = (
     handleChange,
     handleGame15Change,
     handleGoalsChange,
+    handleNoPenaltiesChange,
     handleCancelMatch,
   };
 };

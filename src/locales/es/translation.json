@@ -351,6 +351,7 @@
   "mostAnsweredWrong": "más respondido erróneamente",
   "andMoreDidntParticipate": "y {{count}} más no participaron",
   "leaderboardTitle": "Tabla de clasificación:",
+  "leaderboardResultsHidden": "Los resultados de la clasificación no se muestran en esta liga.",
   "quinipoloWinners": "Ganadores de la Quinipolo",
   "noWinner": "No hay ganador.",
   "thanksForParticipating": "Gracias por participar en Quinipolo. ¡No te pierdas la próxima!",

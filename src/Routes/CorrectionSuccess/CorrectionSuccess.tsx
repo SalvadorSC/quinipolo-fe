@@ -14,6 +14,7 @@ import {
 } from "../../utils/shareMessage";
 import CorrectionStats from "../../Components/CorrectionStats/CorrectionStats";
 import { LEAGUES_WITH_IMAGE_SHARE_BETA } from "../../config/leaguesWithImageShare";
+import { shouldHideLeaderboardResults } from "../../config/leaguesWithHiddenLeaderboard";
 
 export type Result = {
   username: string;
@@ -85,9 +86,14 @@ const CorrectionSuccess = () => {
   } | null>(null);
   const [shareImagesLoading, setShareImagesLoading] = useState(false);
   const { t } = useTranslation();
+  const hideLeaderboardResults = shouldHideLeaderboardResults(leagueId);
 
   // If server provided participants, merge immediately; otherwise fetch.
   useEffect(() => {
+    if (hideLeaderboardResults) {
+      setMergedLeaderboard(null);
+      return;
+    }
     if (participantsFromState && participantsFromState.length > 0) {
       const byUserFromCorrection = new Map<string, Result>();
       for (const r of results) byUserFromCorrection.set(r.username, r);
@@ -140,7 +146,7 @@ const CorrectionSuccess = () => {
         setMergedLeaderboard(null);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [leagueId]);
+  }, [leagueId, hideLeaderboardResults]);
 
   const canShareImages =
     !!leagueId &&
@@ -395,9 +401,10 @@ const CorrectionSuccess = () => {
     const local_sorted_points_earned = groupAndSortPointsEarned(source);
     message += formatPointsEarnedDistribution(t, local_sorted_points_earned);
 
-    // Total Points Distribution (Leaderboard)
-    const local_sorted_total_points = groupAndSortTotalPoints(source);
-    message += formatLeaderboardSection(t, local_sorted_total_points);
+    if (!hideLeaderboardResults) {
+      const local_sorted_total_points = groupAndSortTotalPoints(source);
+      message += formatLeaderboardSection(t, local_sorted_total_points);
+    }
 
     // Winners section
     message += formatWinnersSection(t, source);
@@ -631,12 +638,16 @@ const CorrectionSuccess = () => {
           className={style.copyCorrection}
           style={results.length > 0 ? {} : { marginTop: 40 }}
         >
-          {results.length > 0 ? t("resultsTableInfo") : t("noOneAnswered")}
+          {results.length > 0
+            ? hideLeaderboardResults
+              ? t("leaderboardResultsHidden")
+              : t("resultsTableInfo")
+            : t("noOneAnswered")}
         </p>
         {results.length > 0 ? null : (
           <p className={style.copyCorrection}>{t("communicateWell")}</p>
         )}
-        {results.length > 0 ? (
+        {results.length > 0 && !hideLeaderboardResults ? (
           <div
             style={{
               width: "100%",

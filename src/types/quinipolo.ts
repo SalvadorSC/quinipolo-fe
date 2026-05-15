@@ -6,6 +6,8 @@ export const GAME_15_ALLOWED_SPORTS: GameType[] = ["waterpolo", "football"];
 export const NO_TIE_SPORTS: GameType[] = ["tennis"];
 
 export interface SurveyData {
+  /** References matches.id — populated when created from the scraper. Absent for legacy quinipolos. */
+  match_id?: string;
   gameType: GameType;
   homeTeam: string;
   awayTeam: string;
@@ -39,6 +41,8 @@ export interface CorrectAnswer {
   /** When match ended in tie: regular time score for graphics (e.g. 14-14 before penalty shootout) */
   regularGoalsHomeTeam?: string;
   regularGoalsAwayTeam?: string;
+  /** When true, the tie was decided without a penalty shootout (e.g. league draw or extra time only) */
+  noPenalties?: boolean;
   isGame15: boolean;
   cancelled?: boolean; // If true, this match is cancelled and counts as correct for everyone
 }

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, TextField, FormHelperText, Typography } from "@mui/material";
+import {
+  Box,
+  TextField,
+  FormHelperText,
+  Typography,
+  FormControlLabel,
+  Switch,
+} from "@mui/material";
 import { useTranslation } from "react-i18next";
 import {
   validateGoalsMatchWinner,
@@ -32,6 +39,8 @@ interface GoalsInputsProps {
     teamType: "home" | "away" | "regularHome" | "regularAway",
     value: string,
   ) => void;
+  noPenalties?: boolean;
+  onNoPenaltiesChange?: (matchIndex: number, noPenalties: boolean) => void;
   disabled?: boolean;
 }
 
@@ -45,6 +54,8 @@ export const GoalsInputs: React.FC<GoalsInputsProps> = ({
   homeTeam,
   awayTeam,
   onGoalsChange,
+  noPenalties = false,
+  onNoPenaltiesChange,
   disabled = false,
 }) => {
   const { t } = useTranslation();
@@ -52,11 +63,11 @@ export const GoalsInputs: React.FC<GoalsInputsProps> = ({
   const debouncedGoalsAway = useDebouncedValues(goalsAwayTeam, DEBOUNCE_MS);
   const debouncedRegularHome = useDebouncedValues(
     regularGoalsHomeTeam,
-    DEBOUNCE_MS
+    DEBOUNCE_MS,
   );
   const debouncedRegularAway = useDebouncedValues(
     regularGoalsAwayTeam,
-    DEBOUNCE_MS
+    DEBOUNCE_MS,
   );
 
   const debouncedEffectiveHome =
@@ -83,7 +94,7 @@ export const GoalsInputs: React.FC<GoalsInputsProps> = ({
         debouncedRegularHome,
         debouncedRegularAway,
         debouncedGoalsHome,
-        debouncedGoalsAway
+        debouncedGoalsAway,
       )
     : { valid: true as const };
   const validation = !winnerValidation.valid
@@ -97,7 +108,7 @@ export const GoalsInputs: React.FC<GoalsInputsProps> = ({
   const isEmpat = chosenWinner === "empat";
   const hasRegularGoals =
     regularGoalsHomeTeam !== "" || regularGoalsAwayTeam !== "";
-  const showTieSection = isEmpat || hasRegularGoals;
+  const showTieSection = (isEmpat || hasRegularGoals) && !noPenalties;
   const regularMustBeEqual =
     hasRegularGoals &&
     debouncedRegularHome !== "" &&
@@ -110,9 +121,11 @@ export const GoalsInputs: React.FC<GoalsInputsProps> = ({
     awayValue: string,
     homeType: "home" | "regularHome",
     awayType: "away" | "regularAway",
-    error: boolean
+    error: boolean,
   ) => (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5, width: "100%" }}>
+    <Box
+      sx={{ display: "flex", flexDirection: "column", gap: 0.5, width: "100%" }}
+    >
       <Typography variant="caption" color="text.secondary">
         {label}
       </Typography>
@@ -154,6 +167,26 @@ export const GoalsInputs: React.FC<GoalsInputsProps> = ({
         alignItems: "flex-start",
       }}
     >
+      {isEmpat && onNoPenaltiesChange && (
+        <FormControlLabel
+          control={
+            <Switch
+              checked={!noPenalties}
+              onChange={(e) => {
+                const hasPenalties = e.target.checked;
+                onNoPenaltiesChange(matchIndex, !hasPenalties);
+              }}
+              disabled={disabled}
+              size="small"
+            />
+          }
+          label={
+            <Typography variant="caption" color="text.secondary">
+              {t("penalties")}
+            </Typography>
+          }
+        />
+      )}
       {showTieSection ? (
         <>
           {goalsRow(
@@ -162,7 +195,7 @@ export const GoalsInputs: React.FC<GoalsInputsProps> = ({
             regularGoalsAwayTeam,
             "regularHome",
             "regularAway",
-            regularMustBeEqual
+            regularMustBeEqual,
           )}
           {goalsRow(
             t("goalsAfterPenalties"),
@@ -170,7 +203,7 @@ export const GoalsInputs: React.FC<GoalsInputsProps> = ({
             goalsAwayTeam,
             "home",
             "away",
-            hasError
+            hasError,
           )}
         </>
       ) : (
@@ -180,7 +213,7 @@ export const GoalsInputs: React.FC<GoalsInputsProps> = ({
           goalsAwayTeam,
           "home",
           "away",
-          hasError
+          hasError,
         )
       )}
       {regularMustBeEqual && (

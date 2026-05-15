@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { CircularProgress, Paper, Stack, Box } from "@mui/material";
+import { CircularProgress, Paper, Stack, Box, Typography } from "@mui/material";
+import { shouldHideLeaderboardResults } from "../../config/leaguesWithHiddenLeaderboard";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { LoadingButton } from "@mui/lab";
 import styles from "./LeagueDashboard.module.scss";
@@ -102,6 +103,7 @@ const LeagueDashboard = () => {
   const [showLeagueInfo, setShowLeagueInfo] = useState<boolean>(false);
   const queryParams = new URLSearchParams(window.location.search);
   const leagueId = queryParams.get("id");
+  const hideLeaderboardResults = shouldHideLeaderboardResults(leagueId);
   const { setFeedback } = useFeedback();
   const { t } = useTranslation();
 
@@ -187,7 +189,9 @@ const LeagueDashboard = () => {
     hasFetched.current = true;
     setLoading(true);
     getLeagueData();
-    getLeagueLeaderBoardData();
+    if (!hideLeaderboardResults) {
+      getLeagueLeaderBoardData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData.username]);
 
@@ -374,64 +378,63 @@ const LeagueDashboard = () => {
       );
   }, [leaderboardData]);
 
-  const items: TabsProps["items"] = [
-    {
-      key: "1",
-      label: t("points"),
-      children: (
-        <div
-          style={
-            sortedLeaderboardData.length > 7
-              ? {
-                  maxHeight: "50vh",
-                  width: "100%",
-                  minHeight: 0,
-                  overflowY: "auto",
-                }
-              : { width: "100%" }
-          }
-        >
-          <Leaderboard sortedResults={sortedLeaderboardData} />
-        </div>
-      ), // use memoized data
-    },
-    {
-      key: "2",
-      label: t("stats"),
-      children: (
-        <div
-          style={
-            sortedLeaderboardData.length > 7
-              ? {
-                  maxHeight: "50vh",
-                  width: "100%",
-                  minHeight: 0,
-                  overflowY: "auto",
-                }
-              : { width: "100%" }
-          }
-        >
-          <Stats results={leaderboardData} />
-        </div>
-      ),
-    },
-    /* {
-      key: "3",
-      label: t("info"),
-      children: (
-        <LeagueInfo
-          leagueData={leagueData}
-          isUserModerator={isUserModeratorInThisLeague}
-          isUserCreator={isUserCreator}
-          isSystemModerator={isSystemModerator(userData.role)}
-          onEditLeague={handleOpenEditLeague}
-          onManageModerators={handleOpenManageModerators}
-          onShareLeague={handleOpenShareLeague}
-          onEditIcon={handleOpenEditIcon}
-        />
-      ),
-    }, */
-  ];
+  const hiddenLeaderboardMessage = (
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      sx={{ py: 2, textAlign: "center" }}
+    >
+      {t("leaderboardResultsHidden")}
+    </Typography>
+  );
+
+  const items: TabsProps["items"] = hideLeaderboardResults
+    ? [
+        { key: "1", label: t("points"), children: hiddenLeaderboardMessage },
+        { key: "2", label: t("stats"), children: hiddenLeaderboardMessage },
+      ]
+    : [
+        {
+          key: "1",
+          label: t("points"),
+          children: (
+            <div
+              style={
+                sortedLeaderboardData.length > 7
+                  ? {
+                      maxHeight: "50vh",
+                      width: "100%",
+                      minHeight: 0,
+                      overflowY: "auto",
+                    }
+                  : { width: "100%" }
+              }
+            >
+              <Leaderboard sortedResults={sortedLeaderboardData} />
+            </div>
+          ),
+        },
+        {
+          key: "2",
+          label: t("stats"),
+          children: (
+            <div
+              style={
+                sortedLeaderboardData.length > 7
+                  ? {
+                      maxHeight: "50vh",
+                      width: "100%",
+                      minHeight: 0,
+                      overflowY: "auto",
+                    }
+                  : { width: "100%" }
+              }
+            >
+              <Stats results={leaderboardData} />
+            </div>
+          ),
+        },
+      ];
 
   return (
     <div className={styles.leagueDashboardContainer}>
