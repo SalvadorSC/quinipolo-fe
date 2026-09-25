@@ -249,6 +249,49 @@ describe("LeagueList status chips", () => {
     expect(apiPost).not.toHaveBeenCalled();
   });
 
+  it("orders columns as name, actions, participants, then a lock or globe", async () => {
+    renderList();
+    await screen.findByText("Global 2026-2027");
+
+    const headers = screen.getAllByRole("columnheader");
+    expect(headers).toHaveLength(4);
+    expect(headers[0]).toHaveTextContent("Name");
+    expect(within(headers[1]).getByTestId("MoreHorizIcon")).toBeInTheDocument();
+    expect(within(headers[2]).getByTestId("EmojiPeopleIcon")).toBeInTheDocument();
+    expect(within(headers[3]).getByTestId("LockIcon")).toBeInTheDocument();
+
+    const publicRow = screen
+      .getAllByRole("row")
+      .find((row) => within(row).queryByText("Global 2026-2027"));
+    const publicCells = within(publicRow!).getAllByRole("cell");
+    expect(within(publicRow!).getByRole("rowheader")).toHaveTextContent(
+      "Active"
+    );
+    expect(
+      within(publicCells[0]).getByRole("button", { name: "Go to League" })
+    ).toBeInTheDocument();
+    expect(publicCells[1]).toHaveTextContent("1");
+    expect(within(publicCells[2]).getByLabelText("Public")).toBeInTheDocument();
+    expect(publicCells[2]).not.toHaveTextContent("Public");
+
+    const privateRow = screen
+      .getAllByRole("row")
+      .find((row) => within(row).queryByText("Paused Cup"));
+    const privateCells = within(privateRow!).getAllByRole("cell");
+    expect(within(privateRow!).getByRole("rowheader")).toHaveTextContent(
+      "Inactive"
+    );
+    expect(within(privateCells[2]).getByLabelText("Private")).toBeInTheDocument();
+    expect(privateCells[2]).not.toHaveTextContent("Private");
+
+    const finishedRow = screen
+      .getAllByRole("row")
+      .find((row) => within(row).queryByText("Global (2025-2026)"));
+    expect(within(finishedRow!).getByRole("rowheader")).toHaveTextContent(
+      "Finished"
+    );
+  });
+
   it("uses Spanish labels", async () => {
     await i18n.changeLanguage("es");
     renderList();

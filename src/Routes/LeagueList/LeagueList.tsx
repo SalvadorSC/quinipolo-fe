@@ -21,6 +21,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { apiGet, apiPost, apiPut } from "../../utils/apiUtils";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import LockIcon from "@mui/icons-material/Lock";
+import PublicIcon from "@mui/icons-material/Public";
 import SearchIcon from "@mui/icons-material/Search";
 import { useTranslation } from "react-i18next";
 import { isSystemAdmin } from "../../utils/moderatorUtils";
@@ -247,6 +248,31 @@ const LeagueList = () => {
     );
   };
 
+  const renderVisibility = (league: LeaguesTypes) => {
+    const isPrivate = Boolean(league.is_private);
+    const label = isPrivate ? t("private") : t("public");
+
+    return (
+      <Tooltip title={label}>
+        <span
+          role="img"
+          aria-label={label}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {isPrivate ? (
+            <LockIcon fontSize="small" />
+          ) : (
+            <PublicIcon fontSize="small" />
+          )}
+        </span>
+      </Tooltip>
+    );
+  };
+
   const displayLeagues = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
     const filtered = leagueListData.filter((league) => {
@@ -318,14 +344,13 @@ const LeagueList = () => {
                 <TableRow>
                   <TableCell>{t("name")}</TableCell>
                   <TableCell align="center">
+                    <MoreHorizIcon />
+                  </TableCell>
+                  <TableCell align="center">
                     <EmojiPeopleIcon />
                   </TableCell>
                   <TableCell align="center">
                     <LockIcon />
-                  </TableCell>
-                  <TableCell align="center">{t("status")}</TableCell>
-                  <TableCell align="center">
-                    <MoreHorizIcon />
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -342,21 +367,26 @@ const LeagueList = () => {
                       component="th"
                       scope="row"
                     >
-                      {league.league_name}
+                      <span
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 8,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {league.league_name}
+                        <LeagueStatusChip status={league.status} />
+                      </span>
                     </TableCell>
+                    <TableCell align="left">{renderLeagueAction(league)}</TableCell>
                     <TableCell
                       style={{ paddingLeft: 0, paddingRight: 0 }}
                       align="center"
                     >
                       {league.participants.length}
                     </TableCell>
-                    <TableCell align="left">
-                      {league.is_private ? t("private") : t("public")}
-                    </TableCell>
-                    <TableCell align="center">
-                      <LeagueStatusChip status={league.status} />
-                    </TableCell>
-                    <TableCell align="left">{renderLeagueAction(league)}</TableCell>
+                    <TableCell align="center">{renderVisibility(league)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
