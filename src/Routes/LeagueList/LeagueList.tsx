@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Chip,
   CircularProgress,
   InputAdornment,
   Paper,
@@ -26,7 +25,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useTranslation } from "react-i18next";
 import { isSystemAdmin } from "../../utils/moderatorUtils";
 import { filterVisibleLeagues } from "../../utils/leagueVisibility";
-import { isLeagueFinished } from "../../utils/leagueStatus";
+import { LeagueStatusChip } from "../../Components/LeagueStatusChip/LeagueStatusChip";
 
 type LeagueParticipant = {
   user_id: string;
@@ -255,6 +254,7 @@ const LeagueList = () => {
                   <TableCell align="center">
                     <LockIcon />
                   </TableCell>
+                  <TableCell align="center">{t("status")}</TableCell>
                   <TableCell align="center">
                     <MoreHorizIcon />
                   </TableCell>
@@ -273,23 +273,7 @@ const LeagueList = () => {
                       component="th"
                       scope="row"
                     >
-                      <span
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 8,
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        {league.league_name}
-                        {isLeagueFinished(league) && (
-                          <Chip
-                            size="small"
-                            variant="outlined"
-                            label={t("leagueFinished")}
-                          />
-                        )}
-                      </span>
+                      {league.league_name}
                     </TableCell>
                     <TableCell
                       style={{ paddingLeft: 0, paddingRight: 0 }}
@@ -299,6 +283,9 @@ const LeagueList = () => {
                     </TableCell>
                     <TableCell align="left">
                       {league.is_private ? t("private") : t("public")}
+                    </TableCell>
+                    <TableCell align="center">
+                      <LeagueStatusChip status={league.status} />
                     </TableCell>
                     <TableCell align="left">
                       <Tooltip

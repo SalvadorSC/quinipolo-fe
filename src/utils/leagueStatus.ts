@@ -10,15 +10,57 @@
  */
 export const FINISHED_LEAGUE_STATUS = "finished";
 
+/** Values stored on `leagues.status`. */
+export const LEAGUE_LIFECYCLE_STATUSES = [
+  "active",
+  "inactive",
+  "suspended",
+  "finished",
+] as const;
+
+export type LeagueLifecycleStatus = (typeof LEAGUE_LIFECYCLE_STATUSES)[number];
+
 export type LeagueStatusFields = {
   status?: string | null;
 };
 
+const LEAGUE_STATUS_LABEL_KEY: Record<LeagueLifecycleStatus, string> = {
+  active: "leagueActive",
+  inactive: "leagueInactive",
+  suspended: "leagueSuspended",
+  finished: "leagueFinished",
+};
+
+export type LeagueStatusChipColor = "default" | "success" | "warning";
+
+export function getLeagueLifecycleStatus(
+  league?: LeagueStatusFields | null
+): LeagueLifecycleStatus | null {
+  if (!league?.status || typeof league.status !== "string") return null;
+  const normalized = league.status.trim().toLowerCase();
+  if ((LEAGUE_LIFECYCLE_STATUSES as readonly string[]).includes(normalized)) {
+    return normalized as LeagueLifecycleStatus;
+  }
+  return null;
+}
+
+export function getLeagueStatusLabelKey(status: LeagueLifecycleStatus): string {
+  return LEAGUE_STATUS_LABEL_KEY[status];
+}
+
+/** Outlined Chip color. Finished stays the existing default outline. */
+export function getLeagueStatusChipColor(
+  status: LeagueLifecycleStatus
+): LeagueStatusChipColor {
+  if (status === "active") return "success";
+  if (status === "suspended") return "warning";
+  return "default";
+}
+
 export function isLeagueFinished(
   league?: LeagueStatusFields | null
 ): boolean {
-  if (!league?.status || typeof league.status !== "string") return false;
-  return league.status.trim().toLowerCase() === FINISHED_LEAGUE_STATUS;
+  return getLeagueLifecycleStatus(league) === FINISHED_LEAGUE_STATUS;
 }
 
 const FINISHED_CODE = /^(league_finished|finished_league|league_is_finished)$/i;

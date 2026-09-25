@@ -1,4 +1,12 @@
-import { isFinishedLeagueApiError, isLeagueFinished } from "./leagueStatus";
+import en from "../locales/en/translation.json";
+import es from "../locales/es/translation.json";
+import {
+  getLeagueLifecycleStatus,
+  getLeagueStatusChipColor,
+  getLeagueStatusLabelKey,
+  isFinishedLeagueApiError,
+  isLeagueFinished,
+} from "./leagueStatus";
 
 describe("isLeagueFinished", () => {
   it("is true only when status is finished", () => {
@@ -17,6 +25,47 @@ describe("isLeagueFinished", () => {
     expect(isLeagueFinished({})).toBe(false);
     expect(isLeagueFinished(null)).toBe(false);
     expect(isLeagueFinished(undefined)).toBe(false);
+  });
+});
+
+describe("getLeagueLifecycleStatus", () => {
+  it("recognizes every stored league status, ignoring case and whitespace", () => {
+    expect(getLeagueLifecycleStatus({ status: "active" })).toBe("active");
+    expect(getLeagueLifecycleStatus({ status: " Active " })).toBe("active");
+    expect(getLeagueLifecycleStatus({ status: "inactive" })).toBe("inactive");
+    expect(getLeagueLifecycleStatus({ status: "SUSPENDED" })).toBe("suspended");
+    expect(getLeagueLifecycleStatus({ status: "finished" })).toBe("finished");
+  });
+
+  it("returns null when status is missing or unknown", () => {
+    expect(getLeagueLifecycleStatus({ status: "" })).toBeNull();
+    expect(getLeagueLifecycleStatus({ status: "archived" })).toBeNull();
+    expect(getLeagueLifecycleStatus({})).toBeNull();
+    expect(getLeagueLifecycleStatus(null)).toBeNull();
+  });
+
+  it("maps each status to an existing label key and chip color", () => {
+    expect(getLeagueStatusLabelKey("active")).toBe("leagueActive");
+    expect(getLeagueStatusLabelKey("inactive")).toBe("leagueInactive");
+    expect(getLeagueStatusLabelKey("suspended")).toBe("leagueSuspended");
+    expect(getLeagueStatusLabelKey("finished")).toBe("leagueFinished");
+
+    expect(getLeagueStatusChipColor("active")).toBe("success");
+    expect(getLeagueStatusChipColor("inactive")).toBe("default");
+    expect(getLeagueStatusChipColor("suspended")).toBe("warning");
+    expect(getLeagueStatusChipColor("finished")).toBe("default");
+  });
+
+  it("has Active / Activa and Finished / Finalizada copy", () => {
+    expect(en.leagueActive).toBe("Active");
+    expect(en.leagueInactive).toBe("Inactive");
+    expect(en.leagueSuspended).toBe("Suspended");
+    expect(en.leagueFinished).toBe("Finished");
+
+    expect(es.leagueActive).toBe("Activa");
+    expect(es.leagueInactive).toBe("Inactiva");
+    expect(es.leagueSuspended).toBe("Suspendida");
+    expect(es.leagueFinished).toBe("Finalizada");
   });
 });
 
