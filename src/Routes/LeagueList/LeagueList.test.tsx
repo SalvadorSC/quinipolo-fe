@@ -6,6 +6,7 @@ import i18n from "../../utils/i18n";
 import LeagueList from "./LeagueList";
 
 const mockNavigate = jest.fn();
+const mockSetFeedback = jest.fn();
 
 jest.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
@@ -22,7 +23,7 @@ jest.mock("../../Context/UserContext/UserContext", () => ({
 }));
 
 jest.mock("../../Context/FeedbackContext/FeedbackContext", () => ({
-  useFeedback: () => ({ setFeedback: jest.fn() }),
+  useFeedback: () => ({ setFeedback: mockSetFeedback }),
 }));
 
 jest.mock("../../utils/apiUtils", () => ({
@@ -31,8 +32,10 @@ jest.mock("../../utils/apiUtils", () => ({
   apiPut: jest.fn(),
 }));
 
-const { apiGet } = jest.requireMock("../../utils/apiUtils") as {
+const { apiGet, apiPost, apiPut } = jest.requireMock("../../utils/apiUtils") as {
   apiGet: jest.Mock;
+  apiPost: jest.Mock;
+  apiPut: jest.Mock;
 };
 
 const leagues = [
@@ -85,7 +88,10 @@ function renderList() {
 describe("LeagueList status chips", () => {
   beforeEach(async () => {
     mockNavigate.mockReset();
+    mockSetFeedback.mockReset();
     apiGet.mockResolvedValue(leagues);
+    apiPut.mockResolvedValue({});
+    apiPost.mockResolvedValue([]);
     await i18n.changeLanguage("en");
   });
 
@@ -187,6 +193,60 @@ describe("LeagueList status chips", () => {
     expect(indexOf("CNBeras")).toBeLessThan(indexOf("Hold League"));
     expect(indexOf("Old Global")).toBeLessThan(indexOf("Paused Cup"));
     expect(indexOf("Paused Cup")).toBeLessThan(indexOf("Hold League"));
+  });
+
+  it("does not join a finished league and still joins an active league", async () => {
+    apiGet.mockResolvedValue([
+      {
+        id: "active-open",
+        league_name: "CNBeras",
+        status: "active",
+        is_private: false,
+        participants: [],
+        participantPetitions: [],
+        moderatorArray: [],
+      },
+      {
+        id: "finished-closed",
+        league_name: "Old Cup",
+        status: "finished",
+        is_private: false,
+        participants: [],
+        participantPetitions: [],
+        moderatorArray: [],
+      },
+      {
+        id: "finished-private",
+        league_name: "Old Private",
+        status: "finished",
+        is_private: true,
+        participants: [],
+        participantPetitions: [],
+        moderatorArray: [],
+      },
+    ]);
+
+    renderList();
+    await screen.findByText("CNBeras");
+
+    const blockedButtons = screen.getAllByRole("button", {
+      name: "This league is finished, so you cannot join it.",
+    });
+    expect(blockedButtons).toHaveLength(2);
+    blockedButtons.forEach((button) => expect(button).toBeDisabled());
+    expect(apiPut).not.toHaveBeenCalled();
+    expect(apiPost).not.toHaveBeenCalled();
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Join League" })
+    );
+    await waitFor(() => {
+      expect(apiPut).toHaveBeenCalledWith("/api/leagues/active-open/join", {
+        leagueId: "active-open",
+        username: "me",
+      });
+    });
+    expect(apiPost).not.toHaveBeenCalled();
   });
 
   it("uses Spanish labels", async () => {

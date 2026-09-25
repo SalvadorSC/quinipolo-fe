@@ -26,7 +26,11 @@ import { useTranslation } from "react-i18next";
 import { isSystemAdmin } from "../../utils/moderatorUtils";
 import { filterVisibleLeagues } from "../../utils/leagueVisibility";
 import { LeagueStatusChip } from "../../Components/LeagueStatusChip/LeagueStatusChip";
-import { compareLeaguesActiveFirst } from "../../utils/leagueStatus";
+import {
+  compareLeaguesActiveFirst,
+  isFinishedLeagueApiError,
+  isLeagueFinished,
+} from "../../utils/leagueStatus";
 
 type LeagueParticipant = {
   user_id: string;
@@ -117,9 +121,18 @@ const LeagueList = () => {
   }, [setFeedback, userData.role]);
 
   const handleJoinLeague = (league: LeaguesTypes) => {
-    // Logic to handle joining a league
+    // Members and admins open the league. That is not a join.
     if (league && (isUserInLeague(league) || isSystemAdmin(userData.role))) {
       navigate("/league-dashboard?id=" + league.id);
+      return;
+    }
+
+    if (isLeagueFinished(league)) {
+      setFeedback({
+        message: t("leagueFinishedJoinBlocked"),
+        severity: "info",
+        open: true,
+      });
       return;
     }
 
@@ -139,8 +152,10 @@ const LeagueList = () => {
         .catch((error) => {
           console.log(error);
           setFeedback({
-            message: t("errorJoiningLeague"),
-            severity: "error",
+            message: isFinishedLeagueApiError(error)
+              ? t("leagueFinishedJoinBlocked")
+              : t("errorJoiningLeague"),
+            severity: isFinishedLeagueApiError(error) ? "info" : "error",
             open: true,
           });
         });
@@ -174,12 +189,62 @@ const LeagueList = () => {
         .catch((error) => {
           console.log(error);
           setFeedback({
-            message: t("errorJoiningLeague"),
-            severity: "error",
+            message: isFinishedLeagueApiError(error)
+              ? t("leagueFinishedJoinBlocked")
+              : t("errorJoiningLeague"),
+            severity: isFinishedLeagueApiError(error) ? "info" : "error",
             open: true,
           });
         });
     }
+  };
+
+  const renderLeagueAction = (league: LeaguesTypes) => {
+    const alreadyIn = isUserInLeague(league);
+    const admin = isSystemAdmin(userData.role);
+    const joinClosed = isLeagueFinished(league) && !alreadyIn && !admin;
+    const actionTitle =
+      alreadyIn || admin
+        ? t("goToLeague")
+        : joinClosed
+        ? t("leagueFinishedJoinBlocked")
+        : hasPendingPetition(league)
+        ? t("pendingRequest")
+        : t("joinLeague");
+    const actionButton = (
+      <LoadingButton
+        variant="contained"
+        style={{
+          minWidth: "fit-content",
+          width: "100%",
+          justifyContent: "flex-start",
+          textAlign: "left",
+        }}
+        className={`gradient-primary`}
+        onClick={() => handleJoinLeague(league)}
+        loading={!leagueListData}
+        disabled={hasPendingPetition(league) || joinClosed}
+        aria-label={actionTitle}
+      >
+        {alreadyIn || admin
+          ? t("go")
+          : hasPendingPetition(league)
+          ? t("pending")
+          : t("join")}
+      </LoadingButton>
+    );
+
+    return (
+      <Tooltip title={actionTitle}>
+        {joinClosed || hasPendingPetition(league) ? (
+          <span style={{ display: "inline-flex", width: "100%" }}>
+            {actionButton}
+          </span>
+        ) : (
+          actionButton
+        )}
+      </Tooltip>
+    );
   };
 
   const displayLeagues = useMemo(() => {
@@ -291,38 +356,7 @@ const LeagueList = () => {
                     <TableCell align="center">
                       <LeagueStatusChip status={league.status} />
                     </TableCell>
-                    <TableCell align="left">
-                      <Tooltip
-                        title={
-                          isUserInLeague(league)
-                            ? t("goToLeague")
-                            : hasPendingPetition(league)
-                            ? t("pendingRequest")
-                            : t("joinLeague")
-                        }
-                      >
-                        <LoadingButton
-                          variant="contained"
-                          style={{
-                            minWidth: "fit-content",
-                            width: "100%",
-                            justifyContent: "flex-start",
-                            textAlign: "left",
-                          }}
-                          className={`gradient-primary`}
-                          onClick={() => handleJoinLeague(league)}
-                          loading={!leagueListData}
-                          disabled={hasPendingPetition(league)}
-                        >
-                          {isUserInLeague(league) ||
-                          isSystemAdmin(userData.role)
-                            ? t("go")
-                            : hasPendingPetition(league)
-                            ? t("pending")
-                            : t("join")}
-                        </LoadingButton>
-                      </Tooltip>
-                    </TableCell>
+                    <TableCell align="left">{renderLeagueAction(league)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

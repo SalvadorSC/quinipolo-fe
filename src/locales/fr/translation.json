@@ -378,6 +378,7 @@
   "leagueFinished": "Terminée",
   "leagueFinishedBanner": "Cette ligue est terminée. Vous pouvez toujours consulter les quinipolos, les classements et les records, mais il n'est plus possible d'en créer.",
   "leagueFinishedCreateBlocked": "Cette ligue est terminée : la création d'un Quinipolo est désactivée.",
+  "leagueFinishedJoinBlocked": "Cette ligue est terminée : vous ne pouvez pas la rejoindre.",
   "surveyFormHelpTooltip": "Si vous ne savez pas comment faire, contactez le développeur. Un guide sera bientôt rédigé.",
   "howQuinipoloWorksTitle": "Comment fonctionne Quinipolo",
   "howQuinipoloWorksContent": "Quinipolo est un jeu de prédictions où vous devinez les résultats de matchs sportifs. Voici comment cela fonctionne :\n\n1. **Créer un Quinipolo** : Configurez 15 matchs avec vos prédictions\n2. **Choisir une date limite** : Définissez une date et une heure où les prédictions se ferment\n3. **Partager avec des amis** : Invitez d'autres à rejoindre votre ligue et faire leurs prédictions\n4. **Attendre les résultats** : Après que les matchs soient joués, les résultats sont saisis\n5. **Marquer des points** : Gagnez des points selon la précision de vos prédictions\n6. **Compétition** : Voyez qui obtient le plus de points et grimpe au classement !\n\n**Système de points** :\n- Chaque match correctement deviné vaut 1 point.\n- Pour le match 15, vous devez également deviner le nombre de buts de chaque équipe pour gagner le point.\n\n**Plages de buts** :\n- Water-polo : Moins de 9, 9 ou 10, plus de 10\n- Football : 0, 1 ou 2, plus de 2",

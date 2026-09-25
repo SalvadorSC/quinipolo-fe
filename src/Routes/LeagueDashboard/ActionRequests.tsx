@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import RequestsTable from "../../Components/RequestsTable/RequestsTable";
 import styles from "./LeagueDashboard.module.scss";
 import type { LeaguesTypes } from "./LeagueDashboard";
+import { isLeagueFinished } from "../../utils/leagueStatus";
 
 type ActionRequestsProps = {
   leagueId: string;
@@ -49,6 +50,8 @@ const ActionRequests = ({
             requestType="participant"
             onAccept={onPetitionAccept}
             onReject={onPetitionReject}
+            acceptDisabled={isLeagueFinished(leagueData)}
+            acceptDisabledMessage={t("leagueFinishedJoinBlocked")}
           />
         )}
     </>

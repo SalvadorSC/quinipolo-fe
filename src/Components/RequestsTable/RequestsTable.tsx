@@ -8,6 +8,7 @@ import {
   TableRow,
   Paper,
   Button,
+  Tooltip,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -32,6 +33,8 @@ interface IRequestsTable {
   requestType: "moderator" | "participant";
   onAccept: (id: string) => void;
   onReject: (id: string) => void;
+  acceptDisabled?: boolean;
+  acceptDisabledMessage?: string;
 }
 
 const RequestsTable = ({
@@ -40,6 +43,8 @@ const RequestsTable = ({
   requestType,
   onAccept,
   onReject,
+  acceptDisabled = false,
+  acceptDisabledMessage,
 }: IRequestsTable) => {
   const { t } = useTranslation();
 
@@ -91,14 +96,26 @@ const RequestsTable = ({
                       {dayjs(request.date).format("DD/MM/YYYY")}
                     </TableCell>
                     <TableCell className={style.actionColumn}>
-                      <Button
-                        className={`${style.buttonAction} ${style.buttonAccept} gradient-mint`}
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleAccept(request._id)}
+                      <Tooltip
+                        title={
+                          acceptDisabled ? acceptDisabledMessage || "" : ""
+                        }
                       >
-                        {t("accept")} <CheckIcon />
-                      </Button>
+                        <span>
+                          <Button
+                            className={`${style.buttonAction} ${style.buttonAccept} gradient-mint`}
+                            variant="contained"
+                            color="primary"
+                            disabled={acceptDisabled}
+                            onClick={() => {
+                              if (acceptDisabled) return;
+                              handleAccept(request._id);
+                            }}
+                          >
+                            {t("accept")} <CheckIcon />
+                          </Button>
+                        </span>
+                      </Tooltip>
                       <Button
                         className={`${style.buttonAction} ${style.buttonReject}`}
                         variant="contained"

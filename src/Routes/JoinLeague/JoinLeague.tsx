@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { useUser } from "../../Context/UserContext/UserContext";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { apiPost } from "../../utils/apiUtils";
+import { isFinishedLeagueApiError } from "../../utils/leagueStatus";
 
 interface LeagueInfo {
   id: string;
@@ -72,7 +73,9 @@ const JoinLeague: React.FC = () => {
 
       let errorMessage = t("errorJoiningLeague");
 
-      if (error.response?.status === 404) {
+      if (isFinishedLeagueApiError(error)) {
+        errorMessage = t("leagueFinishedJoinBlocked");
+      } else if (error.response?.status === 404) {
         errorMessage = t("invalidShareLink");
       } else if (error.response?.status === 410) {
         errorMessage = t("shareLinkExpired");

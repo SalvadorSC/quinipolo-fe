@@ -10,6 +10,8 @@ import { UserDataType, useUser } from "../../Context/UserContext/UserContext";
 import { User } from "@supabase/supabase-js";
 import { useNavigate } from "react-router-dom";
 import { trackLogin } from "../../utils/analytics";
+import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
+import { isFinishedLeagueApiError } from "../../utils/leagueStatus";
 
 type Props = { children: React.ReactNode };
 
@@ -22,6 +24,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [profileForm] = Form.useForm();
   const { refreshUserData, updateUser } = useUser();
+  const { setFeedback } = useFeedback();
 
   useEffect(() => {
     const checkUserProfile = async () => {
@@ -65,8 +68,15 @@ const OAuthCallbackHandler = ({ children }: Props) => {
             }
           }
         } catch (e) {
-          // Ignore invalid/expired/already-in-league
+          // Invalid, expired, or already-in-league links continue into the app.
           localStorage.removeItem("pendingShareToken");
+          if (isFinishedLeagueApiError(e)) {
+            setFeedback({
+              message: t("leagueFinishedJoinBlocked"),
+              severity: "info",
+              open: true,
+            });
+          }
         }
         // check if the user has a profile via the BE
         try {
@@ -88,7 +98,7 @@ const OAuthCallbackHandler = ({ children }: Props) => {
     };
 
     checkUserProfile();
-  }, [updateUser, navigate]);
+  }, [updateUser, navigate, setFeedback, t]);
 
   const handleProfileSubmit = async (values: {
     username: string;
