@@ -30,7 +30,10 @@ import ActionRequests from "./ActionRequests";
 import { isSystemModerator } from "../../utils/moderatorUtils";
 import LeagueIconBadge from "../../Components/LeagueIconBadge/LeagueIconBadge";
 import { InfoOutlined } from "@mui/icons-material";
-import { isLeagueFinished } from "../../utils/leagueStatus";
+import {
+  isFinishedLeagueApiError,
+  isLeagueFinished,
+} from "../../utils/leagueStatus";
 
 export type LeaguesTypes = {
   quinipolosToAnswer: any[];
@@ -349,6 +352,14 @@ const LeagueDashboard = () => {
 
   // Handle petition acceptance - update both league data and petitions
   const handlePetitionAccept = async (petitionId: string) => {
+    if (isLeagueFinished(leagueData)) {
+      setFeedback({
+        message: t("leagueFinishedJoinBlocked"),
+        severity: "info",
+        open: true,
+      });
+      return;
+    }
     try {
       const response = (await apiPut(
         `/api/leagues/${leagueId}/participant-petitions/${petitionId}/accept`,
@@ -371,7 +382,13 @@ const LeagueDashboard = () => {
       setFeedback({ message: t("success"), severity: "success", open: true });
     } catch (e) {
       console.error(e);
-      setFeedback({ message: t("error"), severity: "error", open: true });
+      setFeedback({
+        message: isFinishedLeagueApiError(e)
+          ? t("leagueFinishedJoinBlocked")
+          : t("error"),
+        severity: isFinishedLeagueApiError(e) ? "info" : "error",
+        open: true,
+      });
     }
   };
 
@@ -657,6 +674,7 @@ const LeagueDashboard = () => {
         open={isShareLinkModalOpen}
         leagueId={leagueId || ""}
         userId={userData.userId}
+        leagueFinished={leagueIsFinished}
         onClose={handleCloseShareLeague}
       />
     </div>

@@ -380,6 +380,7 @@
   "leagueFinished": "Conclusa",
   "leagueFinishedBanner": "Questo campionato è concluso. Puoi ancora vedere quinipoli, classifiche e record, ma non è possibile crearne di nuovi.",
   "leagueFinishedCreateBlocked": "Questo campionato è concluso, quindi non è possibile creare un Quinipolo.",
+  "leagueFinishedJoinBlocked": "Questo campionato è concluso, quindi non puoi unirti.",
   "surveyFormHelpTooltip": "Se non sai come fare, contatta lo sviluppatore. Una guida sarà scritta presto.",
   "howQuinipoloWorksTitle": "Come Funziona Quinipolo",
   "howQuinipoloWorksContent": "Quinipolo è un gioco di previsioni dove indovini i risultati delle partite sportive. Ecco come funziona:\n\n1. **Crea un Quinipolo**: Configura 15 partite con le tue previsioni\n2. **Scegli una Scadenza**: Imposta una data e ora quando le previsioni si chiudono\n3. **Condividi con Amici**: Invita altri a unirsi alla tua lega e fare le loro previsioni\n4. **Aspetta i Risultati**: Dopo che le partite sono giocate, i risultati vengono inseriti\n5. **Guadagna Punti**: Ottieni punti in base a quanto accurate erano le tue previsioni\n6. **Competi**: Vedi chi ottiene più punti e sale in classifica!\n\n**Sistema di Punteggio**:\n- Ogni partita indovinata correttamente vale 1 punto.\n- Per la partita 15, devi anche indovinare il numero di gol di ciascuna squadra per ottenere il punto.\n\n**Fasce Gol**:\n- Pallanuoto: Meno di 9, 9 o 10, più di 10\n- Calcio: 0, 1 o 2, più di 2",

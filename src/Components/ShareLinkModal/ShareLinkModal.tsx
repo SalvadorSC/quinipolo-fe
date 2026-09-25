@@ -49,6 +49,8 @@ interface ShareLinkModalProps {
   leagueId: string;
   userId: string;
   onClose: () => void;
+  /** Finished leagues cannot take new members, so new invite links stay off. */
+  leagueFinished?: boolean;
 }
 
 const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
@@ -56,6 +58,7 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
   leagueId,
   userId,
   onClose,
+  leagueFinished = false,
 }) => {
   const { t } = useTranslation();
   const [shareLinks, setShareLinks] = useState<ShareLink[]>([]);
@@ -91,6 +94,7 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
   }, [open, leagueId, fetchShareLinks]);
 
   const createShareLink = async () => {
+    if (leagueFinished) return;
     try {
       setCreating(true);
       const newLink = await apiPost(`/api/leagues/${leagueId}/share-link`, {
@@ -176,6 +180,11 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
             <Typography variant="h6" gutterBottom>
               {t("createShareLink")}
             </Typography>
+            {leagueFinished && (
+              <Alert severity="info" sx={{ mb: 2 }}>
+                {t("leagueFinishedJoinBlocked")}
+              </Alert>
+            )}
             <Stack spacing={2}>
               <Stack direction="row" spacing={2}>
                 <TextField
@@ -203,6 +212,7 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
                 variant="contained"
                 onClick={createShareLink}
                 loading={creating}
+                disabled={leagueFinished}
                 startIcon={<LinkIcon />}
                 sx={{
                   alignSelf: "flex-start",

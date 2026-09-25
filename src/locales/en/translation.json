@@ -384,6 +384,7 @@
   "leagueFinished": "Finished",
   "leagueFinishedBanner": "This league is finished. You can still view quinipolos, rankings, and records, but new Quinipolos cannot be created.",
   "leagueFinishedCreateBlocked": "This league is finished, so creating a Quinipolo is disabled.",
+  "leagueFinishedJoinBlocked": "This league is finished, so you cannot join it.",
   "surveyFormHelpTooltip": "If you don't know how to do it, contact the developer. A guide will be written soon.",
   "howQuinipoloWorksTitle": "How Quinipolo Works",
   "howWorks.title": "How Quinipolo Works",

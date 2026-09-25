@@ -5,6 +5,9 @@ import { useUser } from '../../Context/UserContext/UserContext';
 import { getRedirectUrl } from '../../utils/config';
 import { trackLogin } from '../../utils/analytics';
 import { apiPost } from '../../utils/apiUtils';
+import { useFeedback } from '../../Context/FeedbackContext/FeedbackContext';
+import { useTranslation } from 'react-i18next';
+import { isFinishedLeagueApiError } from '../../utils/leagueStatus';
 
 interface LoginCredentials {
   email: string;
@@ -21,6 +24,8 @@ export const useLogin = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { updateUser } = useUser();
+  const { setFeedback } = useFeedback();
+  const { t } = useTranslation();
 
   const login = async (
     credentials: LoginCredentials,
@@ -81,8 +86,16 @@ export const useLogin = () => {
           }
         }
       } catch (e) {
-        // Ignore errors (expired/invalid/already in league), continue normal navigation
+        // Expired, invalid, or already-in-league links continue to the app.
+        // A finished league must not look like a successful join.
         localStorage.removeItem('pendingShareToken');
+        if (isFinishedLeagueApiError(e)) {
+          setFeedback({
+            message: t('leagueFinishedJoinBlocked'),
+            severity: 'info',
+            open: true,
+          });
+        }
       }
 
       // Redirect to returnUrl if provided, otherwise go to home
