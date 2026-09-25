@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
-import { Chip, CircularProgress, Paper, Box } from "@mui/material";
+import { CircularProgress, Paper, Box } from "@mui/material";
 import styles from "./Dashboard.module.scss";
 import { LoadingButton } from "@mui/lab";
 import QuinipolosToAnswer from "../../Components/QuinipolosToAnswer/QuinipolosToAnswer";
@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 import { apiGet } from "../../utils/apiUtils";
 import { isSystemAdmin } from "../../utils/moderatorUtils";
 import { config } from "../../utils/config";
-import { isLeagueFinished } from "../../utils/leagueStatus";
+import { LeagueStatusChip } from "../../Components/LeagueStatusChip/LeagueStatusChip";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -174,18 +174,11 @@ const Dashboard = () => {
                       >
                         <b>{league.leagueName}</b>
                       </p>
-                      {isLeagueFinished(league) && (
-                        <Chip
-                          size="small"
-                          variant="outlined"
-                          label={t("leagueFinished")}
-                          sx={{
-                            ml: "auto",
-                            color: "inherit",
-                            borderColor: "currentColor",
-                          }}
-                        />
-                      )}
+                      <LeagueStatusChip
+                        status={league.status}
+                        contrast="inherit"
+                        sx={{ ml: "auto" }}
+                      />
                     </>
                   </Button>
                 ))}
