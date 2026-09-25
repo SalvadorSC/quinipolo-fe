@@ -63,6 +63,19 @@ export function isLeagueFinished(
   return getLeagueLifecycleStatus(league) === FINISHED_LEAGUE_STATUS;
 }
 
+/**
+ * Active leagues sort before finished, inactive, suspended, and unknown.
+ * Equal ranks compare as 0 so callers can keep their existing tie-break.
+ */
+export function compareLeaguesActiveFirst(
+  a?: LeagueStatusFields | null,
+  b?: LeagueStatusFields | null
+): number {
+  const rank = (league?: LeagueStatusFields | null) =>
+    getLeagueLifecycleStatus(league) === "active" ? 0 : 1;
+  return rank(a) - rank(b);
+}
+
 const FINISHED_CODE = /^(league_finished|finished_league|league_is_finished)$/i;
 const FINISHED_WORD =
   /finished|finalizad|finalitzad|terminad|beendet|conclus/i;

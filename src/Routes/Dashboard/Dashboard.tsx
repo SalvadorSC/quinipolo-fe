@@ -16,6 +16,7 @@ import { apiGet } from "../../utils/apiUtils";
 import { isSystemAdmin } from "../../utils/moderatorUtils";
 import { config } from "../../utils/config";
 import { LeagueStatusChip } from "../../Components/LeagueStatusChip/LeagueStatusChip";
+import { compareLeaguesActiveFirst } from "../../utils/leagueStatus";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -102,7 +103,7 @@ const Dashboard = () => {
         status: league.status,
       };
     });
-    setLeagues(leaguesWithData);
+    setLeagues(leaguesWithData.slice().sort(compareLeaguesActiveFirst));
   }, [userData.leagues]);
 
   useEffect(() => {

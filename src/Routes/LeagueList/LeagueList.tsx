@@ -26,6 +26,7 @@ import { useTranslation } from "react-i18next";
 import { isSystemAdmin } from "../../utils/moderatorUtils";
 import { filterVisibleLeagues } from "../../utils/leagueVisibility";
 import { LeagueStatusChip } from "../../Components/LeagueStatusChip/LeagueStatusChip";
+import { compareLeaguesActiveFirst } from "../../utils/leagueStatus";
 
 type LeagueParticipant = {
   user_id: string;
@@ -190,6 +191,9 @@ const LeagueList = () => {
     });
 
     const withMembershipPriority = filtered.slice().sort((a, b) => {
+      const byStatus = compareLeaguesActiveFirst(a, b);
+      if (byStatus !== 0) return byStatus;
+
       const aIn = isUserInLeague(a) ? 1 : 0;
       const bIn = isUserInLeague(b) ? 1 : 0;
       if (aIn !== bIn) return bIn - aIn; // in-league first
