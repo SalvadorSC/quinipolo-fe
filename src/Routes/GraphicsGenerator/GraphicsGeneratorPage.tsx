@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, Button, Card, CardContent, CircularProgress, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { apiPost } from "../../utils/apiUtils";
+import { LEGACY_GLOBAL_LEAGUE_ID } from "../../config/globalLeague";
 
 /** All teams from teamNameToImage + teams_logos/teams_logos1 - for logo audit */
 const ALL_TEAMS_FOR_LOGO_AUDIT = [
@@ -121,7 +122,7 @@ const MOCK_PAYLOAD: {
   _meta: {
     matchday: "J16",
     quinipoloId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-    leagueId: "351a1949-f6c5-4940-ac70-1c7dd08e8b1a",
+    leagueId: LEGACY_GLOBAL_LEAGUE_ID,
   },
   rawBeResponses: {
     correctionSee: {
@@ -180,7 +181,7 @@ const MOCK_PAYLOAD: {
   image4_generalLeagueRanking: {
     matchday: "J16",
     rankingType: "general",
-    leagueId: "351a1949-f6c5-4940-ac70-1c7dd08e8b1a",
+    leagueId: LEGACY_GLOBAL_LEAGUE_ID,
     participantsLeaderboard: [
       { rank: 1, username: "JANRU", points: 163, totalPoints: 163, medal: "gold" },
       { rank: 2, username: "CARLA.ALTI", points: 162, totalPoints: 162, medal: "silver" },

@@ -1,6 +1,14 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { CircularProgress, Paper, Stack, Box, Typography } from "@mui/material";
+import {
+  Alert,
+  Chip,
+  CircularProgress,
+  Paper,
+  Stack,
+  Box,
+  Typography,
+} from "@mui/material";
 import { shouldHideLeaderboardResults } from "../../config/leaguesWithHiddenLeaderboard";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { LoadingButton } from "@mui/lab";
@@ -22,6 +30,7 @@ import ActionRequests from "./ActionRequests";
 import { isSystemModerator } from "../../utils/moderatorUtils";
 import LeagueIconBadge from "../../Components/LeagueIconBadge/LeagueIconBadge";
 import { InfoOutlined } from "@mui/icons-material";
+import { isLeagueFinished } from "../../utils/leagueStatus";
 
 export type LeaguesTypes = {
   quinipolosToAnswer: any[];
@@ -42,6 +51,8 @@ export type LeaguesTypes = {
     icon_color?: string;
     accent_color?: string;
   };
+  /** `active` | `inactive` | `suspended` | `finished`. Only `finished` locks creation. */
+  status?: string;
   moderatorPetitions: {
     userId: string;
     username: string;
@@ -123,6 +134,7 @@ const LeagueDashboard = () => {
           creator: data.creator,
           description: data.description,
           icon_style: data.icon_style,
+          status: data.status,
           moderatorPetitions: data.moderatorPetitions,
           participantPetitions: data.participantPetitions,
           participants: data.participants,
@@ -238,7 +250,19 @@ const LeagueDashboard = () => {
       });
   };
 
+  const leagueIsFinished = isLeagueFinished(leagueData);
+  const canCreateQuinipolo =
+    isUserModeratorInThisLeague && Boolean(leagueData.id) && !leagueIsFinished;
+
   const handleBasicActionButtonClick = () => {
+    if (leagueIsFinished) {
+      setFeedback({
+        message: t("leagueFinishedCreateBlocked"),
+        severity: "info",
+        open: true,
+      });
+      return;
+    }
     if (!isUserModeratorInThisLeague) {
       handleSolicitarPermisos();
       return;
@@ -497,13 +521,16 @@ const LeagueDashboard = () => {
                   <h1 className={styles.leagueTitle}>
                     {leagueData.league_name}
                   </h1>
+                  {leagueIsFinished && (
+                    <Chip size="small" label={t("leagueFinished")} />
+                  )}
                 </div>
                 <InfoOutlined
                   onClick={() => setShowLeagueInfo(!showLeagueInfo)}
                   sx={{ cursor: "pointer" }}
                 />
               </div>
-              {isUserModeratorInThisLeague && (
+              {canCreateQuinipolo && (
                 <Box sx={{ display: { xs: "none", md: "block" } }}>
                   <LoadingButton
                     size="small"
@@ -517,6 +544,11 @@ const LeagueDashboard = () => {
               )}
             </div>
 
+            {leagueIsFinished && (
+              <Alert severity="info" sx={{ mb: 2 }}>
+                {t("leagueFinishedBanner")}
+              </Alert>
+            )}
             <QuinipolosToAnswer
               wrapperLoading={loading}
               leagueId={leagueId!}
@@ -547,7 +579,9 @@ const LeagueDashboard = () => {
                     pb: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
                     mt: 2,
                     px: 2,
-                    display: { xs: "block", md: "none" },
+                    display: canCreateQuinipolo
+                      ? { xs: "block", md: "none" }
+                      : "none",
                     zIndex: 1,
                   }}
                 >

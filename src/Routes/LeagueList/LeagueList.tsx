@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  Chip,
   CircularProgress,
   InputAdornment,
   Paper,
@@ -25,6 +26,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useTranslation } from "react-i18next";
 import { isSystemAdmin } from "../../utils/moderatorUtils";
 import { filterVisibleLeagues } from "../../utils/leagueVisibility";
+import { isLeagueFinished } from "../../utils/leagueStatus";
 
 type LeagueParticipant = {
   user_id: string;
@@ -271,7 +273,23 @@ const LeagueList = () => {
                       component="th"
                       scope="row"
                     >
-                      {league.league_name}
+                      <span
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 8,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {league.league_name}
+                        {isLeagueFinished(league) && (
+                          <Chip
+                            size="small"
+                            variant="outlined"
+                            label={t("leagueFinished")}
+                          />
+                        )}
+                      </span>
                     </TableCell>
                     <TableCell
                       style={{ paddingLeft: 0, paddingRight: 0 }}

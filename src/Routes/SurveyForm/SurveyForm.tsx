@@ -1,6 +1,13 @@
 // SurveyForm.tsx
 import React, { useState, FormEvent, useEffect } from "react";
-import { Button, Typography, Box, Paper } from "@mui/material";
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  Typography,
+  Box,
+  Paper,
+} from "@mui/material";
 import {
   SurveyData,
   TeamOptionsBySport,
@@ -18,7 +25,11 @@ import HowQuinipoloWorksModal from "./HowQuinipoloWorksModal";
 import { useNavigate } from "react-router-dom";
 import { useFeedback } from "../../Context/FeedbackContext/FeedbackContext";
 import { useTranslation } from "react-i18next";
-import { apiPost } from "../../utils/apiUtils";
+import { apiGet, apiPost } from "../../utils/apiUtils";
+import {
+  isFinishedLeagueApiError,
+  isLeagueFinished,
+} from "../../utils/leagueStatus";
 import { MatchAutoFillModal } from "./MatchAutoFillModal";
 import { ScraperMatchV2 } from "../../services/scraper/types";
 import { useUser } from "../../Context/UserContext/UserContext";
@@ -62,14 +73,19 @@ const SurveyForm = () => {
   );
   const [isMatch15Locked, setIsMatch15Locked] = useState<boolean>(true);
 
+  const queryParams = new URLSearchParams(window.location.search);
   // Check if this is for all leagues
-  const isForAllLeagues =
-    new URLSearchParams(window.location.search).get("allLeagues") === "true";
+  const isForAllLeagues = queryParams.get("allLeagues") === "true";
 
   // Check if this is for managed leagues only
-  const isForManagedLeagues =
-    new URLSearchParams(window.location.search).get("managedLeagues") ===
-    "true";
+  const isForManagedLeagues = queryParams.get("managedLeagues") === "true";
+
+  const leagueId = queryParams.get("leagueId");
+  const needsFinishedCheck =
+    !isForAllLeagues && !isForManagedLeagues && Boolean(leagueId);
+  const [leagueGate, setLeagueGate] = useState<"checking" | "open" | "finished">(
+    needsFinishedCheck ? "checking" : "open"
+  );
 
   const selectedTeams = quinipolo
     .map((match) => match.awayTeam)
@@ -91,12 +107,39 @@ const SurveyForm = () => {
     setHelpModalOpen(false);
   };
 
+  useEffect(() => {
+    if (!needsFinishedCheck || !leagueId) {
+      setLeagueGate("open");
+      return;
+    }
+    let cancelled = false;
+    setLeagueGate("checking");
+    apiGet<{ status?: string }>(`/api/leagues/${leagueId}`)
+      .then((league) => {
+        if (cancelled) return;
+        setLeagueGate(isLeagueFinished(league) ? "finished" : "open");
+      })
+      .catch(() => {
+        // Leave creation available; the API still rejects finished leagues.
+        if (!cancelled) setLeagueGate("open");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [needsFinishedCheck, leagueId]);
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const queryParams = new URLSearchParams(window.location.search);
-    const leagueId = queryParams.get("leagueId");
 
     try {
+      if (leagueGate === "finished") {
+        setFeedback({
+          message: t("errorCreatingQuinipoloFinished"),
+          severity: "info",
+          open: true,
+        });
+        return;
+      }
       if (hasBlockingErrors) {
         setFeedback({
           message: t("genderMismatchSubmitError"),
@@ -188,11 +231,22 @@ const SurveyForm = () => {
         navigate("/quinipolo-success", { state: { quinipolo: response } });
       }
     } catch (error) {
-      setFeedback({
-        message: t("errorCreatingQuinipolo"),
-        severity: "error",
-        open: true,
-      });
+      if (isFinishedLeagueApiError(error)) {
+        if (!isForAllLeagues && !isForManagedLeagues) {
+          setLeagueGate("finished");
+        }
+        setFeedback({
+          message: t("errorCreatingQuinipoloFinished"),
+          severity: "info",
+          open: true,
+        });
+      } else {
+        setFeedback({
+          message: t("errorCreatingQuinipolo"),
+          severity: "error",
+          open: true,
+        });
+      }
       console.error("Error creating Quinipolo:", error);
     } finally {
       // Always reset loading state, even if there's an error
@@ -326,6 +380,28 @@ const SurveyForm = () => {
 
   // Check if user has scraper access
   const hasScraperAccess = userData.hasScraperAccess === true;
+
+  if (leagueGate === "checking") {
+    return (
+      <div className={styles.form} style={{ display: "flex", justifyContent: "center" }}>
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  if (leagueGate === "finished") {
+    return (
+      <div className={styles.form}>
+        <h2>{t("createQuinipolo")}</h2>
+        <Alert severity="info" sx={{ mt: 2 }}>
+          {t("leagueFinishedCreateBlocked")}
+        </Alert>
+        <Button sx={{ mt: 3 }} variant="outlined" onClick={() => navigate(-1)}>
+          {t("backBtn")}
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
