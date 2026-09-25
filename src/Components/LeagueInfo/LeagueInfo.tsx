@@ -25,6 +25,7 @@ import {
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import styles from "./LeagueInfo.module.scss";
+import { isLeagueFinished } from "../../utils/leagueStatus";
 
 interface LeagueInfoProps {
   leagueData: {
@@ -41,6 +42,7 @@ interface LeagueInfoProps {
     created_at?: string;
     description?: string;
     created_by?: string;
+    status?: string;
   };
   isUserModerator: boolean;
   isUserCreator: boolean;
@@ -93,9 +95,14 @@ const LeagueInfo: React.FC<LeagueInfoProps> = ({
   return (
     <Card className={styles.leagueInfoCard}>
       <div className={styles.leagueInfoTitle}>
-        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-          {t("leagueInformation")}
-        </Typography>
+        <Box display="flex" alignItems="center" gap={1}>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            {t("leagueInformation")}
+          </Typography>
+          {isLeagueFinished(leagueData) && (
+            <Chip size="small" variant="outlined" label={t("leagueFinished")} />
+          )}
+        </Box>
         <IconButton onClick={setShowLeagueInfo} aria-label={t("close")}>
           <Close />
         </IconButton>

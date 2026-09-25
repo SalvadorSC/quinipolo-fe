@@ -14,6 +14,7 @@ import {
 } from "../../utils/shareMessage";
 import CorrectionStats from "../../Components/CorrectionStats/CorrectionStats";
 import { LEAGUES_WITH_IMAGE_SHARE_BETA } from "../../config/leaguesWithImageShare";
+import { adjustLegacyGlobalDisplayMatchday } from "../../config/globalLeague";
 import { shouldHideLeaderboardResults } from "../../config/leaguesWithHiddenLeaderboard";
 
 export type Result = {
@@ -382,13 +383,19 @@ const CorrectionSuccess = () => {
       day: "numeric",
     });
     let displayN: number | undefined = source[0]?.nQuinipolosParticipated;
+    let matchdayAlreadySet = false;
     if (matchday) {
       const m = matchday.match(/^J(\d+)$/i);
-      if (m) displayN = parseInt(m[1], 10);
+      if (m) {
+        displayN = parseInt(m[1], 10);
+        matchdayAlreadySet = true;
+      }
     }
-    if (leagueId === "global" && typeof displayN === "number") {
-      displayN = Math.max(1, displayN - 2);
-    }
+    displayN = adjustLegacyGlobalDisplayMatchday(
+      leagueId,
+      displayN,
+      matchdayAlreadySet
+    );
     let message = `*${t("resultsTitle", {
       n: displayN,
       date: formattedDate,

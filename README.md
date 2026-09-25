@@ -52,6 +52,8 @@ The password reset flow includes:
    - `REACT_APP_SUPABASE_URL`: Your Supabase project URL
    - `REACT_APP_SUPABASE_ANON_KEY`: Your Supabase anonymous key
    - `NPM_TOKEN`: GitHub personal access token for private packages (required for `@salvadorsc/quinipolo-shared`)
+   - `REACT_APP_GLOBAL_LEAGUE_ID` (optional): UUID of the active Global league for the current season (2026–27). Image share includes this id plus the legacy 2025–26 Global UUID. Signup still joins the slug `global`, which the backend resolves. Can also be set at runtime as `window.__APP_CONFIG__.globalLeagueId`.
+   - `REACT_APP_LEAGUES_IMAGE_SHARE_BETA` (optional): comma-separated league UUIDs allowed to share result images. The active Global id above is appended when it is not already in the list.
 
 3. **GitHub NPM Token Setup** (Required):
 

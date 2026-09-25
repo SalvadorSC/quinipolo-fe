@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { supabase } from "../lib/supabaseClient";
 import { AUTH_TOKEN_STORAGE_KEY } from "./config";
 import { GoogleUser } from "../types/auth";
+import { isFinishedLeagueApiError } from "./leagueStatus";
 
 // Base URL for the API
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -188,8 +189,12 @@ const apiCall = async <T>(
       );
     }
 
-    // Handle authentication errors
-    if (error.response?.status === 401 || error.response?.status === 403) {
+    // Handle authentication errors. A finished-league rejection may also be
+    // 403; that is a business rule, not a signed-out session.
+    if (
+      (error.response?.status === 401 || error.response?.status === 403) &&
+      !isFinishedLeagueApiError(error)
+    ) {
       console.log("Authentication error, redirecting to login");
       // Clear any stored session data
       localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
