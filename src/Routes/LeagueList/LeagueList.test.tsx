@@ -120,6 +120,75 @@ describe("LeagueList status chips", () => {
     });
   });
 
+  it("lists every active league above finished and other inactive leagues", async () => {
+    apiGet.mockResolvedValue([
+      {
+        id: "finished-big",
+        league_name: "Old Global",
+        status: "finished",
+        is_private: false,
+        participants: [
+          { user_id: "u1", username: "me", role: "user" },
+          { user_id: "u2", username: "other", role: "user" },
+        ],
+        participantPetitions: [],
+        moderatorArray: [],
+      },
+      {
+        id: "inactive-1",
+        league_name: "Paused Cup",
+        status: "inactive",
+        is_private: true,
+        participants: [],
+        participantPetitions: [],
+        moderatorArray: [],
+      },
+      {
+        id: "active-open",
+        league_name: "CNBeras",
+        status: "active",
+        is_private: false,
+        participants: [],
+        participantPetitions: [],
+        moderatorArray: [],
+      },
+      {
+        id: "suspended-1",
+        league_name: "Hold League",
+        status: "suspended",
+        is_private: false,
+        participants: [],
+        participantPetitions: [],
+        moderatorArray: [],
+      },
+      {
+        id: "active-member",
+        league_name: "Current Global",
+        status: "active",
+        is_private: false,
+        participants: [{ user_id: "u1", username: "me", role: "user" }],
+        participantPetitions: [],
+        moderatorArray: [],
+      },
+    ]);
+
+    renderList();
+    await screen.findByText("CNBeras");
+
+    const names = screen
+      .getAllByRole("row")
+      .slice(1)
+      .map((row) => row.textContent ?? "");
+    const indexOf = (name: string) => names.findIndex((text) => text.includes(name));
+
+    expect(indexOf("Current Global")).toBeLessThan(indexOf("CNBeras"));
+    expect(indexOf("CNBeras")).toBeLessThan(indexOf("Old Global"));
+    expect(indexOf("CNBeras")).toBeLessThan(indexOf("Paused Cup"));
+    expect(indexOf("CNBeras")).toBeLessThan(indexOf("Hold League"));
+    expect(indexOf("Old Global")).toBeLessThan(indexOf("Paused Cup"));
+    expect(indexOf("Paused Cup")).toBeLessThan(indexOf("Hold League"));
+  });
+
   it("uses Spanish labels", async () => {
     await i18n.changeLanguage("es");
     renderList();

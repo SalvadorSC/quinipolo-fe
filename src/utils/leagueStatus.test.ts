@@ -1,6 +1,7 @@
 import en from "../locales/en/translation.json";
 import es from "../locales/es/translation.json";
 import {
+  compareLeaguesActiveFirst,
   getLeagueLifecycleStatus,
   getLeagueStatusChipColor,
   getLeagueStatusLabelKey,
@@ -66,6 +67,35 @@ describe("getLeagueLifecycleStatus", () => {
     expect(es.leagueInactive).toBe("Inactiva");
     expect(es.leagueSuspended).toBe("Suspendida");
     expect(es.leagueFinished).toBe("Finalizada");
+  });
+});
+
+describe("compareLeaguesActiveFirst", () => {
+  it("places active before finished, inactive, suspended, and unknown", () => {
+    const active = { status: "active" };
+    expect(compareLeaguesActiveFirst(active, { status: "finished" })).toBeLessThan(
+      0
+    );
+    expect(compareLeaguesActiveFirst(active, { status: "inactive" })).toBeLessThan(
+      0
+    );
+    expect(
+      compareLeaguesActiveFirst(active, { status: "suspended" })
+    ).toBeLessThan(0);
+    expect(compareLeaguesActiveFirst(active, { status: "archived" })).toBeLessThan(
+      0
+    );
+    expect(compareLeaguesActiveFirst(active, {})).toBeLessThan(0);
+    expect(compareLeaguesActiveFirst({ status: " Active " }, active)).toBe(0);
+  });
+
+  it("does not order non-active statuses against each other", () => {
+    expect(
+      compareLeaguesActiveFirst({ status: "finished" }, { status: "inactive" })
+    ).toBe(0);
+    expect(
+      compareLeaguesActiveFirst({ status: "suspended" }, { status: "finished" })
+    ).toBe(0);
   });
 });
 
