@@ -25,7 +25,6 @@ import {
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import styles from "./LeagueInfo.module.scss";
-import { isLeagueFinished } from "../../utils/leagueStatus";
 
 interface LeagueInfoProps {
   leagueData: {
@@ -99,9 +98,6 @@ const LeagueInfo: React.FC<LeagueInfoProps> = ({
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             {t("leagueInformation")}
           </Typography>
-          {isLeagueFinished(leagueData) && (
-            <Chip size="small" variant="outlined" label={t("leagueFinished")} />
-          )}
         </Box>
         <IconButton onClick={setShowLeagueInfo} aria-label={t("close")}>
           <Close />

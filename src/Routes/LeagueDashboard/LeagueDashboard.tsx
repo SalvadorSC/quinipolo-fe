@@ -2,7 +2,6 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Alert,
-  Chip,
   CircularProgress,
   Paper,
   Stack,
@@ -538,9 +537,6 @@ const LeagueDashboard = () => {
                   <h1 className={styles.leagueTitle}>
                     {leagueData.league_name}
                   </h1>
-                  {leagueIsFinished && (
-                    <Chip size="small" label={t("leagueFinished")} />
-                  )}
                 </div>
                 <InfoOutlined
                   onClick={() => setShowLeagueInfo(!showLeagueInfo)}
