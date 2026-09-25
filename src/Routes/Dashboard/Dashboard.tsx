@@ -16,7 +16,10 @@ import { apiGet } from "../../utils/apiUtils";
 import { isSystemAdmin } from "../../utils/moderatorUtils";
 import { config } from "../../utils/config";
 import { LeagueStatusChip } from "../../Components/LeagueStatusChip/LeagueStatusChip";
-import { compareLeaguesActiveFirst } from "../../utils/leagueStatus";
+import {
+  compareLeaguesActiveFirst,
+  isLeagueFinished,
+} from "../../utils/leagueStatus";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -175,11 +178,13 @@ const Dashboard = () => {
                       >
                         <b>{league.leagueName}</b>
                       </p>
-                      <LeagueStatusChip
-                        status={league.status}
-                        contrast="inherit"
-                        sx={{ ml: "auto" }}
-                      />
+                      {isLeagueFinished(league) && (
+                        <LeagueStatusChip
+                          status={league.status}
+                          contrast="inherit"
+                          sx={{ ml: "auto" }}
+                        />
+                      )}
                     </>
                   </Button>
                 ))}
