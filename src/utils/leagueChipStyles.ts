@@ -10,6 +10,10 @@ export const leagueChipStyles: Record<
     background: "linear-gradient(135deg, #b8860b, #ffd54f)",
     color: "#2d1600",
   },
+  CLF: {
+    background: "linear-gradient(135deg, #f9a825, #ffe082)",
+    color: "#2d1600",
+  },
   DHM: {
     background: "linear-gradient(135deg, #0d47a1, #42a5f5)",
     color: "#e3f2fd",

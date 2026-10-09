@@ -35,13 +35,13 @@ import {
   ScraperMatchV2,
   ScraperPresetResponse,
 } from "../../services/scraper/types";
+import { getLeagueSortIndex } from "./utils/leagueOrder";
 
 type DifficultyPreset = "easy" | "moderate" | "hard" | "custom";
 type DifficultySort = "none" | "asc" | "desc";
 type ModalStep = "selection" | "pleno";
 
 const MAX_SELECTION = 15;
-const LEAGUE_ORDER = ["CL", "DHM", "DHF", "PDM", "PDF", "SDM", "SEL. M", "SEL. F"];
 const difficultyRanking: Record<ScraperMatchV2["difficulty"], number> = {
   hard: 0,
   moderate: 1,
@@ -330,11 +330,6 @@ export function MatchAutoFillModal({
     />
   );
 
-  const leagueOrderValue = (leagueId: string) => {
-    const index = LEAGUE_ORDER.indexOf(leagueId);
-    return index === -1 ? LEAGUE_ORDER.length : index;
-  };
-
   const displayedMatches = useMemo(() => {
     if (!data) return [];
     let list = [...data.matches];
@@ -343,7 +338,7 @@ export function MatchAutoFillModal({
     }
     list.sort((a, b) => {
       const leagueDiff =
-        leagueOrderValue(a.leagueId) - leagueOrderValue(b.leagueId);
+        getLeagueSortIndex(a.leagueId) - getLeagueSortIndex(b.leagueId);
       if (leagueDiff !== 0) return leagueDiff;
       return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
     });
