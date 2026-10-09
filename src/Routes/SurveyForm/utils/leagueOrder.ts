@@ -1,13 +1,13 @@
-import { SurveyData } from "../../../types/quinipolo";
+import type { SurveyData } from "../../../types/quinipolo";
 
-const LEAGUE_ORDER = [
+export const LEAGUE_ORDER: readonly string[] = [
+  "CL",
+  "CLF",
   "DHM",
   "DHF",
   "PDM",
   "PDF",
   "SDM",
-  "CL",
-  "CLF",
   "SEL. M",
   "SEL. F",
 ];
