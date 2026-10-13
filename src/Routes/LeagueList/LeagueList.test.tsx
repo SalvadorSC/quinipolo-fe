@@ -7,6 +7,21 @@ import LeagueList from "./LeagueList";
 
 const mockNavigate = jest.fn();
 const mockSetFeedback = jest.fn();
+const mockUpdateUser = jest.fn();
+
+const mockUserData: {
+  username: string;
+  role: string;
+  userId: string;
+  userLeagues: Array<{ league_id: string; role: string }>;
+  leagues: Array<{ leagueId: string }>;
+} = {
+  username: "me",
+  role: "user",
+  userId: "u1",
+  userLeagues: [],
+  leagues: [],
+};
 
 jest.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
@@ -14,11 +29,8 @@ jest.mock("react-router-dom", () => ({
 
 jest.mock("../../Context/UserContext/UserContext", () => ({
   useUser: () => ({
-    userData: {
-      username: "me",
-      role: "user",
-      userId: "u1",
-    },
+    userData: mockUserData,
+    updateUser: mockUpdateUser,
   }),
 }));
 
@@ -44,7 +56,7 @@ const leagues = [
     league_name: "Global 2026-2027",
     status: "active",
     is_private: false,
-    participants: [{ user_id: "u1", username: "me", role: "user" }],
+    participantsCount: 1,
     participantPetitions: [],
     moderatorArray: [],
   },
@@ -53,7 +65,7 @@ const leagues = [
     league_name: "Global (2025-2026)",
     status: "finished",
     is_private: false,
-    participants: [{ user_id: "u1", username: "me", role: "user" }],
+    participantsCount: 1,
     participantPetitions: [],
     moderatorArray: [],
   },
@@ -62,7 +74,7 @@ const leagues = [
     league_name: "Paused Cup",
     status: "inactive",
     is_private: true,
-    participants: [],
+    participantsCount: 0,
     participantPetitions: [],
     moderatorArray: [],
   },
@@ -71,7 +83,7 @@ const leagues = [
     league_name: "Hold League",
     status: "suspended",
     is_private: false,
-    participants: [],
+    participantsCount: 0,
     participantPetitions: [],
     moderatorArray: [],
   },
@@ -89,6 +101,15 @@ describe("LeagueList status chips", () => {
   beforeEach(async () => {
     mockNavigate.mockReset();
     mockSetFeedback.mockReset();
+    mockUpdateUser.mockReset();
+    mockUserData.userLeagues = [
+      { league_id: "active-1", role: "user" },
+      { league_id: "finished-1", role: "user" },
+    ];
+    mockUserData.leagues = [];
+    mockUpdateUser.mockImplementation((patch) => {
+      Object.assign(mockUserData, patch);
+    });
     apiGet.mockResolvedValue(leagues);
     apiPut.mockResolvedValue({});
     apiPost.mockResolvedValue([]);
@@ -127,16 +148,14 @@ describe("LeagueList status chips", () => {
   });
 
   it("lists every active league above finished and other inactive leagues", async () => {
+    mockUserData.userLeagues = [{ league_id: "active-member", role: "user" }];
     apiGet.mockResolvedValue([
       {
         id: "finished-big",
         league_name: "Old Global",
         status: "finished",
         is_private: false,
-        participants: [
-          { user_id: "u1", username: "me", role: "user" },
-          { user_id: "u2", username: "other", role: "user" },
-        ],
+        participantsCount: 2,
         participantPetitions: [],
         moderatorArray: [],
       },
@@ -145,7 +164,7 @@ describe("LeagueList status chips", () => {
         league_name: "Paused Cup",
         status: "inactive",
         is_private: true,
-        participants: [],
+        participantsCount: 0,
         participantPetitions: [],
         moderatorArray: [],
       },
@@ -154,7 +173,7 @@ describe("LeagueList status chips", () => {
         league_name: "CNBeras",
         status: "active",
         is_private: false,
-        participants: [],
+        participantsCount: 50,
         participantPetitions: [],
         moderatorArray: [],
       },
@@ -163,7 +182,7 @@ describe("LeagueList status chips", () => {
         league_name: "Hold League",
         status: "suspended",
         is_private: false,
-        participants: [],
+        participantsCount: 0,
         participantPetitions: [],
         moderatorArray: [],
       },
@@ -172,7 +191,7 @@ describe("LeagueList status chips", () => {
         league_name: "Current Global",
         status: "active",
         is_private: false,
-        participants: [{ user_id: "u1", username: "me", role: "user" }],
+        participantsCount: 1,
         participantPetitions: [],
         moderatorArray: [],
       },
@@ -196,13 +215,14 @@ describe("LeagueList status chips", () => {
   });
 
   it("does not join a finished league and still joins an active league", async () => {
+    mockUserData.userLeagues = [];
     apiGet.mockResolvedValue([
       {
         id: "active-open",
         league_name: "CNBeras",
         status: "active",
         is_private: false,
-        participants: [],
+        participantsCount: 4,
         participantPetitions: [],
         moderatorArray: [],
       },
@@ -211,7 +231,7 @@ describe("LeagueList status chips", () => {
         league_name: "Old Cup",
         status: "finished",
         is_private: false,
-        participants: [],
+        participantsCount: 8,
         participantPetitions: [],
         moderatorArray: [],
       },
@@ -220,7 +240,7 @@ describe("LeagueList status chips", () => {
         league_name: "Old Private",
         status: "finished",
         is_private: true,
-        participants: [],
+        participantsCount: 3,
         participantPetitions: [],
         moderatorArray: [],
       },
@@ -247,6 +267,73 @@ describe("LeagueList status chips", () => {
       });
     });
     expect(apiPost).not.toHaveBeenCalled();
+
+    const joinedRow = screen
+      .getAllByRole("row")
+      .find((row) => within(row).queryByText("CNBeras"));
+    await waitFor(() => {
+      expect(
+        within(joinedRow!).getByRole("button", { name: "Go to League" })
+      ).toBeEnabled();
+    });
+    const joinedCells = within(joinedRow!).getAllByRole("cell");
+    expect(joinedCells[1]).toHaveTextContent("5");
+    expect(mockUpdateUser).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userLeagues: [{ league_id: "active-open", role: "user" }],
+      })
+    );
+  });
+
+  it("uses leagues.leagueId when userLeagues does not list the league", async () => {
+    mockUserData.userLeagues = [];
+    mockUserData.leagues = [{ leagueId: "via-leagues" }];
+    apiGet.mockResolvedValue([
+      {
+        id: "via-leagues",
+        league_name: "Via Leagues",
+        status: "active",
+        is_private: false,
+        current_participants: 9,
+        participantPetitions: [],
+        moderatorArray: [],
+      },
+      {
+        id: "open-bigger",
+        league_name: "Bigger Open",
+        status: "active",
+        is_private: false,
+        participantsCount: 20,
+        participantPetitions: [],
+        moderatorArray: [],
+      },
+    ]);
+
+    renderList();
+    await screen.findByText("Via Leagues");
+
+    const names = screen
+      .getAllByRole("row")
+      .slice(1)
+      .map((row) => row.textContent ?? "");
+    expect(names.findIndex((text) => text.includes("Via Leagues"))).toBeLessThan(
+      names.findIndex((text) => text.includes("Bigger Open"))
+    );
+
+    const memberRow = screen
+      .getAllByRole("row")
+      .find((row) => within(row).queryByText("Via Leagues"));
+    expect(
+      within(memberRow!).getByRole("button", { name: "Go to League" })
+    ).toHaveTextContent("Go");
+    expect(within(memberRow!).getAllByRole("cell")[1]).toHaveTextContent("9");
+    expect(
+      within(
+        screen
+          .getAllByRole("row")
+          .find((row) => within(row).queryByText("Bigger Open"))!
+      ).getByRole("button", { name: "Join League" })
+    ).toHaveTextContent("Join");
   });
 
   it("orders columns as name, actions, participants, then a lock or globe", async () => {

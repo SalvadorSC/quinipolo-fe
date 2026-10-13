@@ -59,8 +59,9 @@ type LeaguesTypes = {
   updated_at?: string;
   description?: string | null;
 
-  // Enriched fields from API
-  participants: LeagueParticipant[];
+  // Enriched fields from API.
+  // GET /api/leagues no longer returns participants; detail GET /api/leagues/:id still does.
+  participants?: LeagueParticipant[];
   participantsCount?: number;
   participantPetitions: LeaguePetition[];
   moderatorPetitions?: LeaguePetition[];
@@ -72,29 +73,77 @@ type LeaguesTypes = {
   isPrivate?: boolean;
 };
 
+const participantCount = (league: LeaguesTypes) =>
+  league.participantsCount ?? league.current_participants ?? 0;
+
 const LeagueList = () => {
   const navigate = useNavigate();
   const [leagueListData, setLeagueListData] = useState<LeaguesTypes[]>([]);
+  const [joinedLeagueIds, setJoinedLeagueIds] = useState<Set<string>>(
+    () => new Set()
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { setFeedback } = useFeedback();
   const { t } = useTranslation();
 
-  const { userData } = useUser();
+  const { userData, updateUser } = useUser();
 
-  // Helper function to check if user is in a league
+  // List payload no longer includes participants. Membership lives on the profile.
   const isUserInLeague = useCallback(
     (league: LeaguesTypes) => {
-      return league.participants.some(
-        (participant) => participant.username === userData.username
+      if (joinedLeagueIds.has(league.id)) return true;
+      const inUserLeagues = (userData.userLeagues ?? []).some(
+        (membership) => membership.league_id === league.id
+      );
+      if (inUserLeagues) return true;
+      return (userData.leagues ?? []).some(
+        (membership) => membership.leagueId === league.id
       );
     },
-    [userData.username]
+    [joinedLeagueIds, userData.userLeagues, userData.leagues]
   );
+
+  const markLeagueJoined = (league: LeaguesTypes) => {
+    setJoinedLeagueIds((prev) => {
+      if (prev.has(league.id)) return prev;
+      const next = new Set(prev);
+      next.add(league.id);
+      return next;
+    });
+
+    const userLeagues = userData.userLeagues ?? [];
+    const leagues = userData.leagues ?? [];
+    const hasUserLeague = userLeagues.some(
+      (membership) => membership.league_id === league.id
+    );
+    const hasLeague = leagues.some(
+      (membership) => membership.leagueId === league.id
+    );
+    if (hasUserLeague && hasLeague) return;
+
+    updateUser({
+      userLeagues: hasUserLeague
+        ? userLeagues
+        : [...userLeagues, { league_id: league.id, role: "user" }],
+      leagues: hasLeague
+        ? leagues
+        : [
+            ...leagues,
+            {
+              leagueId: league.id,
+              leagueName: league.league_name,
+              moderatorArray: [],
+              participants: [],
+              leagueImage: "",
+            },
+          ],
+    });
+  };
 
   // Helper function to check if user has a pending petition
   const hasPendingPetition = (league: LeaguesTypes) => {
-    return league.participantPetitions.some(
+    return (league.participantPetitions ?? []).some(
       (petition) =>
         petition.username === userData.username && petition.status === "pending"
     );
@@ -163,23 +212,24 @@ const LeagueList = () => {
       return;
     }
 
-    const originalIndex = leagueListData.findIndex((l) => l.id === league.id);
+    const leagueIsListed = leagueListData.some((l) => l.id === league.id);
 
-    if (originalIndex !== -1) {
+    if (leagueIsListed) {
       apiPut(`/api/leagues/${league.id}/join`, {
         leagueId: league.id,
         username: userData.username,
       })
-        .then((data) => {
-          setLeagueListData((prevData) => {
-            const newData = [...prevData];
-            newData[originalIndex].participants.push({
-              user_id: userData.userId,
-              username: userData.username,
-              role: "user",
-            });
-            return newData;
-          });
+        .then(() => {
+          setLeagueListData((prevData) =>
+            prevData.map((item) => {
+              if (item.id !== league.id) return item;
+              return {
+                ...item,
+                participantsCount: participantCount(item) + 1,
+              };
+            })
+          );
+          markLeagueJoined(league);
           setFeedback({
             message: t("joinedLeague"),
             severity: "success",
@@ -289,8 +339,8 @@ const LeagueList = () => {
       const bIn = isUserInLeague(b) ? 1 : 0;
       if (aIn !== bIn) return bIn - aIn; // in-league first
 
-      const aCount = a.participants?.length ?? 0;
-      const bCount = b.participants?.length ?? 0;
+      const aCount = participantCount(a);
+      const bCount = participantCount(b);
       return bCount - aCount; // desc by players
     });
 
@@ -384,7 +434,7 @@ const LeagueList = () => {
                       style={{ paddingLeft: 0, paddingRight: 0 }}
                       align="center"
                     >
-                      {league.participants.length}
+                      {participantCount(league)}
                     </TableCell>
                     <TableCell align="center">{renderVisibility(league)}</TableCell>
                   </TableRow>
